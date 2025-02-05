@@ -1,0 +1,4 @@
+
+
+class Tiquete:
+    None
