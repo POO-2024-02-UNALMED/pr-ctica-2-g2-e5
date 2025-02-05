@@ -1,0 +1,2 @@
+class Tesoreria:
+    pass

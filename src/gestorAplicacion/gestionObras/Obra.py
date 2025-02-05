@@ -1,0 +1,2 @@
+class Obra:
+    pass
