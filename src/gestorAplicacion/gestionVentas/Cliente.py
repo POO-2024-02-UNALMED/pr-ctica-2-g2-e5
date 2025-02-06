@@ -1,5 +1,8 @@
 
 
+import random
+
+
 class Cliente:
 
     clientes = []  # Lista estática de clientes
@@ -18,6 +21,45 @@ class Cliente:
         self.cuenta_bancaria = cuenta_bancaria
         self.tiquete = tiquete
         Cliente.clientes.append(self)  # Agregar instancia a la lista de clientes
+
+
+    def verificar(elemento):
+        for i in Cliente.clientes:
+            if i.id==elemento:
+                return True
+        return False
+    
+    def verificar_suscripcion(self, s: str) -> bool:
+        b = {"G": 3, "P": 2, "C": 1, "B": 0}.get(s, 0)
+        
+        suscripcion_niveles = {"Basica": 0, "Premium": 1, "Vip": 2, "Elite": 3}
+        a = suscripcion_niveles.get(self.cliente.suscripcion.name if self.cliente and self.cliente.suscripcion else "Basica", 0)
+        
+        return not (a >= b)
+
+    def asignar(id: int):
+        for cliente in Cliente.clientes:
+            if cliente.id == id:
+                return cliente
+        return None
+    
+    @staticmethod
+    def id_random() -> int:
+        while True:
+            codigo = random.randint(0, 998)
+            if not Tiquete.verificar(codigo):
+                return codigo
+            
+    def consultar_perfil(self) -> str:
+        perfil = f"{'Usuario N.':>30} {self.id}\n"
+        ultima_compra = f"{'Su ultima compra :':>30} {self.obra if self.obra else 'Ninguna'}\n"
+        suscripcion = f"{'Su suscripcion es :':>30} {self.cliente.suscripcion if self.cliente and self.cliente.suscripcion else 'No especificada'}\n"
+        
+        return perfil + ultima_compra + suscripcion
+
+
+
+        
 
     
     
