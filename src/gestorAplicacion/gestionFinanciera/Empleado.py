@@ -24,17 +24,17 @@ class Empleado:
     #Calcular Sueldo
     def calcularSueldo(self):
         if self.__ocupacion == "Seguridad":
-            sueldo = self.__trabajoRealizado * self.SALARIOSEGURIDAD
+            sueldo = self.trabajoRealizado * self.SALARIOSEGURIDAD
             return sueldo
         elif self.__ocupacion == "Aseador":
-            sueldo = self.__trabajoRealizado * self.SALARIOASEADOR
+            sueldo = self.trabajoRealizado * self.SALARIOASEADOR
             return sueldo
         else: #Profesor
-            sueldo = self.__trabajoRealizado * self.SALARIOPROFESOR
+            sueldo = self.trabajoRealizado * self.SALARIOPROFESOR
             return sueldo
     
     def verificacionMeta(self):
-        if self.__trabajoRealizado >= self.__metaSemanal:
+        if self.__trabajoRealizado >= self.metaSemanal:
             return True
         else:
             return False

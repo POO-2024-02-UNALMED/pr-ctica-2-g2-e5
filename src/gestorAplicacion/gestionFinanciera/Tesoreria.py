@@ -8,15 +8,15 @@ class Tesoreria:
         self.total = total
     
     def verificacionMeta(self):
-        return self.__total >= self.__metaSemanal
+        return self.total >= self.metaSemanal
 
     #Transferir dinero de la caja a la cuenta
     def transferenciaFondos(self):
-        self.__cuenta.ingresar(self.__dineroEnCaja)
-        self.__dineroEnCaja = 0
+        self.cuenta.ingresar(self.dineroEnCaja)
+        self.dineroEnCaja = 0
     
     #pagar el sueldo base
     def pagarSueldoBase(self, cuenta, cantidad):
-        self.__cuenta.transferencia(cuenta, cantidad)
+        self.cuenta.transferencia(cuenta, cantidad)
     
     
