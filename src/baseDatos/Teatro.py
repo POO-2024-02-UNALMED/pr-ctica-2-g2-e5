@@ -1,3 +1,4 @@
+from __future__ import annotations
 import gestorAplicacion.gestionFinanciera.Tesoreria
 
 class Teatro:
@@ -38,5 +39,8 @@ class Teatro:
 
     def getInstancia(self):
         return self._instancia
+    
+    def setInstancia(self, teatro: Teatro) -> None:
+        self._instancia = teatro
 
 
