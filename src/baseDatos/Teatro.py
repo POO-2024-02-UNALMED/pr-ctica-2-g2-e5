@@ -1,5 +1,5 @@
 from __future__ import annotations
-import gestorAplicacion.gestionFinanciera.Tesoreria
+from gestorAplicacion.gestionFinanciera.Tesoreria import Tesoreria
 
 class Teatro:
 

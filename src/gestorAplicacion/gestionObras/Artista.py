@@ -22,7 +22,7 @@ class Artista(ABC):
         self.calificaciones = []
         self.calificacionesPublico = []
 
-        Teatro.getInstancia.artistas.add(self)
+        Teatro.getInstancia().artistas.add(self)
 
     #promedio de la lista de calificaciones
     def calcularCalificacion(self) -> None:
@@ -43,7 +43,7 @@ class Artista(ABC):
         return None
     
     @classmethod
-    def inicializarCalificacionesPublico(artista: Artista):
+    def inicializarCalificacionesPublico(artista: Artista) -> None:
         artista.calificacionesPublico += [ round(random() * 5, 2) for i in range(5)]
 
 
