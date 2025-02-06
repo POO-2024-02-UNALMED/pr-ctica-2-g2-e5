@@ -1,5 +1,7 @@
 from gestionFinanciera.CuentaBancaria import CuentaBancaria
-
+from gestorAplicacion.gestionObras.Actor import Actor
+from random import random
+from gestorAplicacion.herramientas.Aptitud import Aptitud
 class Empleado: 
     SALARIOSEGURIDAD = 6500
     SALARIOASEADOR = 5500
