@@ -1,16 +1,16 @@
 class CuentaBancaria:
     def __init__(self, idTitular, Saldo):
-        self._idTitular = idTitular
-        self._Saldo = Saldo
+        self.idTitular = idTitular
+        self.Saldo = Saldo
 
     def ingresar (self, cant):
-        self._Saldo += cant
+        self.Saldo += cant
 
     def retirar(self, cant):
         if(cant > self._Saldo):
              return False
         else:
-            self._Saldo = self._Saldo - cant
+            self.Saldo = self.Saldo - cant
             return True
     
     def transferencia(self, Destino, cant):
@@ -21,17 +21,4 @@ class CuentaBancaria:
         else:
             return False
         
-    # Getters and Setters
-
-    def getIdTitular(self):
-        return self._idTitular
-
-    def setIdTitular(self, idTitular):
-        self._idTitular = idTitular
-
-    def getSaldo(self):
-        return self._Saldo
-
-    def setSaldo(self, Saldo):
-        self._Saldo = Saldo
             
