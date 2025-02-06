@@ -36,7 +36,17 @@ class Empleado:
             return True
         else:
             return False
-    
+
+    #Casting
+    def casting(self, artista, profesores):
+        if not isinstance(artista, Actor):
+            return False
+        if not profesores:
+            return False    
+        aptitud = Aptitud.values
+        for i in range(0, 5):
+            artista.setCalificacionPorAptitud(aptitud[i],round(random()*50 / 10.0, 1))
+        return True
     #Getters and Setters
     #Nombre
     def getNombre(self):
