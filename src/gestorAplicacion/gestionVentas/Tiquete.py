@@ -1,4 +1,5 @@
 
+import random
 
 class Tiquete:
 
@@ -14,3 +15,17 @@ class Tiquete:
         self.obra = obra
         self.silla = silla
         Tiquete.tiquetes.append(self)  # Agregar instancia a la lista de tiquetes
+
+    @staticmethod
+    def idTiquete() -> int:
+        while True:
+            codigo = random.randint(0, 998)
+            if not Tiquete.verificar(codigo):
+                return codigo
+    def verificar(elemento):
+        for i in Tiquete.tiquetes:
+            if i.id==elemento:
+                return True
+        return False
+    
+            

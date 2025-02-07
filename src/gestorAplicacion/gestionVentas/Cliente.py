@@ -47,7 +47,7 @@ class Cliente:
     def id_random() -> int:
         while True:
             codigo = random.randint(0, 998)
-            if not Tiquete.verificar(codigo):
+            if not Cliente.verificar(codigo):
                 return codigo
             
     def consultar_perfil(self) -> str:
@@ -56,6 +56,7 @@ class Cliente:
         suscripcion = f"{'Su suscripcion es :':>30} {self.cliente.suscripcion if self.cliente and self.cliente.suscripcion else 'No especificada'}\n"
         
         return perfil + ultima_compra + suscripcion
+
 
 
 
