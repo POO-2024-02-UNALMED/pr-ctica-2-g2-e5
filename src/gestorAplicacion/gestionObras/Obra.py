@@ -1,21 +1,31 @@
 class Obra:
+        estadoCriticoS = []
+        obras = []
+    def __init__():
+        self.audienciaEsperada = 0
+        self.nombre = ""
+        self.calificacion = 0
+        self.reparto = []
+        self.papeles = []
+        self.director = None
         self.costoProduccion = 0
         self.funcionesSemana = []
-        self.genero = null;
+        self.genero = None
         self.tiquetesTotales = 0
-        self.estadoCriticoA = null
+        self.estadoCriticoA = None
         self.calificaciones = []
         self.franjaHoraria = []
-        self.duracion = null
-        self.funcionEstelar = null
+        self.duracion = None
+        self.funcionEstelar = None
         self.funciones = []
         self.funcionesRecomendadas = 0
         self.promedioArt = 0
-        self.repartoDisponible = false
+        self.repartoDisponible = False
         self.asistencia = 0
         self.precio = 0
         self.calcularCalificacion(calificaciones)
         self.calcAudienciaEsperada(calificacion)
+    
     def funcionesRecomendadas(promedioArt):
         if promedioArt < 2:
             return 3
@@ -25,9 +35,11 @@ class Obra:
             return 7
         else:
             return 10
+    
     def calcAudienciaEsperada(calificacion):
         u = calificacion * 12
         self.audienciaEsperada = u
+    
     def calcularCalificacion(calificaciones):
         u = 0
         t = 0
@@ -36,6 +48,7 @@ class Obra:
             t++
         v = u / t
         self.calificacion = v
+    
     def franjaHoraria(genero):
         a = Funcion(datetime(2024,1,02,00,00))
         franja = [time(00,00),time(23,59)]
@@ -56,4 +69,15 @@ class Obra:
             else:
                 pass
         self.franjaHoraria = franja
-    pass
+
+    def  calcFuncionEstelar(funciones):
+        u = Funcion()
+        v = Funcion()
+        u.tiquetesVendidos = 0
+        s = u.tiquetesVendidos
+        for funcion in funciones:
+            d = funcion.tiquetesVendidos
+            if s < d:
+                s = d
+                v = funcion
+        self.funcionEstelar = v
