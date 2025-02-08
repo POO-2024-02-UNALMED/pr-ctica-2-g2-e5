@@ -1,7 +1,7 @@
 class Obra:
         estadoCriticoS = []
         obras = []
-    def __init__():
+    def __init__(self):
         self.audienciaEsperada = 0
         self.nombre = ""
         self.calificacion = 0
@@ -24,9 +24,9 @@ class Obra:
         self.asistencia = 0
         self.precio = 0
         self.calcularCalificacion(calificaciones)
-        self.calcAudienciaEsperada(calificacion)
-    
-    def funcionesRecomendadas(promedioArt):
+        self.calcAudienciaEsperada(self.calificacion)
+
+    def funcionesRecomendadas(self, promedioArt):
         if promedioArt < 2:
             return 3
         elif promedioArt >= 2 and promedioArt < 3:
@@ -35,8 +35,8 @@ class Obra:
             return 7
         else:
             return 10
-    
-    def calcAudienciaEsperada(calificacion):
+
+    def calcAudienciaEsperada(self, calificacion):
         u = calificacion * 12
         self.audienciaEsperada = u
     
@@ -45,11 +45,11 @@ class Obra:
         t = 0
         for i in calificaciones:
             u = u + i
-            t++
+            t = t+1
         v = u / t
         self.calificacion = v
-    
-    def franjaHoraria(genero):
+
+    def franjaHoraria(self, genero):
         a = Funcion(datetime(2024,1,02,00,00))
         franja = [time(00,00),time(23,59)]
         obrasGenero = []
