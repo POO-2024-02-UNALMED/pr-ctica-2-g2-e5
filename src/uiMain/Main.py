@@ -14,7 +14,7 @@ class Main:
     @classmethod
     def initRoot(cls):
         cls.root = Tk()
-        cls.root.geometry("1600x900") #16:9
+        cls.root.geometry("960x540") #16:9
         cls.root.title("Teatro Escuela Carlos Mayolo")
 
 
@@ -44,7 +44,7 @@ class FieldFrame(Frame):
 
     def __init__(self, root: Tk, tituloCriterios: str = "Requerimientos", criterios: list = [], tituloValores: str = "Por favor digite:", valores: list = None, habilitado: list = None):
         #todos los colores en tkinter: https://www.plus2net.com/python/tkinter-colors.php
-        super().__init__(master = root, width = 1600, height = 900, bg = FieldFrame.bg) #16:9
+        super().__init__(master = root, width = 800, height = 450, bg = FieldFrame.bg) #16:9
         self.root = root
         self.tituloCriterios = tituloCriterios
         self.criterios = criterios
@@ -52,18 +52,30 @@ class FieldFrame(Frame):
         self.valores = valores if valores is not None else []
         self.habilitado = habilitado
 
-        tituloCriteriosWidget = tk.Label(self, text = self.tituloCriterios, font = FieldFrame.font, bg = FieldFrame.bg)
+        tituloCriteriosWidget = tk.Label(self, text = self.tituloCriterios, bg = FieldFrame.bg)
+        tituloValoresWidget = tk.Label(self, text = self.tituloValores, bg = FieldFrame.bg)
+
+        tituloCriteriosWidget.config(font = (FieldFrame.font, 11, "bold"))
+        tituloValoresWidget.config(font = (FieldFrame.font, 11, "bold"))
+
         self.labels = [tituloCriteriosWidget] + [ tk.Label(self, text = label, font = FieldFrame.font, bg = FieldFrame.bg) for label in self.criterios]
 
         for i, label in enumerate(self.labels):
             label.grid(row = i, column = 0, padx= 50, pady= 10)
 
-        tituloValoresWidget = tk.Label(self, text = self.tituloValores, font = FieldFrame.font, bg = FieldFrame.bg)
+        
         self.values = [tituloValoresWidget] + [tk.Entry(self, textvariable= value) for value in self.valores]
 
-        for i, value in enumerate(self.values):
-            value.grid(row = i, column = 1, padx= 50, pady= 10)
+        habilitadoExists = habilitado is not None
 
+        for i, value in enumerate(self.values):
+            if i > 0 and self.valores:
+                value.insert(0, self.valores[i-1]) # i-1 por el desfase que da agregar el titulo de la columna de valores
+                
+                if habilitadoExists:
+                    status = "normal" if self.criterios[i-1] in habilitado else "disabled"
+                    value.configure(state= status)
+            value.grid(row = i, column = 1, padx= 50, pady= 10)
 
         if Main.fieldTest:
             self.pack()   
@@ -80,11 +92,11 @@ class FieldFrame(Frame):
 if __name__ == "__main__":
 
     #datos de prueba
-    criterios = ["Name", "Age", "Email", "Bitcoin"]
-    valores = ["John Doe", "25", "john@example.com", "293090237hjkhjk2j"]
+    criterios = ["Name", "Age", "Email", "Bitcoin", "Country", "Number"]
+    valores = ["John Doe", "25", "john@example.com", "293090237hjkhjk2j", "Rhodesia", "892962"]
 
     #Main.runApp()
     Main.initRoot()
-    window = FieldFrame(Main.rightFrame, criterios= criterios, valores= valores)
+    window = FieldFrame(Main.rightFrame, criterios= criterios, valores= valores, habilitado= ["Age"])
     print(window.getValue("Age")) #25
     window.mainloop()
