@@ -1,30 +1,21 @@
 from enum import Enum
 
 class Asiento(Enum):
-    """     BASICO,
-        COMFORT, 
-        PREMIUM,
-        GOLD;
+        BASICO = object()
+        COMFORT = object()
+        PREMIUM = object()
+        GOLD = object()
 
-        public  String tipos(){
-            String top = String.format("%30s %30s ","Tipo Asiento","Suscripcion necesaria\n\n");
-            String tipo1 = String.format("%30s %30s  ","BASICO","N/A\n");
-            String tipo2 = String.format("%30s %30s  ","COMFORT","PREMIUM\n");
-            String tipo3 = String.format("%30s %30s  ","PREMIUM","VIP\n");
-            String tipo4 = String.format("%30s %30s  ","GOLD","ELITE");
-            
+        def tipos():
+            top = str.format("%30s %30s ","Tipo Asiento","Suscripcion necesaria\n\n")
+            tipo1 = str.format("%30s %30s  ","BASICO","N/A\n")
+            tipo2 = str.format("%30s %30s  ","COMFORT","PREMIUM\n")
+            tipo3 = str.format("%30s %30s  ","PREMIUM","VIP\n")
+            tipo4 = str.format("%30s %30s  ","GOLD","ELITE")
+            return top+tipo1+tipo2+tipo3+tipo4
         
-            return top+tipo1+tipo2+tipo3+tipo4;
-        }
-        
-        public boolean imprimirTipos(String tipo) {
-            for (Asiento asiento : Asiento.values()) {
-                // Comparar el String con el nombre del enum
-                if (asiento.name().equalsIgnoreCase(tipo)) {
-                    return false; 
-                }
-            }
-            return true; // Ningún tipo coincide
-        }
-    } """
-    pass
+        def imprimirTipos(tipo):
+            for asiento in Asiento.values():
+                if (asiento.name().equalsIgnoreCase(tipo)):
+                    return False 
+            return True

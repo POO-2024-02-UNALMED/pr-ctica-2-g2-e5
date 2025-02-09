@@ -128,36 +128,28 @@ class Funcion:
 
     def calificacionVacia(self, obra):
         return obra.califcacionVacia()
-""" 
-    public static float precioFuncion(Funcion funcion){
-        float prom = funcion.obra.promedioCalificacion();
-        float precioBase=10000;
-        float ad = (funcion.obra.getAsistencia()*500);
-        if (prom > 8) {
-            precioBase =( precioBase +(prom*800)+ad);
-            
-        } else if(prom > 5)
-        {
-            precioBase = (precioBase +(prom*400)+ad);
-        } else if (prom > 3){
-            precioBase = (precioBase +(prom*200+ad));
-        }else{
-            precioBase = (precioBase +(prom*100+ad));
-        }
-        
-        
 
-        return precioBase;
+    def precioFuncion(self):
+        prom = self.obra.promedioCalificacion()
+        precioBase = 10000
+        ad = self.obra.asistencia*500
+        if prom > 8 :
+            precioBase = precioBase + prom * 800 + ad  * 500        
+        elif prom > 5:
+            precioBase = precioBase + prom * 400 + ad
+        elif prom > 3:
+            precioBase = precioBase + prom * 200 + ad
+        else:
+            precioBase = precioBase + prom * 100 + ad
+        return precioBase
 
-    }
-
-    def imprimirFuncion(self, funcion):
-        string = str.format("%30s %15s %10s %20s",funcion.obra.nombre,funcion.obra.genero,funcion.obra.duracion.total_minutes(),str.format("$%,.2f",self.precioFuncion(funcion)))
+    def imprimirFuncion(self):
+        string = str.format("%30s %15s %10s %20s",self.obra.nombre,self.obra.genero,self.obra.duracion.total_minutes(),str.format("$%,.2f",self.precioFuncion()))
         return string
     
 
-
-    def buscarFuncion(self, nombre):
+    @staticmethod
+    def buscarFuncion(cls, nombre):
         from baseDatos import Teatro
         for funcion in Teatro.getInstancia().getFuncionesCreadas():
             if funcion.obra!=None:
@@ -165,63 +157,41 @@ class Funcion:
                     return funcion
         return None
 
-    def mostrarPrecioFuncion(self, nombre){
-        for (Funcion funcion : Teatro.getInstancia().getFuncionesCreadas()) {
-            if (funcion.obra!=null){
-            if ((funcion.obra.getNombre().toLowerCase()).equals(nombre.toLowerCase())){
-                return precioFuncion(funcion);
-            }
-    }
-    }
-        return 0;
+    @staticmethod
+    def mostrarPrecioFuncion(cls, nombre):
+        from baseDatos import Teatro
+        for funcion in Teatro.getInstancia().getFuncionesCreadas():
+            if funcion.obra != None:
+                if funcion.obra.nombre.lower() == nombre.lower():
+                    return funcion.precioFuncion()
+        return 0
 
+    @staticmethod
+    def nombres(cls, nombre):
+        from baseDatos import Teatro
+        listaNombres = []
+        for funcion in Teatro.getInstancia().getFuncionesCreadas():
+            listaNombres.append(funcion.obra.nombre.lower())
+        if  nombre in listaNombres:
+            return False
+        else: 
+            return True
 
-}
+    def verificar(self, elemento):
+        for i in len(self.sillas):
+            if self.sillas[i].codigo == elemento:
+                return False
+            else:
+                return True
 
+    def asignarSilla(self, elemento):
+        for i in len(self.sillas):
+            if self.sillas[i].codigo == elemento:
+                return self.sillas[i]
+        return self.sillas[0]
 
-
-public static boolean nombres(String nombre){
-    ArrayList<String> listaNombres=new ArrayList<>();
-    for (Funcion a : Teatro.getInstancia().getFuncionesCreadas()) {
-        listaNombres.add(a.obra.getNombre().toLowerCase());
-        
-    }
-    if(listaNombres.contains(nombre)){
-        return false;
-
-    }
-    return true;
-
-
-
-public  boolean verificar(long elemento){
-    for (int i=0; i < sillas.size();i++){
-        if (sillas.get(i).getCodigo()==elemento) {
-            return false;
-            
-        }
-        
-    }
-    return true;
-}
-
-public Silla asignarSilla(float elemento){
-    for (int i=0; i < sillas.size();i++){
-        if (sillas.get(i).getCodigo()==elemento) {
-            return sillas.get(i);
-        }
-        
-    }
-    return sillas.get(0);
-
-}
-
-public String asignarTipoSilla(long elemento){
-    for (int i=0; i < sillas.size();i++){
-        if (sillas.get(i).getCodigo()==elemento) {
-            return ""+sillas.get(i).getTipo().name().charAt(0);
-            
-        }
-        
-    }
-    return "" """
+    def asignarTipoSilla(self, elemento):
+        for i in len(self.sillas):
+            if (self.sillas[i].codigo == elemento):
+                return ""+self.sillas.get[i].tipo.name().charAt(0)
+        return ""
