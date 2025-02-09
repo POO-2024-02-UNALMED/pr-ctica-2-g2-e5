@@ -1,8 +1,7 @@
 import tkinter as tk
-from tkinter import Label, Tk, Frame, ttk
+from tkinter import Tk, Frame, ttk
 from PIL import Image, ImageTk
-
-
+from typing import Optional
 
 class Main:
     root = None
@@ -10,16 +9,13 @@ class Main:
     fieldTest = True
     imagenes = [
 
-        "src/foto1.jpg",
-        "src/foto2.jpg",
-        "src/foto3.png",
-        "src/foto4.jpg",
-        "src/foto5.jpg"
-
-
-,
-        
+        "src/media/foto1.jpg",
+        "src/media/foto2.jpg",
+        "src/media/foto3.png",
+        "src/media/foto4.jpg",
+        "src/media/foto5.jpg"        
     ]
+
     indice_imagen = 0 
 
     @classmethod
@@ -160,7 +156,7 @@ class FieldFrame(Frame):
         if Main.fieldTest:
             self.pack()   
 
-    def getValue(self, criterio: str) -> str | None:
+    def getValue(self, criterio: str) -> Optional[str]:
         self.mapCriterios = [(criterio, valor) for criterio, valor in zip(self.criterios, self.valores)]
         for (auxCriterio, valor) in self.mapCriterios:
             if auxCriterio == criterio:
