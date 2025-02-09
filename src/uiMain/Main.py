@@ -39,9 +39,12 @@ class Main:
 
 class FieldFrame(Frame):
 
+    bg = "slategray1"
+    font = "Calibri 11"
+
     def __init__(self, root: Tk, tituloCriterios: str = "Requerimientos", criterios: list = [], tituloValores: str = "Por favor digite:", valores: list = None, habilitado: list = None):
         #todos los colores en tkinter: https://www.plus2net.com/python/tkinter-colors.php
-        super().__init__(master = root, width = 1600, height = 900, bg = "slategray1") #16:9
+        super().__init__(master = root, width = 1600, height = 900, bg = FieldFrame.bg) #16:9
         self.root = root
         self.tituloCriterios = tituloCriterios
         self.criterios = criterios
@@ -49,8 +52,21 @@ class FieldFrame(Frame):
         self.valores = valores if valores is not None else []
         self.habilitado = habilitado
 
+        tituloCriteriosWidget = tk.Label(self, text = self.tituloCriterios, font = FieldFrame.font, bg = FieldFrame.bg)
+        self.labels = [tituloCriteriosWidget] + [ tk.Label(self, text = label, font = FieldFrame.font, bg = FieldFrame.bg) for label in self.criterios]
+
+        for i, label in enumerate(self.labels):
+            label.grid(row = i, column = 0, padx= 50, pady= 10)
+
+        tituloValoresWidget = tk.Label(self, text = self.tituloValores, font = FieldFrame.font, bg = FieldFrame.bg)
+        self.values = [tituloValoresWidget] + [tk.Entry(self, textvariable= value) for value in self.valores]
+
+        for i, value in enumerate(self.values):
+            value.grid(row = i, column = 1, padx= 50, pady= 10)
+
+
         if Main.fieldTest:
-            self.pack()
+            self.pack()   
 
     def getValue(self, criterio: str) -> str | None:
         self.mapCriterios = [(criterio, valor) for criterio, valor in zip(self.criterios, self.valores)]
