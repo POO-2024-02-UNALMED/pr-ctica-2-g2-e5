@@ -21,7 +21,7 @@ class Funcion:
     def tablaSillas(self):
         Nuevo=""
         sillas = self.sala.sillas
-        for  i in range (0, len(sillas), 1):        
+        for  i in range(len(sillas)):        
             if (sillas[i].codigo != 88):
                 Nuevo=Nuevo+"        "
             else:
@@ -37,7 +37,7 @@ class Funcion:
         from gestionVentas import Silla
         sillaVacia = Silla(codigo = 88)
         sillas = self.sala.sillas
-        for k in range (0, len(sillas), 1):
+        for k in range (len(sillas)):
             if sillas[k].codigo == i:
                 sillas[k] = sillaVacia
 
@@ -56,7 +56,7 @@ class Funcion:
                     break
             return funcionesALaVenta
 
-"""     def createHorario(self, week):
+    def createHorario(self, week):
         from baseDatos import Teatro
         import datetime
         horario = []
@@ -65,66 +65,48 @@ class Funcion:
             if sala.capacidad > self.obra.audienciaEsperada:
                 for day in week:
                     inicioFranjaITE = inicioFranja
-                    while inicioFranjaITE < self.obra.franjaHoraria[1] and inicioFranjaITE.plusSeconds(self.obra.getDuracionFormatoS())<(datetime.of(22,00)):
-                        i = datetime.of(day, inicioFranjaITE) ;
-                        v = i.plusSeconds(self.obra.getDuracionFormatoS());
-                        if(this.getObra().isRepartoDisponible(i, v) && sala.isDisponible(i,v)){
-                            horario.add(i);
-                            horario.add(v);
-                            this.setSala(sala);
-                            this.getSala().anadirHorario(horario);
+                    while inicioFranjaITE < self.obra.franjaHoraria[1] and inicioFranjaITE + self.obra.getDuracionFormatoS()<(datetime.of(22,00)):
+                        i = datetime.of(day, inicioFranjaITE)
+                        v = i + self.obra.getDuracionFormatoS()
+                        if self.obra.isRepartoDisponible(i, v) and sala.isDisponible(i,v):
+                            horario.append(i)
+                            horario.append(v)
+                            self.sala = sala
+                            self.sala.anadirHorario(horario);
                             return horario;
-                        }
                         inicioFranjaITE = inicioFranjaITE.plusMinutes(30);
-                    }
-                }
-            }
-        }
-        return horario;
-    }
+        return horario
 
-    public ArrayList<LocalTime> extraerHora(ArrayList<LocalDateTime> horario){
-        ArrayList<LocalTime> a = new ArrayList<>();
-        for (LocalDateTime tiempo : horario){
-            // Extraer la hora, minutos y segundos
-            int hora = tiempo.getHour();
-            int minutos = tiempo.getMinute();
-            int segundos = tiempo.getSecond();
-        a.add(LocalTime.of(hora, minutos, segundos));
-        }
-        return a;
-    }
+    def extraerHora(self, horario):
+        a = []
+        for tiempo in horario:
+            hora = tiempo.total_hours()
+            minutos = tiempo.total_minutes()
+            segundos = tiempo.total_seconds()
+        a.append(datetime.datetime(hora, minutos, segundos))
+        return a
     
-    public boolean doWeNeedACalificador(){
-        boolean a = false;
-        for (Actor actor : this.getObra().getReparto()){
-            if (actor.isReevaluacion()){
-                a = true;
-            }
-        }
-        return a;
-    }
-    
+    def doWeNeedACalificador(self):
+        a = False
+        for actor in self.obra.reparto:
+            if actor.getReevaluacion():
+                a = True
+        return a
 
-    public static String generarTabla(String nombre){
-        int in=0;
-        String Nuevo="";
-        String string ="";
-        for (Funcion funcion : Teatro.getInstancia().getFuncionesCreadas()) {
-            if (funcion.obra != null && funcion.obra.getNombre() != null) {
-                if ((funcion.obra.getNombre().toLowerCase()).equals(nombre.toLowerCase())){
-                    if(!funcion.getObra().getNombre().equals("NOTFORITE")){
-                    in++;
-                    string = in+String.format("%20s %30s",funcion.obra.getNombre(),funcion.getHorario().get(0));
-                    Nuevo = Nuevo +"\n"+string;
-                    }
-                }
-            }
-        }
-        return Nuevo;
-    }
+    @staticmethod
+    def generarTabla(cls, nombre):
+        from baseDatos import Teatro
+        il = 0
+        Nuevo = ""
+        string =""
+        for funcion in Teatro.getInstancia().getFuncionesCreadas():
+            if funcion.obra != None and funcion.obra.nombre != None and funcion.obra.getNombre().toLowerCase() == nombre.toLowerCase() and funcion.getObra().getNombre() != "NOTFORITE":
+                il += 1
+                string = f"{il:20} {funcion.obra.getNombre():30} {funcion.getHorario()[0]}"
+                Nuevo = Nuevo + "\n" + string
+        return Nuevo
 
-public static boolean indiceFuncion(int i,String nombre){
+    def indiceFuncion(i, nombre){
     int in =0;
     
     for (Funcion funcion : Teatro.getInstancia().getFuncionesCreadas()) {
@@ -266,7 +248,4 @@ public String asignarTipoSilla(long elemento){
         }
         
     }
-    return "";
-
-}
- """
+    return ""

@@ -5,7 +5,7 @@ class Obra:
     estadoCriticoS = []
     obras = []
     def __init__(self, audienciaEsperada = 0, nombre = "", calificacion = 0, reparto = [], papeles = [], director = None, costoProducción = 0, funcionesSemana = [], genero = None, tiquetesTotales = 0, estadoCriticoA = False, calificaciones = [], franjaHoraria = [],
-                 duracion = None, funcionEstelar = None, funciones = [], funcionesRecomendadas = 0, promedioArt = 0, repartoDisponible = False, asistencia = 0, precio = 0):
+                duracion = None, funcionEstelar = None, funciones = [], funcionesRecomendadas = 0, promedioArt = 0, repartoDisponible = False, asistencia = 0, precio = 0):
         self.audienciaEsperada = audienciaEsperada
         self.nombre = nombre
         self.calificacion = calificacion
@@ -35,9 +35,9 @@ class Obra:
     def funcionesRecomendadas(self, promedioArt):
         if promedioArt < 2:
             return 3
-        elif promedioArt >= 2 and promedioArt < 3:
+        elif promedioArt < 3:
             return 5
-        elif promedioArt >= 3 and promedioArt < 4:
+        elif promedioArt < 4:
             return 7
         else:
             return 10
@@ -74,8 +74,6 @@ class Obra:
                         franja[0] = fstar[0]
                     if fstar[1] < franja[1]:
                         franja[1] = fstar[1]
-            else:
-                pass
         self.franjaHoraria = franja
 
     def  calcFuncionEstelar(self,funciones):
@@ -92,17 +90,11 @@ class Obra:
         self.funcionEstelar = v
 
     def checkEstadoCritico(self):
-        if self.calificacion < 1:
-            return True
-        else:
-            return False
+        return self.calificacion < 1
 
     def calificacionVacia(self):
-        valor = True
-        if len(self.calificaciones) == 0:
-            valor = False
-        return valor
-             
+        return len(self.calificaciones) != 0
+
     def promedioCalificacion(self):
         suma=0
         contador = 0
@@ -135,46 +127,61 @@ class Obra:
             self.precio(precioBase)
 
     def imprimirObra(self):
-            string = str.format("%30s %20s %20s %20s", self.getNombre(), self.getGenero(), self.getDuracionFormato(), str.format("$%,.2f", self.precioObra(self.nombre))+"\n")
-            return string
+        return str.format(
+            "%30s %20s %20s %20s",
+            self.nombre,
+            self.genero,
+            self.getDuracionFormato(),
+            str.format("$%,.2f", self.precioObra(self.nombre)) + "\n",
+        )
         
     def buscarObra(self, nombre):
         from baseDatos import Teatro
-        for obra in Teatro.getInstancia().getObras():
-            if obra.nombre.lower() == nombre.lower():
-                return obra
-        return None
+        return next(
+            (
+                obra
+                for obra in Teatro.getInstancia().getObras()
+                if obra.nombre.lower() == nombre.lower()
+            ),
+            None,
+        )
 
     def precioObra(self, nombre):
         from baseDatos import Teatro
-        for obra in Teatro.getInstancia().getObras(): 
-            if obra.nombre.lower() == nombre.lower():
-                return obra.precioFuncion()
-        return 0
+        return next(
+            (
+                obra.precioFuncion()
+                for obra in Teatro.getInstancia().getObras()
+                if obra.nombre.lower() == nombre.lower()
+            ),
+            0,
+        )
 
+    @staticmethod
     def nombres(cls, nombre):
         from baseDatos import Teatro
         listaNombres= []
-        for obra in Teatro.getInstancia().getObras():
-            listaNombres.append(obra.nombre.lower())
+        listaNombres.extend(
+            obra.nombre.lower() for obra in Teatro.getInstancia().getObras()
+        )
+        return nombre not in listaNombres
 
-        if(nombre in listaNombres):
-            return False
-            pass
-        return True
-
+    @staticmethod
     def actualizarEstadoCritico(cls): 
         from baseDatos import Teatro
         for obra in Teatro.getInstancia().getObras():
             if obra.checkEstadoCritico():
                 cls.estadoCriticoS.append(obra)
     
+    @staticmethod
     def mostrarObrasCriticas(cls):
         from baseDatos import Teatro
         obrasCriticas = []
-        for obra in Teatro.getInstancia().getObras():
-            if obra.promedioCalificacion() <= 2.0 and obra.nombre == "NOTFORITE" :
-                obrasCriticas.append(obra)
+        obrasCriticas.extend(
+            obra
+            for obra in Teatro.getInstancia().getObras()
+            if obra.promedioCalificacion() <= 2.0 and obra.nombre == "NOTFORITE"
+        )
         return obrasCriticas
 
     def calcPromedioArt(self, reparto):
@@ -204,12 +211,20 @@ class Obra:
     def addFuncion(self, funcion):
         self.funcionesSemana.append(funcion)
 
+    @staticmethod
     def generarTabla(cls):
         from baseDatos import Teatro
         nuevo=""
         for obra in Teatro.getInstancia().getObras():
             if obra.nombre != "NOTFORITE":
                 string = str.format("%30s %20s %20s %20s",obra.nombre,obra.genero,obra.getDuracionFormato(),str.format("$%,.2f",obra.precioObra(obra.nombre))+"\n")
-                Nuevo = Nuevo +string
-        return Nuevo
+                nuevo = nuevo +string
+        return nuevo
     
+    def getDuracionFormato(self):
+        horas = self.duracion.total_seconds() // 3600
+        minutos = (self.duracion.total_seconds() % 3600) // 60
+        return str.format("%d:%02d", horas, minutos)
+    
+    def getDuracionFormatoS(self):
+        return self.duracion.total_seconds()
