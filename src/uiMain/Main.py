@@ -61,8 +61,7 @@ class FieldFrame(Frame):
         self.labels = [tituloCriteriosWidget] + [ tk.Label(self, text = label, font = FieldFrame.font, bg = FieldFrame.bg) for label in self.criterios]
 
         for i, label in enumerate(self.labels):
-            label.grid(row = i, column = 0, padx= 50, pady= 10)
-
+            label.grid(row = i, column = 0, padx= 3, pady= 5)
         
         self.values = [tituloValoresWidget] + [tk.Entry(self, textvariable= value) for value in self.valores]
 
@@ -77,6 +76,12 @@ class FieldFrame(Frame):
                     value.configure(state= status)
             value.grid(row = i, column = 1, padx= 50, pady= 10)
 
+        aceptar = tk.Button(self, text = "Aceptar", command = self.gatherEntries)
+        aceptar.grid(row = len(self.valores) + 1, column = 0, sticky= "w")
+
+        borrar = tk.Button(self, text = "Borrar", command = self.deleteEntries)
+        borrar.grid(row = len(self.valores) + 1, column = 1,  sticky= "e")
+
         if Main.fieldTest:
             self.pack()   
 
@@ -86,8 +91,21 @@ class FieldFrame(Frame):
             if auxCriterio == criterio:
                 return valor
         return None
+    
+    def gatherEntries(self) -> None:
+        self.valores = [entry.get() for i, entry in enumerate(self.values) if i > 0]    
+        
+        if Main.fieldTest:
+            print(self.valores)    
+        
+        #PENDIENTE: 
+        # revisar si el dato no es nulo y lanzar excepcion si lo es
+        # revisar dependiendo del caso, si el dato existe en la base de datos (ej, ID)
 
-
+    def deleteEntries(self) -> None:
+        for i, entry in enumerate(self.values):
+            if i > 0:
+                entry.delete(0, "end")
 
 if __name__ == "__main__":
 
@@ -97,6 +115,6 @@ if __name__ == "__main__":
 
     #Main.runApp()
     Main.initRoot()
-    window = FieldFrame(Main.rightFrame, criterios= criterios, valores= valores, habilitado= ["Age"])
+    window = FieldFrame(Main.rightFrame, criterios= criterios, valores= valores, habilitado= ["Age", "Country"])
     print(window.getValue("Age")) #25
     window.mainloop()
