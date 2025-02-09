@@ -1,10 +1,26 @@
 import tkinter as tk
-from tkinter import Tk, Frame, ttk
+from tkinter import Label, Tk, Frame, ttk
+from PIL import Image, ImageTk
+
+
 
 class Main:
     root = None
     test = False
     fieldTest = True
+    imagenes = [
+
+        "src/foto1.jpg",
+        "src/foto2.jpg",
+        "src/foto3.png",
+        "src/foto4.jpg",
+        "src/foto5.jpg"
+
+
+,
+        
+    ]
+    indice_imagen = 0 
 
     @classmethod
     def destroy(cls):
@@ -17,20 +33,79 @@ class Main:
         cls.root.geometry("960x540") #16:9
         cls.root.title("Teatro Escuela Carlos Mayolo")
 
-
-        #FRAME IZQUIERDO
-        Main.leftFrame = Frame(cls.root, borderwidth= 10, bg = "blue")
-        Main.leftFrame.place(relx = 0, rely = 0, relwidth = 0.5, relheight = 1)
-
-        #FRAME DERECHO
-        Main.rightFrame = Frame(cls.root, borderwidth= 10, bg = "green", width = 800, height = 900)
-        Main.rightFrame.place(relx = 0.5, rely = 0, relwidth = 0.5, relheight = 1)
-
         if cls.test:
             ttk.Label(Main.leftFrame, text= "Teatro Escuela Carlos Mayolo", font = "Calibri 24").pack()
             ttk.Label(Main.leftFrame, text='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin maximus volutpat tortor sit amet congue. Fusce pretium quam quam, eget blandit eros eleifend non.').pack()
             ttk.Button(Main.rightFrame, text = "Dele a ver que pasa", command = cls.destroy).pack()
+         
+        Main.rightFrame = Frame(cls.root, borderwidth= 10, bg = "green", width = 800, height = 900)
+        Main.rightFrame.place(relx = 0.5, rely = 0, relwidth = 0.5, relheight = 1)
+
+        # FRAME IZQUIERDO (50% de la pantalla)
+        cls.leftFrame = Frame(cls.root, borderwidth=2, bg="blue")
+        cls.leftFrame.place(relx=0, rely=0, relwidth=0.5, relheight=1)
+
+        # DIVIDIR EN 2 SECCIONES: SUPERIOR E INFERIOR
+        cls.topFrame = Frame(cls.leftFrame, bg="red")
+        cls.topFrame.place(relx=0, rely=0, relwidth=1, relheight=0.5)
+
+        cls.bottomFrame = Frame(cls.leftFrame, bg="black")
+        cls.bottomFrame.place(relx=0, rely=0.5, relwidth=1, relheight=0.5)
+
+        # 🔹 Crear Label para la imagen
+        cls.label = tk.Label(cls.bottomFrame, bg="black")
+        cls.label.pack(fill="both", expand=True)  # Se expande para ocupar el frame
+
+        # Esperar a que `bottomFrame` tenga tamaño antes de cargar la imagen
+        cls.root.after(100, cls.update_image)  
+
+        # Si el frame cambia de tamaño, actualizar la imagen
+        cls.bottomFrame.bind("<Configure>", cls.update_image)
+
+        cls.bottomFrame.bind("<Enter>", cls.cambiar_imagen)
+
+    @classmethod
+    def update_image(cls, event=None):
+        """Carga y ajusta la imagen sin distorsionarla dentro del `bottomFrame`."""
+        try:
+            # Obtener el tamaño actual del frame
+            frame_width = cls.bottomFrame.winfo_width()
+            frame_height = cls.bottomFrame.winfo_height()
+
+            # Evitar redimensionar si el tamaño aún no está definido
+            if frame_width < 10 or frame_height < 10:
+                return
+
+            # Cargar la imagen original
+            img = Image.open(cls.imagenes[cls.indice_imagen])
+
+            # Obtener dimensiones originales
+            img_width, img_height = img.size
+
+            # Calcular nueva escala manteniendo la proporción
+            ratio = min(frame_width / img_width, frame_height / img_height)
+            new_width = int(img_width * ratio)
+            new_height = int(img_height * ratio)
+
+            # Redimensionar la imagen manteniendo la relación de aspecto
+            img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+
+            # Convertir a formato de tkinter
+            cls.img_tk = ImageTk.PhotoImage(img)
+
+            # Actualizar la imagen en el Label
+            cls.label.config(image=cls.img_tk)
+            cls.label.place(x=(frame_width - new_width) // 2, y=(frame_height - new_height) // 2)  # Centrar imagen
+
+        except Exception as e:
+            print("Error al cargar la imagen:", e)
+            cls.label.config(text="No se pudo cargar la imagen", fg="white", bg="black")
     
+    @classmethod
+    def cambiar_imagen(cls, event=None):
+        """Cambia la imagen al siguiente índice al pasar el mouse."""
+        cls.indice_imagen = (cls.indice_imagen + 1) % len(cls.imagenes)  # Bucle infinito de imágenes
+        cls.update_image()  # Llamar a `update_image()` para actualizar la imagen
     @classmethod
     def runApp(cls):
         cls.initRoot()
