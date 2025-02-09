@@ -65,16 +65,16 @@ class Funcion:
             if sala.capacidad > self.obra.audienciaEsperada:
                 for day in week:
                     inicioFranjaITE = inicioFranja
-                    while inicioFranjaITE < self.obra.franjaHoraria[1] and inicioFranjaITE + self.obra.getDuracionFormatoS()<(datetime.of(22,00)):
-                        i = datetime.of(day, inicioFranjaITE)
+                    while inicioFranjaITE < self.obra.franjaHoraria[1] and inicioFranjaITE + self.obra.getDuracionFormatoS()<(datetime.datetime(22,00)):
+                        i = datetime.datetime(day, inicioFranjaITE)
                         v = i + self.obra.getDuracionFormatoS()
                         if self.obra.isRepartoDisponible(i, v) and sala.isDisponible(i,v):
                             horario.append(i)
                             horario.append(v)
                             self.sala = sala
-                            self.sala.anadirHorario(horario);
-                            return horario;
-                        inicioFranjaITE = inicioFranjaITE.plusMinutes(30);
+                            self.sala.anadirHorario(horario)
+                            return horario
+                        inicioFranjaITE = inicioFranjaITE.total_minutes() + 30
         return horario
 
     def extraerHora(self, horario):
@@ -106,47 +106,29 @@ class Funcion:
                 Nuevo = Nuevo + "\n" + string
         return Nuevo
 
-    def indiceFuncion(i, nombre){
-    int in =0;
-    
-    for (Funcion funcion : Teatro.getInstancia().getFuncionesCreadas()) {
-        if (funcion.obra!=null){
-        if ((funcion.obra.getNombre().toLowerCase()).equals(nombre.toLowerCase())){
-            in++;
+    def indiceFuncion(sekf, i, nombre):
+        from baseDatos import Teatro
+        il = 0
+        for funcion in Teatro.getInstancia().getFuncionesCreadas():
+            if funcion.obra != None:
+                if (funcion.obra.nombre.lower()) == nombre.lower():
+                    il = il + 1
+        return il >= i
 
-        }
-    }}
+    def escogerFuncion(self, i, nombre):
+        from baseDatos import Teatro
+        il = 0
+        for funcion in Teatro.getInstancia().getFuncionesCreadas():
+            if funcion.obra!=None:
+                if funcion.obra.nombre.lower() == nombre.lower():
+                    il = il + 1
+            if il==i:
+                return funcion
+        return None
 
-return in >= i;
-}
-
-public static Funcion escogerFuncion(int i,String nombre){
-    int in=0;
-    for (Funcion funcion : Teatro.getInstancia().getFuncionesCreadas()) {
-        if (funcion.obra!=null){
-        if ((funcion.obra.getNombre().toLowerCase()).equals(nombre.toLowerCase())){
-            in++;
-            if (in==i){
-                return funcion;
-            }
-        }
-            
-        }
-        
-    }
-    return null;
-
-}
-public static boolean calificacionVacia(Obra obra){
-    boolean valor = true;
-    if (obra.getCalificaciones().size()==0) {
-        valor = false;
-    }
-    return valor;
-    
-
-}
-
+    def calificacionVacia(self, obra):
+        return obra.califcacionVacia()
+""" 
     public static float precioFuncion(Funcion funcion){
         float prom = funcion.obra.promedioCalificacion();
         float precioBase=10000;
@@ -169,35 +151,29 @@ public static boolean calificacionVacia(Obra obra){
 
     }
 
-public static String imprimirFuncion(Funcion funcion){
-        String string = String.format("%30s %15s %10s %20s",funcion.obra.getNombre(),funcion.obra.getGenero(),funcion.obra.getDuracion().toMinutes(),String.format("$%,.2f",precioFuncion(funcion)));
-        return string;
-    }
+    def imprimirFuncion(self, funcion):
+        string = str.format("%30s %15s %10s %20s",funcion.obra.nombre,funcion.obra.genero,funcion.obra.duracion.total_minutes(),str.format("$%,.2f",self.precioFuncion(funcion)))
+        return string
     
 
 
-public static Funcion buscarFuncion(String nombre){
-    for (Funcion funcion : Teatro.getInstancia().getFuncionesCreadas()) {
-        if (funcion.obra!=null){
-        if ((funcion.obra.getNombre().toLowerCase()).equals(nombre.toLowerCase())){
-            return funcion;
-        }
-        
-    }}
-    return null;
+    def buscarFuncion(self, nombre):
+        from baseDatos import Teatro
+        for funcion in Teatro.getInstancia().getFuncionesCreadas():
+            if funcion.obra!=None:
+                if funcion.obra.nombre.lower() == nombre.lower():
+                    return funcion
+        return None
 
-
-}
-
-public static float mostrarPrecioFuncion(String nombre){
-    for (Funcion funcion : Teatro.getInstancia().getFuncionesCreadas()) {
-        if (funcion.obra!=null){
-        if ((funcion.obra.getNombre().toLowerCase()).equals(nombre.toLowerCase())){
-            return precioFuncion(funcion);
-        }
+    def mostrarPrecioFuncion(self, nombre){
+        for (Funcion funcion : Teatro.getInstancia().getFuncionesCreadas()) {
+            if (funcion.obra!=null){
+            if ((funcion.obra.getNombre().toLowerCase()).equals(nombre.toLowerCase())){
+                return precioFuncion(funcion);
+            }
     }
     }
-    return 0;
+        return 0;
 
 
 }
@@ -248,4 +224,4 @@ public String asignarTipoSilla(long elemento){
         }
         
     }
-    return ""
+    return "" """
