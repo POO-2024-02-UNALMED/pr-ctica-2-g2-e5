@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import Tk, Frame, ttk
 from PIL import Image, ImageTk
-from typing import Optional
 
 class Main:
     root = None
@@ -156,7 +155,7 @@ class FieldFrame(Frame):
         if Main.fieldTest:
             self.pack()   
 
-    def getValue(self, criterio: str) -> Optional[str]:
+    def getValue(self, criterio: str) -> str | None:
         self.mapCriterios = [(criterio, valor) for criterio, valor in zip(self.criterios, self.valores)]
         for (auxCriterio, valor) in self.mapCriterios:
             if auxCriterio == criterio:

@@ -3,7 +3,6 @@ from baseDatos.Teatro import Teatro
 from gestorAplicacion.herramientas.Aptitud import Aptitud
 from gestionFinanciera.CuentaBancaria import CuentaBancaria
 from functools import cmp_to_key
-from typing import Optional
 
 def format_cop(amount):
     return f"${amount:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
@@ -58,9 +57,12 @@ class Actor(Artista):
             return -1
 
     def compare(a: float, b: float) -> int:
-        if a < b: return -1
-        elif a > b: return 1
-        else: return 0
+        if a < b: 
+            return -1
+        elif a > b: 
+            return 1
+        else: 
+            return 0
 
     def obtenerAreasDeMejora(self) -> list:
 
@@ -72,7 +74,7 @@ class Actor(Artista):
 
         return areasDeMejora
     
-    def getHistorialCalificaciones(self, aptitud: Aptitud) -> Optional[list]:
+    def getHistorialCalificaciones(self, aptitud: Aptitud) -> list | None:
         #si existe el indice, devuelve la respecta lista de historial de calificacion 
         # para la aptitud pedida
         index = self.__aptitudes.index(aptitud)

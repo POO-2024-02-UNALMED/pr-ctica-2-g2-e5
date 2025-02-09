@@ -5,7 +5,6 @@ from src.gestorAplicacion.gestionClases.Clase import Clase
 from datetime import datetime
 from baseDatos import Teatro
 from random import random
-from typing import Optional
 
 
 class Artista(ABC):
@@ -37,7 +36,7 @@ class Artista(ABC):
         return True
     
     @classmethod
-    def buscarArtistaPorId(id: int) -> Optional[Artista]:
+    def buscarArtistaPorId(id: int) -> Artista | None:
         for artista in Teatro.getInstancia().getArtistas():
             if (artista.getId() == id):
                 return artista
