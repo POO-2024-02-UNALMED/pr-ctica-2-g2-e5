@@ -1,13 +1,13 @@
 import tkinter as tk
-from tkinter import Tk, Frame, ttk
+from tkinter import Tk, Frame
 from PIL import Image, ImageTk
-import customtkinter as ctk
 
 class Main:
     root = None
-    test = True
+    test = False
     fieldTest = True
     custom = False
+    bg = "lightsteelblue3"
 
     imagenes = [
 
@@ -28,20 +28,20 @@ class Main:
     #Esta función se encargará de inicializar todo lo referente a la ventana raíz
     @classmethod
     def initRoot(cls):
-        cls.root = Tk() if not Main.custom else ctk.CTk()
-        ico = Image.open("src/media/foto1.jpg")
+        cls.root = Tk() 
+        ico = Image.open("src/media/icon.jpg")
         logo = ImageTk.PhotoImage(ico)
         cls.root.wm_iconphoto(False, logo)
         cls.root.geometry("960x540") #16:9
         cls.root.title("Teatro Escuela Carlos Mayolo")
 
-        Main.rightFrame = Frame(cls.root, borderwidth= 10, bg = "green", width = 800, height = 900)
+        Main.rightFrame = Frame(cls.root, borderwidth= 10, bg = Main.bg, width = 800, height = 900)
         Main.rightFrame.place(relx = 0.5, rely = 0, relwidth = 0.5, relheight = 1)
 
         
 
         # FRAME IZQUIERDO (50% de la pantalla)
-        cls.leftFrame = Frame(cls.root, borderwidth=2, bg="blue")
+        cls.leftFrame = Frame(cls.root, borderwidth=2, bg= Main.bg)
         cls.leftFrame.place(relx=0, rely=0, relwidth=0.5, relheight=1)
 
         # DIVIDIR EN 2 SECCIONES: SUPERIOR E INFERIOR
@@ -68,14 +68,9 @@ class Main:
         
 
         if cls.test:
-            if not cls.custom:
-                ttk.Label(cls.leftFrame, text= "Teatro Escuela Carlos Mayolo", font = "Calibri 24").pack()
-                ttk.Label(cls.leftFrame, text='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin maximus volutpat tortor sit amet congue. Fusce pretium quam quam, eget blandit eros eleifend non.').pack()
-                ttk.Button(cls.rightFrame, text = "Dele a ver que pasa", command = cls.destroy).pack()
-            else:
-                ctk.CTkLabel(cls.leftFrame, text= "Teatro Escuela Carlos Mayolo").pack()
-                ctk.CTkLabel(cls.leftFrame, text='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin maximus volutpat tortor sit amet congue. Fusce pretium quam quam, eget blandit eros eleifend non.').pack()
-                ctk.CTkButton(cls.rightFrame, text = "Dele a ver que pasa", command = cls.destroy).pack()
+            tk.Label(cls.leftFrame, text= "Teatro Escuela Carlos Mayolo", font = "Calibri 24").pack()
+            tk.Label(cls.leftFrame, text='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin maximus volutpat tortor sit amet congue. Fusce pretium quam quam, eget blandit eros eleifend non.').pack()
+            tk.Button(cls.rightFrame, text = "Dele a ver que pasa", command = cls.destroy).pack()
 
     @classmethod
     def update_image(cls, event=None):
@@ -145,14 +140,14 @@ class Main:
         cls.root.mainloop()
 
 
-class FieldFrame(ctk.CTkFrame):
+class FieldFrame(Frame):
 
     bg = "slategray1"
     font = "Calibri 11"
 
     def __init__(self, root: Tk, tituloCriterios: str = "Requerimientos", criterios: list = [], tituloValores: str = "Por favor digite:", valores: list = None, habilitado: list = None):
         #todos los colores en tkinter: https://www.plus2net.com/python/tkinter-colors.php
-        super().__init__(master = root, width = 800, height = 450)#, bg = FieldFrame.bg) #16:9
+        super().__init__(master = root, width = 800, height = 450, bg = FieldFrame.bg) #16:9
         self.root = root
         self.tituloCriterios = tituloCriterios
         self.criterios = criterios
@@ -160,18 +155,18 @@ class FieldFrame(ctk.CTkFrame):
         self.valores = valores if valores is not None else []
         self.habilitado = habilitado
 
-        tituloCriteriosWidget = ctk.CTkLabel(self, text = self.tituloCriterios)#, bg = FieldFrame.bg)
-        tituloValoresWidget = ctk.CTkLabel(self, text = self.tituloValores)#, bg = FieldFrame.bg)
+        tituloCriteriosWidget = tk.Label(self, text = self.tituloCriterios, bg = FieldFrame.bg)
+        tituloValoresWidget = tk.Label(self, text = self.tituloValores, bg = FieldFrame.bg)
 
         tituloCriteriosWidget.configure(font = (FieldFrame.font, 11, "bold"))
         tituloValoresWidget.configure(font = (FieldFrame.font, 11, "bold"))
 
-        self.labels = [tituloCriteriosWidget] + [ ctk.CTkLabel(self, text = label, font = (FieldFrame.font, 11)) for label in self.criterios]
+        self.labels = [tituloCriteriosWidget] + [ tk.Label(self, text = label, font = (FieldFrame.font, 11), bg = FieldFrame.bg) for label in self.criterios]
 
         for i, label in enumerate(self.labels):
             label.grid(row = i, column = 0, padx= 3, pady= 5)
         
-        self.values = [tituloValoresWidget] + [ctk.CTkEntry(self, placeholder_text= value) for value in self.valores]
+        self.values = [tituloValoresWidget] + [tk.Entry(self, text= value) for value in self.valores]
 
         habilitadoExists = habilitado is not None
 
@@ -184,10 +179,10 @@ class FieldFrame(ctk.CTkFrame):
                     value.configure(state= status)
             value.grid(row = i, column = 1, padx= 50, pady= 10)
 
-        aceptar = ctk.CTkButton(self, text = "Aceptar", command = self.gatherEntries)
+        aceptar = tk.Button(self, text = "Aceptar", command = self.gatherEntries)
         aceptar.grid(row = len(self.valores) + 1, column = 0, sticky= "w")
 
-        borrar = ctk.CTkButton(self, text = "Borrar", command = self.deleteEntries)
+        borrar = tk.Button(self, text = "Borrar", command = self.deleteEntries)
         borrar.grid(row = len(self.valores) + 1, column = 1,  sticky= "e")
 
         if Main.fieldTest:
