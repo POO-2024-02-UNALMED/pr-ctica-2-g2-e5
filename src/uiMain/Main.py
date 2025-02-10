@@ -34,13 +34,14 @@ class Main:
         cls.root.geometry("960x540") #16:9
         cls.root.title("Teatro Escuela Carlos Mayolo")
 
-        cls.rightFrame = Frame(cls.root, borderwidth= 10, bg = Main.bg, width = 800, height = 900)
+        cls.mainFrame = Frame(cls.root, bg = Main.bg, width = 960, height=540)
+        cls.mainFrame.place(relx = 0, rely = 0, relwidth = 1, relheight = 1)
+
+        cls.rightFrame = Frame(cls.mainFrame, borderwidth= 10, bg = Main.bg, width = 800, height = 900)
         cls.rightFrame.place(relx = 0.5, rely = 0, relwidth = 0.5, relheight = 1)
 
-        
-
         # FRAME IZQUIERDO (50% de la pantalla)
-        cls.leftFrame = Frame(cls.root, borderwidth=2, bg= Main.bg)
+        cls.leftFrame = Frame(cls.mainFrame, borderwidth=2, bg= Main.bg)
         cls.leftFrame.place(relx=0, rely=0, relwidth=0.5, relheight=1)
 
         # DIVIDIR EN 2 SECCIONES: SUPERIOR E INFERIOR
