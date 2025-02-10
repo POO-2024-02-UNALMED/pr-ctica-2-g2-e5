@@ -83,7 +83,7 @@ class Main:
         cls.topFrame.grid_columnconfigure(0, weight=1)
 
         # Crear el Label
-        cls.titleLabel = ttk.Label(
+        cls.titleLabel = tk.Label(
             cls.topFrame, 
             text="Bienvenido al Teatro Escuela Carlos Mayolo",
             font=("Calibri", 18),  # Tamaño inicial
@@ -98,8 +98,8 @@ class Main:
             newWindow.title("Iniciar")
             newWindow.geometry("960x540")
 
-            ttk.Label(newWindow, text="Bienvenido al Teatro Escuela Carlos Mayolo", font=("Calibri", 18)).pack(pady=20)
-            ttk.Button(newWindow, text="Cerrar", command=newWindow.destroy).pack(pady=20)
+            tk.Label(newWindow, text="Bienvenido al Teatro Escuela Carlos Mayolo", font=("Calibri", 18)).pack(pady=20)
+            tk.Button(newWindow, text="Cerrar", command=newWindow.destroy).pack(pady=20)
         
         # Vinculacion de eventos
         cls.root.bind("<Configure>", update_font)
