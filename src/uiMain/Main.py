@@ -7,7 +7,7 @@ class Main:
     root = None
     test = True
     fieldTest = True
-    custom = True
+    custom = False
 
     imagenes = [
 
@@ -19,6 +19,7 @@ class Main:
     ]
 
     indice_imagen = 0 
+    img_actual_tamano = (0, 0)
 
     @classmethod
     def destroy(cls):
@@ -55,16 +56,16 @@ class Main:
         cls.label.pack(fill="both", expand=True)  # Se expande para ocupar el frame
         
 
-        # Esperar a que `bottomFrame` tenga tamaño antes de cargar la imagen
-        cls.root.after(100, cls.update_image)
 
         # Esperar a que `bottomFrame` tenga tamaño antes de cargar la imagen
         cls.root.after(100, cls.update_image)  
 
         # Si el frame cambia de tamaño, actualizar la imagen
-        cls.bottomFrame.bind("<Configure>", cls.update_image)
 
         cls.bottomFrame.bind("<Enter>", cls.cambiar_imagen)
+        cls.bottomFrame.bind("<Configure>", cls.update_image)
+
+        
 
         if cls.test:
             if not cls.custom:
@@ -109,7 +110,7 @@ class Main:
 
             # Actualizar la imagen en el Label
             cls.label.config(image=cls.img_tk)
-            cls.label.place(x=(frame_width - new_width) // 2, y=(frame_height - new_height) // 2)  # Centrar imagen
+
 
         except Exception as e:
             print("Error al cargar la imagen:", e)
