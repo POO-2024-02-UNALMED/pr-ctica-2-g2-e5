@@ -34,6 +34,8 @@ class Main:
         Main.rightFrame = Frame(cls.root, borderwidth= 10, bg = "green", width = 800, height = 900)
         Main.rightFrame.place(relx = 0.5, rely = 0, relwidth = 0.5, relheight = 1)
 
+        
+
         # FRAME IZQUIERDO (50% de la pantalla)
         cls.leftFrame = Frame(cls.root, borderwidth=2, bg="blue")
         cls.leftFrame.place(relx=0, rely=0, relwidth=0.5, relheight=1)
@@ -48,6 +50,10 @@ class Main:
         # 🔹 Crear Label para la imagen
         cls.label = tk.Label(cls.bottomFrame, bg="black")
         cls.label.pack(fill="both", expand=True)  # Se expande para ocupar el frame
+        
+
+        # Esperar a que `bottomFrame` tenga tamaño antes de cargar la imagen
+        cls.root.after(100, cls.update_image)
 
         # Esperar a que `bottomFrame` tenga tamaño antes de cargar la imagen
         cls.root.after(100, cls.update_image)  
@@ -90,6 +96,8 @@ class Main:
             new_width = int(img_width * ratio)
             new_height = int(img_height * ratio)
 
+            cls.img_actual_tamano = (new_width, new_height)
+
             # Redimensionar la imagen manteniendo la relación de aspecto
             img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
@@ -103,7 +111,25 @@ class Main:
         except Exception as e:
             print("Error al cargar la imagen:", e)
             cls.label.config(text="No se pudo cargar la imagen", fg="white", bg="black")
-    
+    @classmethod
+    def detectar_mouse(cls, event):
+        """Verifica si el mouse está sobre la imagen real o en el fondo negro."""
+        label_width = cls.label.winfo_width()
+        label_height = cls.label.winfo_height()
+        img_width, img_height = cls.img_actual_tamano
+
+        # Calcular márgenes vacíos
+        margen_x = (label_width - img_width) // 2
+        margen_y = (label_height - img_height) // 2
+
+        # Si el mouse está en los márgenes, no cambiar la imagen
+        if event.x < margen_x or event.x > (margen_x + img_width):
+            return
+        if event.y < margen_y or event.y > (margen_y + img_height):
+            return
+
+        # Si el mouse está sobre la imagen real, cambiar la imagen
+        cls.cambiar_imagen()
     @classmethod
     def cambiar_imagen(cls, event=None):
         """Cambia la imagen al siguiente índice al pasar el mouse."""
