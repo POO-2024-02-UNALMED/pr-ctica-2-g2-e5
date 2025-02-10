@@ -105,15 +105,12 @@ class Main:
     @classmethod
     def abrir_ventana_funcionalidades(cls):
         cls.clear_frame()
-        cls.navBar = tk.Frame(cls.main_frame, bg="lightsteelblue3")
-        cls.navBar.pack(side="left", fill="y")
+        cls.navBar = tk.Frame(cls.main_frame, bg="red")
+        cls.navBar.place(relx=0, rely=0, relwidth=0.2, relheight=1)
 
         cls.content = tk.Frame(cls.main_frame, bg="black")
-        cls.content.pack(side="right", fill="both", expand=True)
-
+        cls.content.place(relx=0.2, rely=0, relwidth=0.8, relheight=1)
             
-        tk.Label(cls.main_frame, text="Bienvenido al Teatro Escuela Carlos Mayolo", font=("Calibri", 18)).pack(pady=20)
-        tk.Button(cls.main_frame, text="Cerrar", command=cls.main_frame.destroy).pack(pady=20)
 
 
     @classmethod
