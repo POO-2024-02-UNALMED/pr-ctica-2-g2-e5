@@ -4,7 +4,7 @@ from PIL import Image, ImageTk
 
 class Main:
     root = None
-    test = True
+    test = False
     fieldTest = True
     custom = False
     bg = "lightsteelblue3"
@@ -23,25 +23,33 @@ class Main:
     img_actual_tamano = (0, 0)
 
     @classmethod
-    def clearFrame(cls):
-        for widget in cls.mainFrame.winfo_children():
+    def clear_frame(cls):
+        for widget in cls.main_frame.winfo_children():
             widget.destroy()
 
     #Esta función se encargará de inicializar todo lo referente a la ventana raíz
     @classmethod
     def initRoot(cls):
         cls.root = Tk() 
+        ico = Image.open("src/media/icon.jpg")
+        logo = ImageTk.PhotoImage(ico)
+        cls.root.wm_iconphoto(False, logo)
         cls.root.geometry("960x540") #16:9
         cls.root.title("Teatro Escuela Carlos Mayolo")
 
-        cls.mainFrame = Frame(cls.root, bg = Main.bg, width = 960, height=540)
-        cls.mainFrame.place(relx = 0, rely = 0, relwidth = 1, relheight = 1)
+        cls.main_frame = Frame(cls.root)
+        cls.main_frame.pack(fill="both", expand=True)
 
-        cls.rightFrame = Frame(cls.mainFrame, borderwidth= 10, bg = Main.bg, width = 800, height = 900)
-        cls.rightFrame.place(relx = 0.5, rely = 0, relwidth = 0.5, relheight = 1)
+        cls.window_main() 
+
+    @classmethod
+    def window_main(cls):
+        cls.clear_frame()
+        Main.rightFrame = Frame(cls.main_frame, borderwidth= 10, bg = Main.bg, width = 800, height = 900)
+        Main.rightFrame.place(relx = 0.5, rely = 0, relwidth = 0.5, relheight = 1)
 
         # FRAME IZQUIERDO (50% de la pantalla)
-        cls.leftFrame = Frame(cls.mainFrame, borderwidth=2, bg= Main.bg)
+        cls.leftFrame = Frame(cls.main_frame, borderwidth=2, bg= Main.bg)
         cls.leftFrame.place(relx=0, rely=0, relwidth=0.5, relheight=1)
 
         # DIVIDIR EN 2 SECCIONES: SUPERIOR E INFERIOR
@@ -69,7 +77,6 @@ class Main:
         cls.bottomFrame.bind("<Enter>", cls.cambiar_imagen)
 
         #Frame izquierdo Superior
-
         def update_font(event):
         # Ajustar el tamaño de la fuente según el ancho de la ventana
             new_size = max(20, event.width // 30)  # Ajusta el divisor según el crecimiento deseado
@@ -90,23 +97,24 @@ class Main:
             wraplength=800
         )
         cls.titleLabel.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
-
-        def abrir_ventana_funcionalidades():
-            newWindow = tk.Toplevel(cls.root)
-            newWindow.title("Iniciar")
-            newWindow.geometry("960x540")
-
-            tk.Label(newWindow, text="Bienvenido al Teatro Escuela Carlos Mayolo", font=("Calibri", 18)).pack(pady=20)
-            tk.Button(newWindow, text="Cerrar", command=newWindow.destroy).pack(pady=20)
-        
+    
         # Vinculacion de eventos
+        cls.titleLabel.bind("<Button-1>", lambda e: cls.abrir_ventana_funcionalidades())
         cls.root.bind("<Configure>", update_font)
-        cls.titleLabel.bind("<Button-1>", lambda e: abrir_ventana_funcionalidades())
 
-        if cls.test:
-            tk.Label(cls.leftFrame, text= "Teatro Escuela Carlos Mayolo", font = "Calibri 24").pack()
-            tk.Label(cls.leftFrame, text='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin maximus volutpat tortor sit amet congue. Fusce pretium quam quam, eget blandit eros eleifend non.').pack()
-            tk.Button(cls.rightFrame, text = "Dele a ver que pasa", command = cls.clearFrame).pack()
+    @classmethod
+    def abrir_ventana_funcionalidades(cls):
+        cls.clear_frame()
+        cls.navBar = tk.Frame(cls.main_frame, bg="lightsteelblue3")
+        cls.navBar.pack(side="left", fill="y")
+
+        cls.content = tk.Frame(cls.main_frame, bg="black")
+        cls.content.pack(side="right", fill="both", expand=True)
+
+            
+        tk.Label(cls.main_frame, text="Bienvenido al Teatro Escuela Carlos Mayolo", font=("Calibri", 18)).pack(pady=20)
+        tk.Button(cls.main_frame, text="Cerrar", command=cls.main_frame.destroy).pack(pady=20)
+
 
     @classmethod
     def update_image(cls, event=None):
