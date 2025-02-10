@@ -13,16 +13,16 @@ class Main:
     # --- NUEVAS VARIABLES PARA PROGRAMADORES ---
     current_programador_index = -1
     programadores = [
-        ("Programador 1:\nNombre: Perro1\nId:1",
-         ["src/media/perro.png", "src/media/perro.png", "src/media/perro.png", "src/media/perro.png"]),
-        ("Programador 2:\nNombre: Perro2\nId:2",
-         ["src/media/perro2.png", "src/media/perro2.png", "src/media/perro2.png", "src/media/perro2.png"]),
-        ("Programador 3:\nNombre: Perro3\nId:3",
-         ["src/media/perro3.png", "src/media/perro3.png", "src/media/perro3.png", "src/media/perro3.png"]),
-        ("Programador 4:\nNombre: Juan Pablo\nId:4",
-         ["src/media/Pablo.png", "src/media/Pablo.png", "src/media/Pablo.png", "src/media/Pablo.png"]),
-        ("Programador 5:\nNombre: Velez\nId:5",
-         ["src/media/Velez.png", "src/media/Velez.png", "src/media/Velez.png", "src/media/Velez.png"])
+        ("Programador 1:\nNombre: Francisco Jose Ceren Porto\n Edad: 17 \nID: 1023631713",
+         ["src/media/Programadores/perro.png", "src/media/Programadores/perro.png", "src/media/Programadores/perro.png", "src/media/Programadores/perro.png"]),
+        ("Programador 2:\nNombre: Danna Valeria Perez Niño\n Edad: 17 \nID: 1052839541",
+         ["src/media/Programadores/perro2.png", "src/media/Programadores/perro2.png", "src/media/Programadores/perro2.png", "src/media/Programadores/perro2.png"]),
+        ("Programador 3:\nNombre: Oscar David Arango Garcia\n Edad: 17 \nID: 1011591946",
+         ["src/media/Programadores/perro3.png", "src/media/Programadores/perro3.png", "src/media/Programadores/perro3.png", "src/media/Programadores/perro3.png"]),
+        ("Programador 4:\nNombre: Juan Pablo Miras Cañas\n Edad: 18 \nID: 4",
+         ["src/media/Programadores/Pablo.png", "src/media/Programadores/Pablo.png", "src/media/Programadores/Pablo.png", "src/media/Programadores/Pablo.png"]),
+        ("Programador 5:\nNombre: Miguel Velez Bernal\n Edad: 18 \nID: 1023524572",
+         ["src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png"])
     ]
 
     imagenes = [
@@ -367,8 +367,8 @@ if __name__ == "__main__":
     valores = ["John Doe", "25", "john@example.com", "293090237hjkhjk2j", "Rhodesia", "892962"]
 
     #Main.runApp()
-    #Main.initRoot()
+    Main.initRoot()
     #window = FieldFrame(Main.rightFrame, criterios= criterios, valores= valores, habilitado= ["Age", "Country"])
     #print(window.getValue("Age")) #25
-    #Main.root.mainloop()
-    Main.runApp()
+    Main.root.mainloop()
+    #Main.runApp()
