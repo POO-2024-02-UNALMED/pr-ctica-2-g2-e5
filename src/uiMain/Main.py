@@ -100,7 +100,7 @@ class Main:
     
         # Vinculacion de eventos
         cls.titleLabel.bind("<Button-1>", lambda e: cls.abrir_ventana_funcionalidades())
-        cls.root.bind("<Configure>", update_font)
+        cls.topFrame.bind("<Configure>", update_font)
 
     @classmethod
     def abrir_ventana_funcionalidades(cls):
@@ -110,7 +110,9 @@ class Main:
 
         cls.content = tk.Frame(cls.main_frame, bg="black")
         cls.content.place(relx=0.2, rely=0, relwidth=0.8, relheight=1)
-            
+
+        tk.Label(cls.content, text="Bienvenido al Teatro Escuela Carlos Mayolo", font=("Calibri", 18)).pack(pady=20)
+        tk.Button(cls.content, text="Cerrar", command=cls.window_main).pack(pady=20)
 
 
     @classmethod
