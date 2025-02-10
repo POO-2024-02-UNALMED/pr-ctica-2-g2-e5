@@ -28,6 +28,9 @@ class Main:
     @classmethod
     def initRoot(cls):
         cls.root = Tk() if not Main.custom else ctk.CTk()
+        ico = Image.open("src/media/foto1.jpg")
+        logo = ImageTk.PhotoImage(ico)
+        cls.root.wm_iconphoto(False, logo)
         cls.root.geometry("960x540") #16:9
         cls.root.title("Teatro Escuela Carlos Mayolo")
 
