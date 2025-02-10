@@ -4,8 +4,7 @@ from PIL import Image, ImageTk
 
 class Main:
     root = None
-    test = False
-    test = False
+    test = True
     fieldTest = True
     custom = False
     bg = "lightsteelblue3"
@@ -24,8 +23,9 @@ class Main:
     img_actual_tamano = (0, 0)
 
     @classmethod
-    def destroy(cls):
-        cls.root.destroy()
+    def clearFrame(cls):
+        for widget in cls.mainFrame.winfo_children():
+            widget.destroy()
 
     #Esta función se encargará de inicializar todo lo referente a la ventana raíz
     @classmethod
@@ -106,7 +106,7 @@ class Main:
         if cls.test:
             tk.Label(cls.leftFrame, text= "Teatro Escuela Carlos Mayolo", font = "Calibri 24").pack()
             tk.Label(cls.leftFrame, text='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin maximus volutpat tortor sit amet congue. Fusce pretium quam quam, eget blandit eros eleifend non.').pack()
-            tk.Button(cls.rightFrame, text = "Dele a ver que pasa", command = cls.destroy).pack()
+            tk.Button(cls.rightFrame, text = "Dele a ver que pasa", command = cls.clearFrame).pack()
 
     @classmethod
     def update_image(cls, event=None):
