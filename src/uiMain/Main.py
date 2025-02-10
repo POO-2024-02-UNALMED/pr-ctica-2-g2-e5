@@ -44,6 +44,14 @@ class Main:
 
     @classmethod
     def window_main(cls):
+
+        menuBar = tk.Menu(cls.root)
+        cls.root.config(menu=menuBar)
+        menuInicio = tk.Menu(menuBar, tearoff=False)
+        menuBar.add_cascade(menu=menuInicio, label="Inicio")
+    
+        menuInicio.add_command( label="Salir")
+        menuInicio.add_command( label="Descripcion",  command = lambda: cls.titleLabel.config(text = "Lorem ipsum")) 
         cls.clear_frame()
         Main.rightFrame = Frame(cls.main_frame, borderwidth= 10, bg = Main.bg, width = 800, height = 900)
         Main.rightFrame.place(relx = 0.5, rely = 0, relwidth = 0.5, relheight = 1)
