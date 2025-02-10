@@ -107,12 +107,29 @@ class Main:
         cls.clear_frame()
         cls.navBar = tk.Frame(cls.main_frame, bg="red")
         cls.navBar.place(relx=0, rely=0, relwidth=0.2, relheight=1)
+        #Opciones navbar
+        cls.inicio = tk.Button(cls.navBar, text="Inicio", command=cls.window_main)
+        cls.inicio.place(relx=0, rely=0, relwidth=1, relheight=0.1)
+        cls.procesos = tk.Button(cls.navBar, text="Procesos", command=cls.mostrar_procesos)
+        cls.procesos.place(relx=0, rely=0.1, relwidth=1, relheight=0.1)
+
 
         cls.content = tk.Frame(cls.main_frame, bg="black")
         cls.content.place(relx=0.2, rely=0, relwidth=0.8, relheight=1)
+        cls.Label = tk.Label(cls.content, text="Bienvenido al Teatro Escuela Carlos Mayolo", font=("Calibri", 30), wraplength=500)
+        cls.Label.place(relx=0.5, rely=0.5, anchor="center")
+    
+    @classmethod
+    def mostrar_procesos(cls):
+        for widget in cls.content.winfo_children():
+            widget.destroy()
 
-        tk.Label(cls.content, text="Bienvenido al Teatro Escuela Carlos Mayolo", font=("Calibri", 18)).pack(pady=20)
-        tk.Button(cls.content, text="Cerrar", command=cls.window_main).pack(pady=20)
+        # Nuevo contenido en content
+        tk.Label(cls.content, text="Sección de Procesos", font=("Calibri", 25), fg="white", bg="black").place(relx=0.5, rely=0.3, anchor="center")
+
+        tk.Button(cls.content, text="Opción 1", font=("Calibri", 15)).place(relx=0.5, rely=0.5, anchor="center")
+        tk.Button(cls.content, text="Opción 2", font=("Calibri", 15)).place(relx=0.5, rely=0.6, anchor="center")
+
 
 
     @classmethod
