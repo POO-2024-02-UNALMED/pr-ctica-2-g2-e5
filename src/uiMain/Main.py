@@ -10,6 +10,21 @@ class Main:
     bg = "lightsteelblue3"
     custom = False
 
+    # --- NUEVAS VARIABLES PARA PROGRAMADORES ---
+    current_programador_index = -1
+    programadores = [
+        ("Programador 1:\nNombre: Perro1\nId:1",
+         ["src/media/perro.png", "src/media/perro.png", "src/media/perro.png", "src/media/perro.png"]),
+        ("Programador 2:\nNombre: Perro2\nId:2",
+         ["src/media/perro.png", "src/media/perro.png", "src/media/perro.png", "src/media/perro.png"]),
+        ("Programador 3:\nNombre: Perro3\nId:3",
+         ["src/media/perro.png", "src/media/perro.png", "src/media/perro.png", "src/media/perro.png"]),
+        ("Programador 4:\nNombre: Perro4\nId:4",
+         ["src/media/perro.png", "src/media/perro.png", "src/media/perro.png", "src/media/perro.png"]),
+        ("Programador 5:\nNombre: Perro5\nId:5",
+         ["src/media/perro.png", "src/media/perro.png", "src/media/perro.png", "src/media/perro.png"])
+    ]
+
     imagenes = [
 
         "src/media/foto1.jpg",
@@ -53,6 +68,8 @@ class Main:
         menuInicio.add_command( label="Salir")
         menuInicio.add_command( label="Descripcion",  command = lambda: cls.titleLabel.config(text = "Lorem ipsum")) 
         cls.clear_frame()
+
+        # CREACIÓN DEL RIGHT FRAME (usado para programadores)
         Main.rightFrame = Frame(cls.main_frame, borderwidth= 10, bg = Main.bg, width = 800, height = 900)
         Main.rightFrame.place(relx = 0.5, rely = 0, relwidth = 0.5, relheight = 1)
 
@@ -60,7 +77,7 @@ class Main:
         cls.leftFrame = Frame(cls.main_frame, borderwidth=2, bg= Main.bg)
         cls.leftFrame.place(relx=0, rely=0, relwidth=0.5, relheight=1)
 
-        # DIVIDIR EN 2 SECCIONES: SUPERIOR E INFERIOR
+        # DIVIDIR EN 2 SECCIONES(FRAME IZQUIERDO): SUPERIOR E INFERIOR
         cls.topFrame = Frame(cls.leftFrame, bg="red")
         cls.topFrame.place(relx=0, rely=0, relwidth=1, relheight=0.5)
 
@@ -109,6 +126,68 @@ class Main:
         # Vinculacion de eventos
         cls.titleLabel.bind("<Button-1>", lambda e: cls.abrir_ventana_funcionalidades())
         cls.topFrame.bind("<Configure>", update_font)
+
+        #En este método está todo lo relacionado a la sección de programadores
+        cls.init_programador_functionality()
+
+    @classmethod
+    def init_programador_functionality(cls):
+        """
+        Inicializa la sección de programadores en el RightFrame.
+        Se crean dos subframes:
+          - programadorFrameTop: contiene un botón que muestra la info del programador.
+          - programadorFrameBottom: muestra en formato 2x2 las imágenes asociadas.
+        """
+        cls.programadorFrameTop = tk.Frame(cls.rightFrame, bg="skyblue")
+        cls.programadorFrameTop.place(relx=0, rely=0, relwidth=1, relheight=0.3)
+        
+        cls.programadorFrameBottom = tk.Frame(cls.rightFrame, bg="lightgreen")
+        cls.programadorFrameBottom.place(relx=0, rely=0.3, relwidth=1, relheight=0.7)
+        
+        cls.btn_info = tk.Button(cls.programadorFrameTop, text="Programadores", command=cls.update_programador)
+        cls.btn_info.pack(expand=True, fill="both")
+
+    @classmethod
+    def update_programador(cls):
+        """
+        Actualiza la información y las imágenes del programador mostrado.
+        Cada vez que se pulsa el botón, se avanza de forma cíclica por la lista de programadores.
+        """
+        # Actualizar índice y obtener datos del siguiente programador
+        cls.current_programador_index = (cls.current_programador_index + 1) % len(cls.programadores)
+        info, image_paths = cls.programadores[cls.current_programador_index]
+        cls.btn_info.config(text=info)
+        
+        # Limpiar el contenido previo del frame inferior
+        for widget in cls.programadorFrameBottom.winfo_children():
+            widget.destroy()
+        
+        # Lista para mantener referencias a las imágenes y evitar que sean recolectadas
+        cls.programadorFrameBottom.image_refs = []
+        
+        # Configurar la cuadrícula: 2 filas y 2 columnas
+        for i in range(2):
+            cls.programadorFrameBottom.rowconfigure(i, weight=1)
+            cls.programadorFrameBottom.columnconfigure(i, weight=1)
+        
+        cls.programadorFrameBottom.update_idletasks()
+        frame_width = cls.programadorFrameBottom.winfo_width()
+        frame_height = cls.programadorFrameBottom.winfo_height()
+        cell_width = frame_width // 2
+        cell_height = frame_height // 2
+        
+        # Cargar, redimensionar y colocar las 4 imágenes en la cuadrícula
+        for idx, img_path in enumerate(image_paths):
+            try:
+                pil_image = Image.open(img_path)
+                pil_image = pil_image.resize((cell_width, cell_height), Image.Resampling.LANCZOS)
+                img = ImageTk.PhotoImage(pil_image)
+            except Exception as e:
+                print(f"Error al cargar la imagen {img_path}: {e}")
+                img = tk.PhotoImage(width=cell_width, height=cell_height)
+            cls.programadorFrameBottom.image_refs.append(img)
+            label = tk.Label(cls.programadorFrameBottom, image=img, bg="white")
+            label.grid(row=idx // 2, column=idx % 2, sticky="nsew", padx=5, pady=5)
 
     @classmethod
     def abrir_ventana_funcionalidades(cls):
