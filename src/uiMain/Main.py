@@ -31,14 +31,11 @@ class Main:
     @classmethod
     def initRoot(cls):
         cls.root = Tk() 
-        ico = Image.open("src/media/icon.jpg")
-        logo = ImageTk.PhotoImage(ico)
-        cls.root.wm_iconphoto(False, logo)
         cls.root.geometry("960x540") #16:9
         cls.root.title("Teatro Escuela Carlos Mayolo")
 
-        Main.rightFrame = Frame(cls.root, borderwidth= 10, bg = Main.bg, width = 800, height = 900)
-        Main.rightFrame.place(relx = 0.5, rely = 0, relwidth = 0.5, relheight = 1)
+        cls.rightFrame = Frame(cls.root, borderwidth= 10, bg = Main.bg, width = 800, height = 900)
+        cls.rightFrame.place(relx = 0.5, rely = 0, relwidth = 0.5, relheight = 1)
 
         
 
@@ -172,9 +169,13 @@ class Main:
         """Cambia la imagen al siguiente índice al pasar el mouse."""
         cls.indice_imagen = (cls.indice_imagen + 1) % len(cls.imagenes)  # Bucle infinito de imágenes
         cls.update_image()  # Llamar a `update_image()` para actualizar la imagen
+    
     @classmethod
     def runApp(cls):
         cls.initRoot()
+        ico = Image.open("src/media/icon.jpg")
+        logo = ImageTk.PhotoImage(ico)
+        cls.root.wm_iconphoto(False, logo)
         cls.root.mainloop()
 
 
@@ -255,7 +256,8 @@ if __name__ == "__main__":
     valores = ["John Doe", "25", "john@example.com", "293090237hjkhjk2j", "Rhodesia", "892962"]
 
     #Main.runApp()
-    Main.initRoot()
-    window = FieldFrame(Main.rightFrame, criterios= criterios, valores= valores, habilitado= ["Age", "Country"])
-    print(window.getValue("Age")) #25
-    window.mainloop()
+    #Main.initRoot()
+    #window = FieldFrame(Main.rightFrame, criterios= criterios, valores= valores, habilitado= ["Age", "Country"])
+    #print(window.getValue("Age")) #25
+    #Main.root.mainloop()
+    Main.runApp()
