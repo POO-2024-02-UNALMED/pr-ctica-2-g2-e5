@@ -16,17 +16,16 @@ class Main:
         ("Programador 1:\nNombre: Perro1\nId:1",
          ["src/media/perro.png", "src/media/perro.png", "src/media/perro.png", "src/media/perro.png"]),
         ("Programador 2:\nNombre: Perro2\nId:2",
-         ["src/media/perro.png", "src/media/perro.png", "src/media/perro.png", "src/media/perro.png"]),
+         ["src/media/perro2.png", "src/media/perro2.png", "src/media/perro2.png", "src/media/perro2.png"]),
         ("Programador 3:\nNombre: Perro3\nId:3",
-         ["src/media/perro.png", "src/media/perro.png", "src/media/perro.png", "src/media/perro.png"]),
-        ("Programador 4:\nNombre: Perro4\nId:4",
-         ["src/media/perro.png", "src/media/perro.png", "src/media/perro.png", "src/media/perro.png"]),
-        ("Programador 5:\nNombre: Perro5\nId:5",
-         ["src/media/perro.png", "src/media/perro.png", "src/media/perro.png", "src/media/perro.png"])
+         ["src/media/perro3.png", "src/media/perro3.png", "src/media/perro3.png", "src/media/perro3.png"]),
+        ("Programador 4:\nNombre: Juan Pablo\nId:4",
+         ["src/media/Pablo.png", "src/media/Pablo.png", "src/media/Pablo.png", "src/media/Pablo.png"]),
+        ("Programador 5:\nNombre: Velez\nId:5",
+         ["src/media/Velez.png", "src/media/Velez.png", "src/media/Velez.png", "src/media/Velez.png"])
     ]
 
     imagenes = [
-
         "src/media/foto1.jpg",
         "src/media/foto2.jpg",
         "src/media/foto3.png",
@@ -130,14 +129,14 @@ class Main:
         #En este método está todo lo relacionado a la sección de programadores
         cls.init_programador_functionality()
 
+    """
+    Inicializa la sección de programadores en el RightFrame.
+    Se crean dos subframes:
+        - programadorFrameTop: contiene un botón que muestra la info del programador.
+        - programadorFrameBottom: muestra en formato 2x2 las imágenes asociadas.
+    """
     @classmethod
     def init_programador_functionality(cls):
-        """
-        Inicializa la sección de programadores en el RightFrame.
-        Se crean dos subframes:
-          - programadorFrameTop: contiene un botón que muestra la info del programador.
-          - programadorFrameBottom: muestra en formato 2x2 las imágenes asociadas.
-        """
         cls.programadorFrameTop = tk.Frame(cls.rightFrame, bg="skyblue")
         cls.programadorFrameTop.place(relx=0, rely=0, relwidth=1, relheight=0.3)
         
@@ -147,12 +146,12 @@ class Main:
         cls.btn_info = tk.Button(cls.programadorFrameTop, text="Programadores", command=cls.update_programador)
         cls.btn_info.pack(expand=True, fill="both")
 
+
+    """
+    Actualiza la información y las imágenes del programador mostrado.
+    """
     @classmethod
     def update_programador(cls):
-        """
-        Actualiza la información y las imágenes del programador mostrado.
-        Cada vez que se pulsa el botón, se avanza de forma cíclica por la lista de programadores.
-        """
         # Actualizar índice y obtener datos del siguiente programador
         cls.current_programador_index = (cls.current_programador_index + 1) % len(cls.programadores)
         info, image_paths = cls.programadores[cls.current_programador_index]
