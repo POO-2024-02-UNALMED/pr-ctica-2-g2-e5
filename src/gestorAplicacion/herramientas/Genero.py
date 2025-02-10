@@ -1,23 +1,25 @@
 from enum import Enum
 
 class Genero(Enum):
-    """      DRAMA, COMEDIA, MUSICAL, FANTASIA, TERROR, ROMANCE, CIRCO, EXPERIMENTAL;
+    DRAMA = object()
+    COMEDIA = object()
+    MUSICAL = object()
+    FANTASIA = object() 
+    TERROR = object() 
+    ROMANCE = object() 
+    CIRCO = object() 
+    EXPERIMENTAL = object()
 
-        private ArrayList<Director> directores = new ArrayList<>();
+    def __init__(self, directores):
+        directores = self.getDirectores()
         
-        public ArrayList<Director> getDirectores() {
-            ArrayList<Director> dirgenero = new ArrayList<>();
-            for (Director director : Teatro.getInstancia().getDirectors()){
-                if (director.getGenero() == this){
-                    dirgenero.add(director);
-                }
-            }
-            return dirgenero;
-        }
-        public void setDirectores(ArrayList<Director> directores) {
-            this.directores = directores;
-        }
-        public void anadirDirector(Director director){
-            this.directores.add(director);
-        }
-    } """
+    def getDirectores(self):
+        from baseDatos import Teatro
+        dirgenero = []
+        for director in Teatro.getInstancia().getDirectors():
+            if director.genero == self:
+                dirgenero.append(director)
+            return dirgenero
+
+    def anadirDirector(self, director):
+        self.directores.append(director)
