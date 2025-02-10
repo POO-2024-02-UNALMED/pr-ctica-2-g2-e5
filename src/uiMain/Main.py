@@ -5,9 +5,9 @@ import customtkinter as ctk
 
 class Main:
     root = None
-    test = True
+    test = False
     fieldTest = True
-    custom = True
+    custom = False
 
     imagenes = [
 
@@ -65,6 +65,41 @@ class Main:
         cls.bottomFrame.bind("<Configure>", cls.update_image)
 
         cls.bottomFrame.bind("<Enter>", cls.cambiar_imagen)
+
+        #Frame izquierdo Superior
+
+        def update_font(event):
+        # Ajustar el tamaño de la fuente según el ancho de la ventana
+            new_size = max(20, event.width // 30)  # Ajusta el divisor según el crecimiento deseado
+            new_font = ("Calibri", new_size)
+    
+            cls.titleLabel.config(font=new_font, wraplength=cls.topFrame.winfo_width() * 0.9)
+        cls.topFrame.grid_rowconfigure(0, weight=3)  # Parte superior (50%)
+        cls.topFrame.grid_rowconfigure(1, weight=5)  # Parte inferior (50%)
+        cls.topFrame.grid_columnconfigure(0, weight=1)
+
+        # Crear el Label
+        cls.titleLabel = ttk.Label(
+            cls.topFrame, 
+            text="Bienvenido al Teatro Escuela Carlos Mayolo",
+            font=("Calibri", 18),  # Tamaño inicial
+            justify="center",
+            anchor="center",
+            wraplength=800
+        )
+        cls.titleLabel.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+
+        def abrir_ventana_funcionalidades():
+            newWindow = tk.Toplevel(cls.root)
+            newWindow.title("Iniciar")
+            newWindow.geometry("960x540")
+
+            ttk.Label(newWindow, text="Bienvenido al Teatro Escuela Carlos Mayolo", font=("Calibri", 18)).pack(pady=20)
+            ttk.Button(newWindow, text="Cerrar", command=newWindow.destroy).pack(pady=20)
+        
+        # Vinculacion de eventos
+        cls.root.bind("<Configure>", update_font)
+        cls.titleLabel.bind("<Button-1>", lambda e: abrir_ventana_funcionalidades())
 
         if cls.test:
             if not cls.custom:
