@@ -191,32 +191,33 @@ class Main:
     @classmethod
     def abrir_ventana_funcionalidades(cls):
         cls.clear_frame()
-        cls.navBar = tk.Frame(cls.main_frame, bg="red")
-        cls.navBar.place(relx=0, rely=0, relwidth=0.2, relheight=1)
-        #Opciones navbar
-        cls.inicio = tk.Button(cls.navBar, text="Inicio", command=cls.window_main)
-        cls.inicio.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-        cls.procesos = tk.Button(cls.navBar, text="Procesos", command=cls.mostrar_procesos)
-        cls.procesos.place(relx=0, rely=0.1, relwidth=1, relheight=0.1)
+        cls.menu_bar = tk.Menu(cls.main_frame)
+        menu_inicio = tk.Menu(cls.menu_bar, tearoff=False)
+        menu_inicio.add_command(label="Inicio",command=cls.window_main)
+        cls.menu_bar.add_cascade(label="Inicio", menu=menu_inicio)
+        menu_archivo = tk.Menu(cls.menu_bar, tearoff=False)
+        menu_archivo.add_command(label="Abrir")
+        cls.menu_bar.add_cascade(label="Archivo", menu=menu_archivo)
+        menu_procesos = tk.Menu(cls.menu_bar, tearoff=0)
+        menu_procesos.add_command(label="Gestion de Ventas", command=cls.gestionVentas)
+        menu_procesos.add_command(label="Gestion de Empleados", command=cls.gestionEmpleados)
+        menu_procesos.add_command(label="Gestion de Obras", command=cls.gestionObras)
+        menu_procesos.add_command(label="Gestion de Clases", command=cls.gestionClases)
+        menu_procesos.add_command(label="Contratar Actores", command=cls.contratarActores)
+        cls.menu_bar.add_cascade(label="Procesos y Consultas", menu=menu_procesos)
+        menu_ayuda = tk.Menu(cls.menu_bar, tearoff=0)
+        menu_ayuda.add_command(label="Acerca de")
+        cls.menu_bar.add_cascade(label="Ayuda", menu=menu_ayuda)
 
+        # Configurar el menú en la ventana principal
+        cls.main_frame.master.config(menu=cls.menu_bar)
 
+        #contenido
         cls.content = tk.Frame(cls.main_frame, bg="black")
-        cls.content.place(relx=0.2, rely=0, relwidth=0.8, relheight=1)
+        cls.content.place(relx=0, rely=0, relwidth=1, relheight=1)
         cls.Label = tk.Label(cls.content, text="Bienvenido al Teatro Escuela Carlos Mayolo", font=("Calibri", 30), wraplength=500)
         cls.Label.place(relx=0.5, rely=0.5, anchor="center")
     
-    @classmethod
-    def mostrar_procesos(cls):
-        for widget in cls.content.winfo_children():
-            widget.destroy()
-
-        # Nuevo contenido en content
-        tk.Label(cls.content, text="Sección de Procesos", font=("Calibri", 25), fg="white", bg="black").place(relx=0.5, rely=0.3, anchor="center")
-
-        tk.Button(cls.content, text="Opción 1", font=("Calibri", 15)).place(relx=0.5, rely=0.5, anchor="center")
-        tk.Button(cls.content, text="Opción 2", font=("Calibri", 15)).place(relx=0.5, rely=0.6, anchor="center")
-
-
 
     @classmethod
     def update_image(cls, event=None):
@@ -289,6 +290,38 @@ class Main:
         cls.root.wm_iconphoto(False, logo)
         cls.root.mainloop()
 
+    @classmethod
+    def gestionVentas(cls):
+        for widget in cls.content.winfo_children():
+            widget.destroy()
+        
+        label = tk.Label(cls.content, text="Eres cliente nuevo?", font=("Calibri", 25), fg="white", bg="black")
+        label.place(relx=0.5, rely=0.3, anchor="center")
+
+        Button_Si = tk.Button(cls.content, text="Si", font=("Calibri", 15))
+        Button_No = tk.Button(cls.content, text="No", font=("Calibri", 15))
+        Button_Si.place(relx=0.5, rely=0.5, anchor="center")
+        Button_No.place(relx=0.5, rely=0.6, anchor="center")
+
+    @classmethod
+    def gestionEmpleados(cls):
+        for widget in cls.content.winfo_children():
+            widget.destroy()
+
+    @classmethod
+    def gestionObras(cls):
+        for widget in cls.content.winfo_children():
+            widget.destroy()
+    
+    @classmethod
+    def contratarActores(cls):
+        for widget in cls.content.winfo_children():
+            widget.destroy()
+
+    @classmethod
+    def gestionClases(cls):
+        for widget in cls.content.winfo_children():
+            widget.destroy()
 
 class FieldFrame(Frame):
 
