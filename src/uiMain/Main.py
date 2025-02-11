@@ -10,6 +10,18 @@ class Main:
     bg = "lightsteelblue3"
     custom = False
 
+    @classmethod
+    def update_font(cls, event, frame, text):
+        """Actualiza el tamaño de la fuente del título al cambiar el tamaño de la ventana."""
+        new_size = max(20, event.width // 30)
+        new_font = ("Calibri", new_size)
+
+        text.config(font=new_font, wraplength=frame.winfo_width()*0.9)
+    
+    @classmethod
+    def resize(cls, frame, text):
+        frame.bind("<Configure>", lambda e: cls.update_font(e, frame, text))
+
     # --- NUEVAS VARIABLES PARA PROGRAMADORES ---
     current_programador_index = -1
     programadores = [
@@ -101,12 +113,6 @@ class Main:
         cls.bottomFrame.bind("<Enter>", cls.cambiar_imagen)
 
         #Frame izquierdo Superior
-        def update_font(event):
-        # Ajustar el tamaño de la fuente según el ancho de la ventana
-            new_size = max(20, event.width // 30)  # Ajusta el divisor según el crecimiento deseado
-            new_font = ("Calibri", new_size)
-    
-            cls.titleLabel.config(font=new_font, wraplength=cls.topFrame.winfo_width() * 0.9)
         cls.topFrame.grid_rowconfigure(0, weight=3)  # Parte superior (50%)
         cls.topFrame.grid_rowconfigure(1, weight=5)  # Parte inferior (50%)
         cls.topFrame.grid_columnconfigure(0, weight=1)
@@ -124,7 +130,7 @@ class Main:
     
         # Vinculacion de eventos
         cls.titleLabel.bind("<Button-1>", lambda e: cls.abrir_ventana_funcionalidades())
-        cls.topFrame.bind("<Configure>", update_font)
+        cls.resize(cls.topFrame, cls.titleLabel)
 
         #En este método está todo lo relacionado a la sección de programadores
         cls.init_programador_functionality()
@@ -192,9 +198,6 @@ class Main:
     def abrir_ventana_funcionalidades(cls):
         cls.clear_frame()
         cls.menu_bar = tk.Menu(cls.main_frame)
-        menu_inicio = tk.Menu(cls.menu_bar, tearoff=False)
-        menu_inicio.add_command(label="Inicio",command=cls.window_main)
-        cls.menu_bar.add_cascade(label="Inicio", menu=menu_inicio)
         menu_archivo = tk.Menu(cls.menu_bar, tearoff=False)
         menu_archivo.add_command(label="Abrir")
         cls.menu_bar.add_cascade(label="Archivo", menu=menu_archivo)
@@ -218,7 +221,7 @@ class Main:
         cls.Label = tk.Label(cls.content, text="Bienvenido al Teatro Escuela Carlos Mayolo", font=("Calibri", 30), wraplength=500)
         cls.Label.place(relx=0.5, rely=0.5, anchor="center")
     
-
+    
     @classmethod
     def update_image(cls, event=None):
         """Carga y ajusta la imagen sin distorsionarla dentro del `bottomFrame`."""
