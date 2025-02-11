@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import Tk, Frame, ttk
+from tkinter import Tk, Frame, ttk, messagebox
 from PIL import Image, ImageTk
 
 class Main:
@@ -199,7 +199,8 @@ class Main:
         cls.clear_frame()
         cls.menu_bar = tk.Menu(cls.main_frame)
         menu_archivo = tk.Menu(cls.menu_bar, tearoff=False)
-        menu_archivo.add_command(label="Abrir")
+        menu_archivo.add_command(label="Aplicacion", command=cls.ventanaDialogo)
+        menu_archivo.add_command(label="Salir", command=cls.window_main)
         cls.menu_bar.add_cascade(label="Archivo", menu=menu_archivo)
         menu_procesos = tk.Menu(cls.menu_bar, tearoff=0)
         menu_procesos.add_command(label="Gestion de Ventas", command=cls.gestionVentas)
@@ -209,7 +210,7 @@ class Main:
         menu_procesos.add_command(label="Contratar Actores", command=cls.contratarActores)
         cls.menu_bar.add_cascade(label="Procesos y Consultas", menu=menu_procesos)
         menu_ayuda = tk.Menu(cls.menu_bar, tearoff=0)
-        menu_ayuda.add_command(label="Acerca de")
+        menu_ayuda.add_command(label="Acerca de", command=cls.autores)
         cls.menu_bar.add_cascade(label="Ayuda", menu=menu_ayuda)
 
         # Configurar el menú en la ventana principal
@@ -221,7 +222,13 @@ class Main:
         cls.Label = tk.Label(cls.content, text="Bienvenido al Teatro Escuela Carlos Mayolo", font=("Calibri", 30), wraplength=500)
         cls.Label.place(relx=0.5, rely=0.5, anchor="center")
     
+    @classmethod
+    def ventanaDialogo(cls):
+        messagebox.showinfo("Aplicacion", "Bienvenido a la aplicacion")
     
+    def autores():
+        messagebox.showinfo("Acerca de", "Autores: \n- Francisco Jose Ceren Porto\n- Danna Valeria Perez Niño\n- Oscar David Arango Garcia\n- Juan Pablo Miras Cañas\n- Miguel Velez Bernal")
+
     @classmethod
     def update_image(cls, event=None):
         """Carga y ajusta la imagen sin distorsionarla dentro del `bottomFrame`."""
