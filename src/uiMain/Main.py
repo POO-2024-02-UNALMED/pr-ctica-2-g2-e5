@@ -330,19 +330,20 @@ class Main:
     
     @classmethod
     def contratarActores(cls):
-        cls.clear_frame()
+        for widget in cls.content.winfo_children():
+            widget.destroy()
 
         #datos de prueba
 
         criterios = ["Name", "Age", "Email", "Bitcoin", "Country", "Number"]
         valores = ["John Doe", "25", "john@example.com", "293090237hjkhjk2j", "Rhodesia", "892962"]
 
-        captionFrame = Frame(cls.main_frame, bg = "red")
-        captionFrame.place(relx=0, rely=0, relwidth= 0.8, relheight= 0.2)
+        captionFrame = Frame(cls.content, bg = "red")
+        captionFrame.place(relx=0, rely=0, relwidth= 1, relheight= 0.2)
         caption = tk.Label(captionFrame, text="Bienvenido al panel de contratación de actores.\nRellene la información requerida para cada botón que aparece en el menú lateral derecho.")
         caption.place(relx = 0, rely = 0, relheight= .5, relwidth= 1)
 
-        vframe = Frame(cls.main_frame, bg = "blue")
+        vframe = Frame(cls.content, bg = "blue")
         vframe.place(relx=0.9, rely=0, relwidth=0.1, relheight=1)
 
         def tipoEmpresa():
@@ -360,7 +361,7 @@ class Main:
         for i, submenu in enumerate(submenusBotones):
             submenu.pack(expand=True, fill="both")
 
-        leftFrame5 = Frame(cls.main_frame, bg = "green")
+        leftFrame5 = Frame(cls.content, bg = "green")
         leftFrame5.place(relx=0, rely=0.1, relwidth=0.9, relheight=1)
 
         leftFrame5.columnconfigure(0, weight=1) 
