@@ -152,6 +152,11 @@ class Main:
         cls.btn_info = tk.Button(cls.programadorFrameTop, text="Programadores", command=cls.update_programador)
         cls.btn_info.pack(expand=True, fill="both")
 
+        # Vincula el evento <Configure> del frame superior para actualizar la fuente del botón
+        cls.programadorFrameTop.bind(
+            "<Configure>",
+            lambda event: cls.update_font(event, cls.programadorFrameTop, cls.btn_info)
+        )
 
     """
     Actualiza la información y las imágenes del programador mostrado.
