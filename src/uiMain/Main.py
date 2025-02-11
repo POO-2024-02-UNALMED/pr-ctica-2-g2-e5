@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import Tk, Frame
+from tkinter import Tk, Frame, ttk
 from PIL import Image, ImageTk
 
 class Main:
@@ -315,8 +315,36 @@ class Main:
     
     @classmethod
     def contratarActores(cls):
-        for widget in cls.content.winfo_children():
-            widget.destroy()
+        cls.clear_frame()
+
+        #datos de prueba
+        criterios = ["Name", "Age", "Email", "Bitcoin", "Country", "Number"]
+        valores = ["John Doe", "25", "john@example.com", "293090237hjkhjk2j", "Rhodesia", "892962"]
+
+        captionFrame = Frame(cls.main_frame, bg = "red")
+        captionFrame.place(relx=0, rely=0, relwidth= 0.8, relheight= 0.2)
+        caption = tk.Label(captionFrame, text="Bienvenido al panel de contratación de actores")
+        caption.place(relx = 0, rely = 0, relheight= .5, relwidth= 1)
+
+        vframe = Frame(cls.main_frame, bg = "blue")
+        vframe.place(relx=0.8, rely=0, relwidth=0.2, relheight=1)
+
+        leftFrame5 = Frame(cls.main_frame, bg = "green")
+        leftFrame5.place(relx=0, rely=0.1, relwidth=0.8, relheight=1)
+
+        leftFrame5.columnconfigure(0, weight=1) 
+        leftFrame5.columnconfigure(1, weight=1) 
+
+        vlist = [["Option1", "Option2", "Option3",
+          "Option4", "Option5"]] * 6
+ 
+        #Combo = ttk.Combobox(leftFrame5, values = vlist)
+        #Combo.set("Pick an Option")
+        #Combo.grid(row = 0, column=1)
+
+        window = FieldFrame(leftFrame5, criterios= criterios, valores= vlist, habilitado= ["Age", "Country"], combobox= True)
+        window.place(relx = 0.05, rely = 0.05, relheight= .8, relwidth= .9)
+
 
     @classmethod
     def gestionClases(cls):
@@ -328,7 +356,7 @@ class FieldFrame(Frame):
     bg = "slategray1"
     font = "Calibri 11"
 
-    def __init__(self, root: Tk, tituloCriterios: str = "Requerimientos", criterios: list = [], tituloValores: str = "Por favor digite:", valores: list = None, habilitado: list = None):
+    def __init__(self, root: Tk, tituloCriterios: str = "Requerimientos", criterios: list = [], tituloValores: str = "Por favor digite:", valores: list = None, habilitado: list = None, combobox = False):
         #todos los colores en tkinter: https://www.plus2net.com/python/tkinter-colors.php
         super().__init__(master = root, width = 800, height = 450, bg = FieldFrame.bg) #16:9
         self.root = root
@@ -344,12 +372,23 @@ class FieldFrame(Frame):
         tituloCriteriosWidget.configure(font = (FieldFrame.font, 11, "bold"))
         tituloValoresWidget.configure(font = (FieldFrame.font, 11, "bold"))
 
-        self.labels = [tituloCriteriosWidget] + [ tk.Label(self, text = label, font = (FieldFrame.font, 11), bg = FieldFrame.bg) for label in self.criterios]
+        #expande las columnas según crece la pantalla
+        self.columnconfigure(0, weight=1) 
+        self.columnconfigure(1, weight=1)  
 
+        self.labels = [tituloCriteriosWidget] + [ tk.Label(self, text = label, font = (FieldFrame.font, 11), bg = FieldFrame.bg) for label in self.criterios]
+        
         for i, label in enumerate(self.labels):
             label.grid(row = i, column = 0, padx= 3, pady= 5)
+            self.rowconfigure(i, weight=1)
         
-        self.values = [tituloValoresWidget] + [tk.Entry(self, text= value) for value in self.valores]
+        if not combobox:
+            self.values = [tituloValoresWidget] + [tk.Entry(self, text= value) for value in self.valores]
+        else:
+            criteriosStringVar = [tk.StringVar() for _ in criterios]
+            self.values = [tituloValoresWidget] + [ttk.Combobox(self, values= value, textvariable= criteriosStringVar[i]) for i, value in enumerate(self.valores)]
+        
+
 
         habilitadoExists = habilitado is not None
 
