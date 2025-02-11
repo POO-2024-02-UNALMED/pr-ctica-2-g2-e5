@@ -339,7 +339,7 @@ class Main:
 
         captionFrame = Frame(cls.main_frame, bg = "red")
         captionFrame.place(relx=0, rely=0, relwidth= 0.8, relheight= 0.2)
-        caption = tk.Label(captionFrame, text="Bienvenido al panel de contratación de actores.\nRellene la información requerida para cada botón que aparece en el menú lateral izquierdo.")
+        caption = tk.Label(captionFrame, text="Bienvenido al panel de contratación de actores.\nRellene la información requerida para cada botón que aparece en el menú lateral derecho.")
         caption.place(relx = 0, rely = 0, relheight= .5, relwidth= 1)
 
         vframe = Frame(cls.main_frame, bg = "blue")
