@@ -324,11 +324,11 @@ class Main:
 
         captionFrame = Frame(cls.main_frame, bg = "red")
         captionFrame.place(relx=0, rely=0, relwidth= 0.8, relheight= 0.2)
-        caption = tk.Label(captionFrame, text="Bienvenido al panel de contratación de actores")
+        caption = tk.Label(captionFrame, text="Bienvenido al panel de contratación de actores.\nRellene la información requerida para cada botón que aparece en el menú lateral izquierdo.")
         caption.place(relx = 0, rely = 0, relheight= .5, relwidth= 1)
 
         vframe = Frame(cls.main_frame, bg = "blue")
-        vframe.place(relx=0.8, rely=0, relwidth=0.2, relheight=1)
+        vframe.place(relx=0.9, rely=0, relwidth=0.1, relheight=1)
 
         def tipoEmpresa():
             vlist = [["Option1", "Option2", "Option3",
@@ -339,14 +339,14 @@ class Main:
 
         actions = [tipoEmpresa] * 5
 
-        submenus = ["Tipo de Empresa", "Filtros", "Búsqueda avanzada", "Presupuesto y Resultados"]
+        submenus = ["Tipo\nde Empresa", "Filtros", "Búsqueda\navanzada", "Presupuesto\ny Resultados"]
         submenusBotones = [tk.Button(vframe, text = submenu, bg = "yellow", command= actions[i]) for i, submenu in enumerate(submenus)]
 
         for i, submenu in enumerate(submenusBotones):
             submenu.pack(expand=True, fill="both")
 
         leftFrame5 = Frame(cls.main_frame, bg = "green")
-        leftFrame5.place(relx=0, rely=0.1, relwidth=0.8, relheight=1)
+        leftFrame5.place(relx=0, rely=0.1, relwidth=0.9, relheight=1)
 
         leftFrame5.columnconfigure(0, weight=1) 
         leftFrame5.columnconfigure(1, weight=1) 
