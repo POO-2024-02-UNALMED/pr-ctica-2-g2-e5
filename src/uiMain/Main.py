@@ -343,23 +343,17 @@ class Main:
         for widget in cls.content.winfo_children():
             widget.destroy()
 
-        #datos de prueba
-
-        criterios = ["Name", "Age", "Email", "Bitcoin", "Country", "Number"]
-        valores = ["John Doe", "25", "john@example.com", "293090237hjkhjk2j", "Rhodesia", "892962"]
-
         captionFrame = Frame(cls.content, bg = "red")
-        captionFrame.place(relx=0, rely=0, relwidth= 1, relheight= 0.2)
-        caption = tk.Label(captionFrame, text="Bienvenido al panel de contratación de actores.\nRellene la información requerida para cada botón que aparece en el menú lateral derecho.")
-        caption.place(relx = 0, rely = 0, relheight= .5, relwidth= 1)
-
-        #actions = [tipoEmpresa] * 5
-
-        #submenus = ["Tipo\nde Empresa", "Filtros", "Búsqueda\navanzada", "Presupuesto\ny Resultados"]
-        #submenusBotones = [tk.Button(vframe, text = submenu, bg = "yellow", command= actions[i]) for i, submenu in enumerate(submenus)]
-
-        #for i, submenu in enumerate(submenusBotones):
-        #    submenu.pack(expand=True, fill="both")
+        captionFrame.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
+        caption = tk.Label(captionFrame, 
+                           text="Bienvenido al panel de contratación de actores.",
+                           font= ("Calibri", 30))
+        caption.place(relx = 0, rely = 0, relheight= 1, relwidth= 1)
+        
+        captionFrame.bind(
+            "<Configure>",
+            cls.resize(cls.content, caption, 20)
+        )
 
         leftFrame5 = Frame(cls.content, bg = "green")
         leftFrame5.place(relx=0, rely=0.1, relwidth=1, relheight=1)
@@ -370,32 +364,32 @@ class Main:
         questionFrame = Frame(leftFrame5, bg = "orange")
         questionFrame.place(relx= .05, rely= .07, relheight= .75, relwidth= .9)
 
+        ansFrame = Frame(questionFrame, bg = "pink")
+        ansFrame.place(relx= 0, rely= .3, relheight= 1, relwidth= 1)
+
 
         #PREGUNTA NO. 1
         criteriosTipoEmpresa = ["Tipo de Empresa"]
         valoresTipoEmpresa = [["Empresa registrada", "Empresa nueva"]]
 
+        def definirTipoEmpresa(fieldframe: FieldFrame, topFrame: Frame) -> None:
+            fieldframe.gatherEntries()
+            choice = fieldframe.getValue("Tipo de Empresa")
+            if choice in ["Empresa registrada", "Empresa nueva"]:
+                tk.Label(topFrame, text= "Opción escogida: " + choice).pack()
+            else:
+                ##MANEJO DE EXCEPCION
+                tk.Label(topFrame, text= "Opción inválida").pack()
+
         pregunta1 = FieldFrame(root = questionFrame, 
                                criterios = criteriosTipoEmpresa,
                                valores = valoresTipoEmpresa,
                                combobox= True,
-                               command= None)
+                               command= lambda: definirTipoEmpresa(pregunta1, ansFrame))
 
-        actions = [(pregunta1, [0, 0, .3, 1])]
-
-
-
-        def pedirDatos():
-            for action, size in actions:
-                relx, rely, relheight, relwidth = size
-                action.place(relx = relx, rely = rely, relheight = relheight, relwidth = relwidth)
-                
-
-
-                
-
+        pregunta1.place(relx = 0, rely = 0, relheight = .3, relwidth = 1)
         
-        continuar = tk.Button(leftFrame5, text="Continuar", command=pedirDatos)
+        continuar = tk.Button(leftFrame5, text="Continuar")
         continuar.place(relx=0.4, rely=0.82, relwidth= .2, relheight= .06)
 
 
@@ -473,17 +467,12 @@ class FieldFrame(Frame):
             if auxCriterio == criterio:
                 return valor
         return None
-
-    def setEntries(self) -> None:
-        if self.combobox:
-            for value, entry in zip(self.criteriosStringVar, self.values[1:]):
-                value.set(entry.get())
     
     def gatherEntries(self) -> None:
         self.valores = [entry.get() for i, entry in enumerate(self.values) if i > 0]    
         
-        #if Main.fieldTest:
-        #    print(self.valores)    
+        if Main.fieldTest:
+            print(self.valores)    
         
         #PENDIENTE: 
         # revisar si el dato no es nulo y lanzar excepcion si lo es
