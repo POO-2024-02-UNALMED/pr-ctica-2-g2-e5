@@ -5,7 +5,7 @@ from PIL import Image, ImageTk
 class Main:
     root = None
     test = False
-    fieldTest = True
+    fieldTest = False
     custom = False
     bg = "lightsteelblue3"
     custom = False
@@ -343,29 +343,50 @@ class Main:
         caption = tk.Label(captionFrame, text="Bienvenido al panel de contratación de actores.\nRellene la información requerida para cada botón que aparece en el menú lateral derecho.")
         caption.place(relx = 0, rely = 0, relheight= .5, relwidth= 1)
 
-        vframe = Frame(cls.content, bg = "blue")
-        vframe.place(relx=0.9, rely=0, relwidth=0.1, relheight=1)
+        #actions = [tipoEmpresa] * 5
 
-        def tipoEmpresa():
-            vlist = [["Option1", "Option2", "Option3",
-            "Option4", "Option5"]] * 6
+        #submenus = ["Tipo\nde Empresa", "Filtros", "Búsqueda\navanzada", "Presupuesto\ny Resultados"]
+        #submenusBotones = [tk.Button(vframe, text = submenu, bg = "yellow", command= actions[i]) for i, submenu in enumerate(submenus)]
 
-            window = FieldFrame(leftFrame5, criterios= criterios, valores= vlist, habilitado= ["Age", "Country"], combobox= True)
-            window.place(relx = 0.05, rely = 0.05, relheight= .8, relwidth= .9)
-
-        actions = [tipoEmpresa] * 5
-
-        submenus = ["Tipo\nde Empresa", "Filtros", "Búsqueda\navanzada", "Presupuesto\ny Resultados"]
-        submenusBotones = [tk.Button(vframe, text = submenu, bg = "yellow", command= actions[i]) for i, submenu in enumerate(submenus)]
-
-        for i, submenu in enumerate(submenusBotones):
-            submenu.pack(expand=True, fill="both")
+        #for i, submenu in enumerate(submenusBotones):
+        #    submenu.pack(expand=True, fill="both")
 
         leftFrame5 = Frame(cls.content, bg = "green")
-        leftFrame5.place(relx=0, rely=0.1, relwidth=0.9, relheight=1)
+        leftFrame5.place(relx=0, rely=0.1, relwidth=1, relheight=1)
 
         leftFrame5.columnconfigure(0, weight=1) 
         leftFrame5.columnconfigure(1, weight=1) 
+
+        questionFrame = Frame(leftFrame5, bg = "orange")
+        questionFrame.place(relx= .05, rely= .07, relheight= .75, relwidth= .9)
+
+
+        #PREGUNTA NO. 1
+        criteriosTipoEmpresa = ["Tipo de Empresa"]
+        valoresTipoEmpresa = [["Empresa registrada", "Empresa nueva"]]
+
+        pregunta1 = FieldFrame(root = questionFrame, 
+                               criterios = criteriosTipoEmpresa,
+                               valores = valoresTipoEmpresa,
+                               combobox= True,
+                               command= None)
+
+        actions = [(pregunta1, [0, 0, .3, 1])]
+
+
+
+        def pedirDatos():
+            for action, size in actions:
+                relx, rely, relheight, relwidth = size
+                action.place(relx = relx, rely = rely, relheight = relheight, relwidth = relwidth)
+                
+
+
+                
+
+        
+        continuar = tk.Button(leftFrame5, text="Continuar", command=pedirDatos)
+        continuar.place(relx=0.4, rely=0.82, relwidth= .2, relheight= .06)
 
 
 
@@ -380,7 +401,7 @@ class FieldFrame(Frame):
     bg = "slategray1"
     font = "Calibri 11"
 
-    def __init__(self, root: Tk, tituloCriterios: str = "Requerimientos", criterios: list = [], tituloValores: str = "Por favor digite:", valores: list = None, habilitado: list = None, combobox = False):
+    def __init__(self, root: Tk, tituloCriterios: str = "Requerimientos", criterios: list = [], tituloValores: str = "Por favor digite:", valores: list = None, habilitado: list = None, combobox = False, command = None):
         #todos los colores en tkinter: https://www.plus2net.com/python/tkinter-colors.php
         super().__init__(master = root, width = 800, height = 450, bg = FieldFrame.bg) #16:9
         self.root = root
@@ -389,6 +410,7 @@ class FieldFrame(Frame):
         self.tituloValores = tituloValores
         self.valores = valores if valores is not None else []
         self.habilitado = habilitado
+        self.combobox = combobox
 
         tituloCriteriosWidget = tk.Label(self, text = self.tituloCriterios, bg = FieldFrame.bg)
         tituloValoresWidget = tk.Label(self, text = self.tituloValores, bg = FieldFrame.bg)
@@ -405,12 +427,13 @@ class FieldFrame(Frame):
         for i, label in enumerate(self.labels):
             label.grid(row = i, column = 0, padx= 3, pady= 5)
             self.rowconfigure(i, weight=1)
+
+        self.criteriosStringVar = [tk.StringVar(self, value="hola") for _ in self.valores]
         
         if not combobox:
             self.values = [tituloValoresWidget] + [tk.Entry(self, text= value) for value in self.valores]
         else:
-            criteriosStringVar = [tk.StringVar() for _ in criterios]
-            self.values = [tituloValoresWidget] + [ttk.Combobox(self, values= value, textvariable= criteriosStringVar[i]) for i, value in enumerate(self.valores)]
+            self.values = [tituloValoresWidget] + [ttk.Combobox(self, values= value, textvariable= self.criteriosStringVar[i]) for i, value in enumerate(self.valores)]
         
 
 
@@ -425,7 +448,7 @@ class FieldFrame(Frame):
                     value.configure(state= status)
             value.grid(row = i, column = 1, padx= 50, pady= 10)
 
-        aceptar = tk.Button(self, text = "Aceptar", command = self.gatherEntries)
+        aceptar = tk.Button(self, text = "Guardar", command = self.gatherEntries if command is None else command)
         aceptar.grid(row = len(self.valores) + 1, column = 0, sticky= "w")
 
         borrar = tk.Button(self, text = "Borrar", command = self.deleteEntries)
@@ -440,12 +463,17 @@ class FieldFrame(Frame):
             if auxCriterio == criterio:
                 return valor
         return None
+
+    def setEntries(self) -> None:
+        if self.combobox:
+            for value, entry in zip(self.criteriosStringVar, self.values[1:]):
+                value.set(entry.get())
     
     def gatherEntries(self) -> None:
         self.valores = [entry.get() for i, entry in enumerate(self.values) if i > 0]    
         
-        if Main.fieldTest:
-            print(self.valores)    
+        #if Main.fieldTest:
+        #    print(self.valores)    
         
         #PENDIENTE: 
         # revisar si el dato no es nulo y lanzar excepcion si lo es
