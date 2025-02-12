@@ -11,16 +11,16 @@ class Main:
     custom = False
 
     @classmethod
-    def update_font(cls, event, frame, text):
+    def update_font(cls, event, frame, text, tamano):
         """Actualiza el tamaño de la fuente del título al cambiar el tamaño de la ventana."""
-        new_size = max(20, event.width // 30)
+        new_size = max(tamano, event.width // 30)
         new_font = ("Calibri", new_size)
 
         text.config(font=new_font, wraplength=frame.winfo_width()*0.9)
     
     @classmethod
-    def resize(cls, frame, text):
-        frame.bind("<Configure>", lambda e: cls.update_font(e, frame, text))
+    def resize(cls, frame, text, tamano = 20):
+        frame.bind("<Configure>", lambda e: cls.update_font(e, frame, text, tamano))
 
     # --- NUEVAS VARIABLES PARA PROGRAMADORES ---
     current_programador_index = -1
@@ -113,9 +113,7 @@ class Main:
         cls.bottomFrame.bind("<Enter>", cls.cambiar_imagen)
 
         #Frame izquierdo Superior
-        cls.topFrame.grid_rowconfigure(0, weight=3)  # Parte superior (50%)
-        cls.topFrame.grid_rowconfigure(1, weight=5)  # Parte inferior (50%)
-        cls.topFrame.grid_columnconfigure(0, weight=1)
+    
 
         # Crear el Label
         cls.titleLabel = tk.Label(
@@ -126,7 +124,7 @@ class Main:
             anchor="center",
             wraplength=800
         )
-        cls.titleLabel.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+        cls.titleLabel.place(relx=0.5, rely=0.5, anchor="center")
     
         # Vinculacion de eventos
         cls.titleLabel.bind("<Button-1>", lambda e: cls.abrir_ventana_funcionalidades())
@@ -155,7 +153,7 @@ class Main:
         # Vincula el evento <Configure> del frame superior para actualizar la fuente del botón
         cls.programadorFrameTop.bind(
             "<Configure>",
-            lambda event: cls.update_font(event, cls.programadorFrameTop, cls.btn_info)
+            cls.resize(cls.programadorFrameTop, cls.btn_info)
         )
 
     """
@@ -201,11 +199,16 @@ class Main:
 
     @classmethod
     def abrir_ventana_funcionalidades(cls):
-        cls.clear_frame()
-        cls.menu_bar = tk.Menu(cls.main_frame)
+        cls.root.withdraw()
+
+        cls.new_window = tk.Tk()
+        cls.new_window.title("Teatro Escuela Carlos Mayolo")
+        cls.new_window.geometry("960x540")
+
+        cls.menu_bar = tk.Menu(cls.new_window)
         menu_archivo = tk.Menu(cls.menu_bar, tearoff=False)
         menu_archivo.add_command(label="Aplicacion", command=cls.ventanaDialogo)
-        menu_archivo.add_command(label="Salir", command=cls.window_main)
+        menu_archivo.add_command(label="Salir", command=cls.volver)
         cls.menu_bar.add_cascade(label="Archivo", menu=menu_archivo)
         menu_procesos = tk.Menu(cls.menu_bar, tearoff=0)
         menu_procesos.add_command(label="Gestion de Ventas", command=cls.gestionVentas)
@@ -219,14 +222,21 @@ class Main:
         cls.menu_bar.add_cascade(label="Ayuda", menu=menu_ayuda)
 
         # Configurar el menú en la ventana principal
-        cls.main_frame.master.config(menu=cls.menu_bar)
+        cls.new_window.config(menu=cls.menu_bar)
 
         #contenido
-        cls.content = tk.Frame(cls.main_frame, bg="black")
+        cls.content = tk.Frame(cls.new_window, bg="black")
         cls.content.place(relx=0, rely=0, relwidth=1, relheight=1)
         cls.Label = tk.Label(cls.content, text="Bienvenido al Teatro Escuela Carlos Mayolo", font=("Calibri", 30), wraplength=500)
         cls.Label.place(relx=0.5, rely=0.5, anchor="center")
-    
+        
+        cls.new_window.focus_force()
+
+    @classmethod
+    def volver(cls):
+        cls.new_window.destroy()
+        cls.root.deiconify()
+
     @classmethod
     def ventanaDialogo(cls):
         messagebox.showinfo("Aplicacion", "Bienvenido a la aplicacion")
