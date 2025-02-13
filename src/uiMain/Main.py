@@ -2,6 +2,12 @@ import tkinter as tk
 from tkinter import Tk, Frame, ttk, messagebox
 from PIL import Image, ImageTk
 
+from src.gestorAplicacion.gestionVentas.Cliente import Cliente
+
+
+
+
+
 class Main:
     root = None
     test = False
@@ -317,16 +323,50 @@ class Main:
 
     @classmethod
     def gestionVentas(cls):
+        
+
+    
+
+        def Usuario_Nuevo():
+            for widget in cls.content.winfo_children():
+                widget.destroy()
+
+                
+            #SE CREARA UN NUEVO ID
+            code = Cliente.id_random()
+            cliente = Cliente(id = code)
+            print (cliente.id)
+        
+
+        def Usuario_Antiguo():
+            for widget in cls.content.winfo_children():
+                widget.destroy()
+            cliente=Cliente(id=12)
+            a = int(input())
+            print(Cliente.verificar(a))
+
+
+
+            
+
+
+
+
         for widget in cls.content.winfo_children():
             widget.destroy()
         
         label = tk.Label(cls.content, text="Eres cliente nuevo?", font=("Calibri", 25), fg="white", bg="black")
         label.place(relx=0.5, rely=0.3, anchor="center")
 
-        Button_Si = tk.Button(cls.content, text="Si", font=("Calibri", 15))
-        Button_No = tk.Button(cls.content, text="No", font=("Calibri", 15))
+        Button_Si = tk.Button(cls.content, text="Si", font=("Calibri", 15),command=Usuario_Nuevo)
+        Button_No = tk.Button(cls.content, text="No", font=("Calibri", 15),command=Usuario_Antiguo)
         Button_Si.place(relx=0.5, rely=0.5, anchor="center")
         Button_No.place(relx=0.5, rely=0.6, anchor="center")
+
+        
+
+
+        
 
     @classmethod
     def gestionEmpleados(cls):
