@@ -22,13 +22,19 @@ class Main:
     @classmethod
     def update_font(cls, event, frame, text, tamano, reescalamiento):
         """Actualiza el tamaño de la fuente del título al cambiar el tamaño de la ventana."""
-        new_size = max(tamano, event.width // reescalamiento)
+        # new_size = max(tamano, event.width // reescalamiento)
+        if event.height < 140 or event.width < 350:
+            new_size = max(8, min(event.height // 5, event.width // 20))
+        else:
+            new_size = max(tamano, event.width // reescalamiento)
+
         new_font = ("Calibri", new_size)
 
-        text.config(font=new_font, wraplength=frame.winfo_width()*0.9)
+        wrap_length = min(frame.winfo_height() * 5, frame.winfo_width() * 0.85)
+        text.config(font=new_font, wraplength=wrap_length)
     
     @classmethod
-    def resize(cls, frame, text, tamano = 20, reescalamiento = 30):
+    def resize(cls, frame, text, tamano = 18, reescalamiento = 30):
         frame.bind("<Configure>", lambda e: cls.update_font(e, frame, text, tamano, reescalamiento))
 
     # --- NUEVAS VARIABLES PARA PROGRAMADORES ---
