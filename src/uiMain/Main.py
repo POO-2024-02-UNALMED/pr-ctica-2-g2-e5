@@ -1,6 +1,13 @@
 import tkinter as tk
 from tkinter import Tk, Frame, ttk, messagebox
 from PIL import Image, ImageTk
+import sys
+import os
+
+#AGREGAR SRC AL PATH
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from baseDatos.Teatro import Teatro
 
 from src.gestorAplicacion.gestionVentas.Cliente import Cliente
 
@@ -383,6 +390,7 @@ class Main:
         for widget in cls.content.winfo_children():
             widget.destroy()
 
+        #captionframe contiene el mensaje de bienvenida la funcionalidad
         captionFrame = Frame(cls.content, bg = "red")
         captionFrame.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
         caption = tk.Label(captionFrame, 
@@ -390,33 +398,83 @@ class Main:
                            font= ("Calibri", 30))
         caption.place(relx = 0, rely = 0, relheight= 1, relwidth= 1)
         
+        #reasignación de tamaño de letra
         captionFrame.bind(
             "<Configure>",
             cls.resize(cls.content, caption, 20)
         )
 
-        leftFrame5 = Frame(cls.content, bg = "green")
-        leftFrame5.place(relx=0, rely=0.1, relwidth=1, relheight=1)
+        #centerFrame está ubicado en el centro, en este frame se asignarán 
+        # los objetos tipo fieldFrame y las respuestas a sus entradas
+        centerFrame = Frame(cls.content, bg = "green")
+        centerFrame.place(relx=0, rely=0.1, relwidth=1, relheight=1)
 
-        leftFrame5.columnconfigure(0, weight=1) 
-        leftFrame5.columnconfigure(1, weight=1) 
+        centerFrame.columnconfigure(0, weight=1) 
+        centerFrame.columnconfigure(1, weight=1) 
 
-        questionFrame = Frame(leftFrame5, bg = "orange")
-        questionFrame.place(relx= .05, rely= .07, relheight= .75, relwidth= .9)
+        #questionFrame es la subsección de centerFrame donde irán los formularios
+        questionFrame = Frame(centerFrame, bg = "orange")
 
+        #ansFrame es la subsección de questionFrame donde se interactuará con las respuestas del usuario
         ansFrame = Frame(questionFrame, bg = "pink")
-        ansFrame.place(relx= 0, rely= .3, relheight= 1, relwidth= 1)
 
+        #assignFrame cumple tres funciones: si un frame existe, lo remueve de la pantalla
+        # luego remueve los widgets que tuviera asociado (opciona)
+        # por ultimo lo coloca de nuevo con place en las nuevas posiciones relativas
+        def assignFrame(frame, relx, rely, relheight, relwidth, destroy = True):
+            frame.place_forget()
+            
+            if destroy:
+                for widget in frame.winfo_children():
+                    if isinstance(widget, tk.Frame) and not isinstance(widget, FieldFrame):
+                        continue
+                    widget.destroy()
+            
+            frame.place(relx = relx, rely= rely, relheight= relheight, relwidth= relwidth)
 
+        assignFrame(questionFrame, relx= .05, rely= .07, relheight= .75, relwidth= .9)
+
+        #----------------------- PRIMERA RONDA DE PREGUNTAS AL USUARIO --------------------------------
+        
         #PREGUNTA NO. 1
         criteriosTipoEmpresa = ["Tipo de Empresa"]
         valoresTipoEmpresa = [["Empresa registrada", "Empresa nueva"]]
 
+        historialEmpresa = None
+        empresa = None
+
         def definirTipoEmpresa(fieldframe: FieldFrame, topFrame: Frame) -> None:
             fieldframe.gatherEntries()
+
+            assignFrame(ansFrame, relx= 0, rely= .3, relheight= 1, relwidth= 1)
+
             choice = fieldframe.getValue("Tipo de Empresa")
             if choice in ["Empresa registrada", "Empresa nueva"]:
                 tk.Label(topFrame, text= "Opción escogida: " + choice).pack()
+                print(choice == "Empresa registrada")
+                
+                if choice == "Empresa registrada":
+                    idFlag = False
+                    id = FieldFrame(topFrame, criterios= ["Inserte ID existente"], tituloCriterios= "", tituloValores= "", valores = [""])
+                    id.place(relwidth= 1, relheight= .3)
+
+                    for cliente in Teatro.getInstancia().getClientes():
+                        if cliente.getId() == id and cliente.getTipo() == "Empresa":
+                            tk.Label(topFrame, text= "Cliente confirmado en base de datos").pack()
+                            historialEmpresa = cliente.getHistorial()
+                            empresa = cliente
+                            idFlag = True
+                    
+                    if not idFlag:
+                        tk.label(topFrame, "El número de identificación no existe en la base de datos de empresa.\nRevise si el cliente es de tipo Empresa o si se digitó correctamente.").pack()
+
+                elif choice == "Empresa Nueva":
+                    id = FieldFrame(topFrame, criterios= ["Gener nuevo ID"], tituloCriterios= "", tituloValores= "", valores = [""])
+                    id.place(relwidth= 1, relheight= .3)
+
+
+                        
+
             else:
                 ##MANEJO DE EXCEPCION
                 tk.Label(topFrame, text= "Opción inválida").pack()
@@ -429,7 +487,7 @@ class Main:
 
         pregunta1.place(relx = 0, rely = 0, relheight = .3, relwidth = 1)
         
-        continuar = tk.Button(leftFrame5, text="Continuar")
+        continuar = tk.Button(centerFrame, text="Continuar")
         continuar.place(relx=0.4, rely=0.82, relwidth= .2, relheight= .06)
 
 

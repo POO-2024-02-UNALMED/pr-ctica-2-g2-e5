@@ -7,7 +7,7 @@ class Teatro:
 
     def __init__(self):
 
-        self.tesoreria = Tesoreria()
+        self.tesoreria = Tesoreria(100, 10)
 
         # empleados
         self.__empleadosPorRendimiento = []

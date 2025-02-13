@@ -1,4 +1,4 @@
-from gestionFinanciera.CuentaBancaria import CuentaBancaria
+from gestorAplicacion.gestionFinanciera.CuentaBancaria import CuentaBancaria
 
 class Tesoreria:
     pass
