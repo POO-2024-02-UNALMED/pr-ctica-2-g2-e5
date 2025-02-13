@@ -622,8 +622,59 @@ class Main:
 
     @classmethod
     def gestionClases(cls):
+        # Se limpia el frame de contenido actual (línea ~320)
         for widget in cls.content.winfo_children():
             widget.destroy()
+
+        # --- FRAME DE BIENVENIDA ---
+        frame_bienvenida = Frame(cls.content, bg="red")
+        frame_bienvenida.place(relx=0, rely=0, relwidth=1, relheight=0.1)
+        saludo = tk.Label(frame_bienvenida,
+                          text="Bienvenido a la gestión de clases",
+                          font=("Calibri", 16),
+                          bg="black", fg="white")
+        saludo.place(relx=0, rely=0, relwidth=1, relheight=1)
+        frame_bienvenida.bind("<Configure>", lambda e: cls.resize(frame_bienvenida, saludo))
+
+        # --- FRAME PRINCIPAL PARA EL PROCESO ---
+        process_frame = Frame(cls.content, bg="white")
+        process_frame.place(relx=0, rely=0.1, relwidth=1, relheight=0.9)
+
+        # ----------- PASO 1: Mostrar Artistas existentes y solicitar ID -----------
+        def step1():
+            for widget in process_frame.winfo_children():
+                widget.destroy()
+            
+            # Se obtienen los artistas existentes de la base de datos (suponiendo que Teatro.getInstancia().getArtistas() exista)
+            artistas = Teatro.getInstancia().getArtistas()
+            if artistas:
+                lbl_artistas = tk.Label(process_frame, text="Artistas existentes en la base de datos:", font=("Calibri", 14), bg="white")
+                lbl_artistas.pack(pady=10)
+                txt_artistas = tk.Text(process_frame, height=10, width=80, font=("Calibri", 12))
+                txt_artistas.pack(pady=10)
+                for artista in artistas:
+                    # Se diferencia actor de director (asumimos que si tiene atributo "edad" es actor)
+                    if hasattr(artista, "edad"):
+                        linea = f"- Actor {artista.nombre} con ID {artista.id}\n"
+                    else:
+                        linea = f"- Director {artista.nombre} con ID {artista.id}\n"
+                    txt_artistas.insert("end", linea)
+                txt_artistas.config(state="disabled")
+            else:
+                tk.Label(process_frame, text="No hay artistas en la base de datos.", font=("Calibri", 14), bg="white").pack(pady=10)
+            
+            # Se solicita el ID del artista
+            lbl_id = tk.Label(process_frame, text="Ingrese el ID del artista para gestionar clases:", font=("Calibri", 14), bg="white")
+            lbl_id.pack(pady=10)
+            entry_id = tk.Entry(process_frame, font=("Calibri", 14))
+            entry_id.pack(pady=5)
+            btn_buscar = tk.Button(process_frame, text="Buscar", font=("Calibri", 14),
+                                   command=lambda: process_artist(entry_id.get()))
+            btn_buscar.pack(pady=10)
+
+
+        
+
 
 class FieldFrame(Frame):
 
