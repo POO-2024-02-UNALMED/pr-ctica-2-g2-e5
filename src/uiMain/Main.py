@@ -508,9 +508,25 @@ class Main:
         for widget in cls.content.winfo_children():
             widget.destroy()
 
-        #captionframe contiene el mensaje de bienvenida la funcionalidad
-        captionFrame = Frame(cls.content, bg = "red")
+        #frame izquierdo
+        leftFrame = tk.Frame(cls.content, bg="blue")
+        leftFrame.place(relx=0, rely=0, relwidth=0.15, relheight=1)
+
+        # Frame derecho
+        rightFrame = tk.Frame(cls.content, bg="blue")
+        rightFrame.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
+
+        #posible barra de avance
+        bottomFrame = tk.Frame(cls.content, bg="black", padx=15, pady=20)
+        bottomFrame.place(relx=0.5, rely=0.80,anchor="center")
+        
+        centerFrame = tk.Frame(cls.content, bg="purple", padx=20, pady=20)
+        centerFrame.place(relx=0.15, rely=0.1, relwidth=.7, relheight=.8)
+
+        captionFrame = Frame(cls.content,background="black")
         captionFrame.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
+
+        #captionframe contiene el mensaje de bienvenida la funcionalidad
         caption = tk.Label(captionFrame, 
                            text="Bienvenido al panel de contratación de actores.",
                            font= ("Calibri", 10))
@@ -522,19 +538,8 @@ class Main:
             lambda e: cls.resize(captionFrame, caption, 20, 60)
         )
 
-        #centerFrame está ubicado en el centro, en este frame se asignarán 
-        # los objetos tipo fieldFrame y las respuestas a sus entradas
-        centerFrame = Frame(cls.content, bg = "green")
-        centerFrame.place(relx=0, rely=0.1, relwidth=1, relheight=1)
-
         centerFrame.columnconfigure(0, weight=1) 
         centerFrame.columnconfigure(1, weight=1) 
-
-        #questionFrame es la subsección de centerFrame donde irán los formularios
-        questionFrame = Frame(centerFrame, bg = "orange")
-
-        #ansFrame es la subsección de questionFrame donde se interactuará con las respuestas del usuario
-        #ansFrame = Frame(questionFrame, bg = "pink")
 
         #assignFrame cumple tres funciones: si un frame existe, lo remueve de la pantalla
         # luego remueve los widgets que tuviera asociado (opciona)
@@ -550,10 +555,6 @@ class Main:
             
             frame.place(relx = relx, rely= rely, relheight= relheight, relwidth= relwidth)
 
-        assignFrame(questionFrame, relx= .05, rely= .07, relheight= .75, relwidth= .9)
-        #assignFrame(questionFrame, relx= .0, rely= .0, relheight= 1, relwidth= 1)
-
-
         #----------------------- PRIMERA RONDA DE PREGUNTAS AL USUARIO --------------------------------
         
         #PREGUNTA NO. 1
@@ -565,9 +566,6 @@ class Main:
 
         def definirTipoEmpresa(fieldframe: FieldFrame, topFrame: Frame) -> None:
             fieldframe.gatherEntries()
-
-            #assignFrame(ansFrame, relx= 0, rely= 0, relheight= 1, relwidth= 1)
-            #assignFrame(questionFrame, relx= .05, rely= .07, relheight= .75, relwidth= .9)
 
             choice = fieldframe.getValue("Tipo de Empresa")
             if choice in ["Empresa registrada", "Empresa nueva"]:
@@ -601,7 +599,7 @@ class Main:
                 ##MANEJO DE EXCEPCION
                 tk.Label(topFrame, text= "Opción inválida").pack()
 
-        pregunta1 = FieldFrame(root = questionFrame, 
+        pregunta1 = FieldFrame(root = centerFrame, 
                                criterios = criteriosTipoEmpresa,
                                valores = valoresTipoEmpresa,
                                combobox= True,
