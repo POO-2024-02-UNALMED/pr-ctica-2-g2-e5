@@ -539,7 +539,7 @@ class Main:
         questionFrame = Frame(centerFrame, bg = "orange")
 
         #ansFrame es la subsección de questionFrame donde se interactuará con las respuestas del usuario
-        ansFrame = Frame(questionFrame, bg = "pink")
+        #ansFrame = Frame(questionFrame, bg = "pink")
 
         #assignFrame cumple tres funciones: si un frame existe, lo remueve de la pantalla
         # luego remueve los widgets que tuviera asociado (opciona)
@@ -556,6 +556,8 @@ class Main:
             frame.place(relx = relx, rely= rely, relheight= relheight, relwidth= relwidth)
 
         assignFrame(questionFrame, relx= .05, rely= .07, relheight= .75, relwidth= .9)
+        #assignFrame(questionFrame, relx= .0, rely= .0, relheight= 1, relwidth= 1)
+
 
         #----------------------- PRIMERA RONDA DE PREGUNTAS AL USUARIO --------------------------------
         
@@ -569,7 +571,8 @@ class Main:
         def definirTipoEmpresa(fieldframe: FieldFrame, topFrame: Frame) -> None:
             fieldframe.gatherEntries()
 
-            assignFrame(ansFrame, relx= 0, rely= .3, relheight= 1, relwidth= 1)
+            #assignFrame(ansFrame, relx= 0, rely= 0, relheight= 1, relwidth= 1)
+            #assignFrame(questionFrame, relx= .05, rely= .07, relheight= .75, relwidth= .9)
 
             choice = fieldframe.getValue("Tipo de Empresa")
             if choice in ["Empresa registrada", "Empresa nueva"]:
@@ -579,10 +582,11 @@ class Main:
                 if choice == "Empresa registrada":
                     idFlag = False
                     id = FieldFrame(topFrame, criterios= ["Inserte ID existente"], tituloCriterios= "", tituloValores= "", valores = [""])
-                    id.place(relwidth= 1, relheight= .3)
+                    id.place(relwidth= 1, relheight= 1)
 
                     for cliente in Teatro.getInstancia().getClientes():
                         if cliente.getId() == id and cliente.getTipo() == "Empresa":
+                            messagebox.showerror("Error", "Id no existente")
                             tk.Label(topFrame, text= "Cliente confirmado en base de datos").pack()
                             historialEmpresa = cliente.getHistorial()
                             empresa = cliente
@@ -592,7 +596,7 @@ class Main:
                         tk.label(topFrame, "El número de identificación no existe en la base de datos de empresa.\nRevise si el cliente es de tipo Empresa o si se digitó correctamente.").pack()
 
                 elif choice == "Empresa Nueva":
-                    id = FieldFrame(topFrame, criterios= ["Gener nuevo ID"], tituloCriterios= "", tituloValores= "", valores = [""])
+                    id = FieldFrame(topFrame, criterios= ["Generar nuevo ID"], tituloCriterios= "", tituloValores= "", valores = [""])
                     id.place(relwidth= 1, relheight= .3)
 
 
@@ -606,12 +610,12 @@ class Main:
                                criterios = criteriosTipoEmpresa,
                                valores = valoresTipoEmpresa,
                                combobox= True,
-                               command= lambda: definirTipoEmpresa(pregunta1, ansFrame))
+                               command= lambda: definirTipoEmpresa(pregunta1, centerFrame))
 
-        pregunta1.place(relx = 0, rely = 0, relheight = .3, relwidth = 1)
+        pregunta1.place(relx = 0, rely = 0, relheight = 1, relwidth = 1)
         
-        continuar = tk.Button(centerFrame, text="Continuar")
-        continuar.place(relx=0.4, rely=0.82, relwidth= .2, relheight= .06)
+        #continuar = tk.Button(centerFrame, text="Continuar")
+        #continuar.place(relx=0.4, rely=0.82, relwidth= .2, relheight= .06)
 
 
 
@@ -644,8 +648,9 @@ class FieldFrame(Frame):
         tituloValoresWidget.configure(font = (FieldFrame.font, 11, "bold"))
 
         #expande las columnas según crece la pantalla
-        self.columnconfigure(0, weight=1) 
+        self.columnconfigure(0, weight=2) 
         self.columnconfigure(1, weight=1)  
+        self.columnconfigure(2, weight=2)  
 
         self.labels = [tituloCriteriosWidget] + [ tk.Label(self, text = label, font = (FieldFrame.font, 11), bg = FieldFrame.bg) for label in self.criterios]
         
@@ -653,7 +658,7 @@ class FieldFrame(Frame):
             label.grid(row = i, column = 0, padx= 3, pady= 5)
             self.rowconfigure(i, weight=1)
 
-        self.criteriosStringVar = [tk.StringVar(self, value="hola") for _ in self.valores]
+        self.criteriosStringVar = [tk.StringVar(self, value="") for _ in self.valores]
         
         if not combobox:
             self.values = [tituloValoresWidget] + [tk.Entry(self, text= value) for value in self.valores]
@@ -671,13 +676,13 @@ class FieldFrame(Frame):
                 if habilitadoExists:
                     status = "normal" if self.criterios[i-1] in habilitado else "disabled"
                     value.configure(state= status)
-            value.grid(row = i, column = 1, padx= 50, pady= 10)
+            value.grid(row = i, column = 2,)# padx= 10, pady= 10)
 
         aceptar = tk.Button(self, text = "Guardar", command = self.gatherEntries if command is None else command)
-        aceptar.grid(row = len(self.valores) + 1, column = 0, sticky= "w")
+        aceptar.grid(row = len(self.valores) + 1, column = 1, sticky= "ew")
 
         borrar = tk.Button(self, text = "Borrar", command = self.deleteEntries)
-        borrar.grid(row = len(self.valores) + 1, column = 1,  sticky= "e")
+        borrar.grid(row = len(self.valores) + 2, column = 1, sticky= "ew")
 
         if Main.fieldTest:
             self.pack()   
@@ -707,12 +712,14 @@ class FieldFrame(Frame):
 if __name__ == "__main__":
 
     #datos de prueba
-    criterios = ["Name", "Age", "Email", "Bitcoin", "Country", "Number"]
-    valores = ["John Doe", "25", "john@example.com", "293090237hjkhjk2j", "Rhodesia", "892962"]
+    criterios = ["Name"]#, "Age", "Email", "Bitcoin", "Country", "Number"]
+    valores = ["John Doe"]#, "25", "john@example.com", "293090237hjkhjk2j", "Rhodesia", "892962"]
 
-    #Main.runApp()
-    Main.initRoot()
-    #window = FieldFrame(Main.rightFrame, criterios= criterios, valores= valores, habilitado= ["Age", "Country"])
+    Main.runApp()
+    #root = Tk()
+    #Main.initRoot()
+    #window = FieldFrame(root, criterios= criterios, valores= valores, habilitado= ["Age", "Country"]).pack()
     #print(window.getValue("Age")) #25
     Main.root.mainloop()
     #Main.runApp()
+    #root.mainloop()
