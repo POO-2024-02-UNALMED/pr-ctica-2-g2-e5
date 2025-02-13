@@ -357,6 +357,7 @@ class Main:
             global cliente
             cliente = Cliente(id = code)
             messagebox.showinfo("Éxito", f"Su nuevo ID es {cliente.id}")
+            Inicio_preguntas()
             
         
         def validar(a):
@@ -441,13 +442,17 @@ class Main:
             top_label = tk.Label(top_frame,text="Venta de tiquetes",font=("Calibri", 25), bg="black",fg="white")
             top_label.place(relx=0.5, rely=0.1, anchor="n")
 
+            label = tk.Label(cls.content,text="Desea mejorar su suscripcion?", font=("Calibri", 25), fg="black",bg="white")
+            label.place(relx=0.5, rely=0.3, anchor="center")
+
+            Button_Si = tk.Button(cls.content, text="Si", font=("Calibri", 15),command=Usuario_Nuevo)
+            Button_No = tk.Button(cls.content, text="No", font=("Calibri", 15),command=Usuario_Antiguo)
+            Button_Si.place(relx=0.48, rely=0.5, anchor="center")
+            Button_No.place(relx=0.53, rely=0.5, anchor="center")
+
             Main.wait()
 
-            respuesta = messagebox.askyesno("Confirmación", "¿Desea mejorar su suscripcion?")
-            if respuesta:
-                print("El usuario seleccionó 'Sí'.")
-            else:
-                print("El usuario seleccionó 'No'.")
+            
             
 
 
@@ -615,8 +620,59 @@ class Main:
 
     @classmethod
     def gestionClases(cls):
+        # Se limpia el frame de contenido actual (línea ~320)
         for widget in cls.content.winfo_children():
             widget.destroy()
+
+        # --- FRAME DE BIENVENIDA ---
+        frame_bienvenida = Frame(cls.content, bg="red")
+        frame_bienvenida.place(relx=0, rely=0, relwidth=1, relheight=0.1)
+        saludo = tk.Label(frame_bienvenida,
+                          text="Bienvenido a la gestión de clases",
+                          font=("Calibri", 16),
+                          bg="black", fg="white")
+        saludo.place(relx=0, rely=0, relwidth=1, relheight=1)
+        frame_bienvenida.bind("<Configure>", lambda e: cls.resize(frame_bienvenida, saludo))
+
+        # --- FRAME PRINCIPAL PARA EL PROCESO ---
+        process_frame = Frame(cls.content, bg="white")
+        process_frame.place(relx=0, rely=0.1, relwidth=1, relheight=0.9)
+
+        # ----------- PASO 1: Mostrar Artistas existentes y solicitar ID -----------
+        def step1():
+            for widget in process_frame.winfo_children():
+                widget.destroy()
+            
+            # Se obtienen los artistas existentes de la base de datos (suponiendo que Teatro.getInstancia().getArtistas() exista)
+            artistas = Teatro.getInstancia().getArtistas()
+            if artistas:
+                lbl_artistas = tk.Label(process_frame, text="Artistas existentes en la base de datos:", font=("Calibri", 14), bg="white")
+                lbl_artistas.pack(pady=10)
+                txt_artistas = tk.Text(process_frame, height=10, width=80, font=("Calibri", 12))
+                txt_artistas.pack(pady=10)
+                for artista in artistas:
+                    # Se diferencia actor de director (asumimos que si tiene atributo "edad" es actor)
+                    if hasattr(artista, "edad"):
+                        linea = f"- Actor {artista.nombre} con ID {artista.id}\n"
+                    else:
+                        linea = f"- Director {artista.nombre} con ID {artista.id}\n"
+                    txt_artistas.insert("end", linea)
+                txt_artistas.config(state="disabled")
+            else:
+                tk.Label(process_frame, text="No hay artistas en la base de datos.", font=("Calibri", 14), bg="white").pack(pady=10)
+            
+            # Se solicita el ID del artista
+            lbl_id = tk.Label(process_frame, text="Ingrese el ID del artista para gestionar clases:", font=("Calibri", 14), bg="white")
+            lbl_id.pack(pady=10)
+            entry_id = tk.Entry(process_frame, font=("Calibri", 14))
+            entry_id.pack(pady=5)
+            btn_buscar = tk.Button(process_frame, text="Buscar", font=("Calibri", 14),
+                                   command=lambda: process_artist(entry_id.get()))
+            btn_buscar.pack(pady=10)
+
+
+        
+
 
 class FieldFrame(Frame):
 
