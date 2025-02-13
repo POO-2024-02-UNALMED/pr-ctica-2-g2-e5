@@ -330,6 +330,8 @@ class Main:
 
     @classmethod
     def gestionVentas(cls):
+
+        
         
 
     
@@ -341,14 +343,32 @@ class Main:
                 
             #SE CREARA UN NUEVO ID
             code = Cliente.id_random()
-            cliente = Cliente(id = code)
-            print (cliente.id)
-        
 
+            global cliente
+            cliente = Cliente(id = code)
+            messagebox.showinfo("Éxito", f"Su nuevo ID es {cliente.id}")
+            
+        
+        def validar(a):
+                texto =a.get()
+                value = False
+                try:
+                    numero = int(texto)  # Intenta convertir a entero
+ 
+                except ValueError:
+                    value = True
+                if value:
+                    messagebox.showerror("Error", "Ingrese un numero entero")
+                elif not Cliente.verificar(numero):  # Si está vacío
+                    messagebox.showerror("Error", "Id no existente")
+                else:
+                    messagebox.showinfo("Éxito", "Iniciando sesion")
         def Usuario_Antiguo():
             for widget in cls.content.winfo_children():
                 widget.destroy()
             cliente=Cliente(id=12)
+
+           
             
             frame = tk.Frame(cls.content, bg="white", padx=20, pady=20)
             frame.place(relx=0.5, rely=0.5, anchor="center")
@@ -361,10 +381,8 @@ class Main:
             entry = tk.Entry(frame, font=("Arial", 14))
             entry.pack(pady=5)
 
-            boton = tk.Button(frame, text="Aceptar", font=("Arial", 12))
+            boton = tk.Button(frame, text="Aceptar", font=("Arial", 12),command= lambda : validar(entry))
             boton.pack(pady=10)
-
-
 
             
 
@@ -374,7 +392,31 @@ class Main:
         for widget in cls.content.winfo_children():
             widget.destroy()
         
-        label = tk.Label(cls.content, text="Eres cliente nuevo?", font=("Calibri", 25), fg="white", bg="black")
+        frame_izq = tk.Frame(cls.content, bg="black")
+        frame_izq.place(relx=0, rely=0, relwidth=0.15, relheight=1)  # Se ubica en la izquierda
+
+        # Frame derecho
+        frame_der = tk.Frame(cls.content, bg="black")
+        frame_der.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
+
+        top_frame = Frame(cls.content,background="black")
+        top_frame.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
+
+        frame_central = tk.Frame(cls.content, bg="white")
+        frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+
+        frame_central = tk.Frame(cls.content, bg="white")
+        frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+
+        top_label = tk.Label(top_frame,text="Venta de tiquetes",font=("Calibri", 25), bg="black",fg="white")
+        top_label.place(relx=0.5, rely=0.1, anchor="n")
+
+        """"top_label.bind(
+            "<Configure>",
+            lambda e: cls.resize(top_frame,top_label, 60, 100)
+        )"""
+
+        label = tk.Label(cls.content,text="Eres un cliente nuevo?", font=("Calibri", 25), fg="black",bg="white")
         label.place(relx=0.5, rely=0.3, anchor="center")
 
         Button_Si = tk.Button(cls.content, text="Si", font=("Calibri", 15),command=Usuario_Nuevo)
