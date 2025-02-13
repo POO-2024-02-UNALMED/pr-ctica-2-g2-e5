@@ -9,11 +9,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from baseDatos.Teatro import Teatro
 
-from src.gestorAplicacion.gestionVentas.Cliente import Cliente
-
-
-
-
+from gestorAplicacion.gestionVentas.Cliente import Cliente
 
 class Main:
     root = None
@@ -24,16 +20,16 @@ class Main:
     custom = False
 
     @classmethod
-    def update_font(cls, event, frame, text, tamano):
+    def update_font(cls, event, frame, text, tamano, reescalamiento):
         """Actualiza el tamaño de la fuente del título al cambiar el tamaño de la ventana."""
-        new_size = max(tamano, event.width // 30)
+        new_size = max(tamano, event.width // reescalamiento)
         new_font = ("Calibri", new_size)
 
         text.config(font=new_font, wraplength=frame.winfo_width()*0.9)
     
     @classmethod
-    def resize(cls, frame, text, tamano = 20):
-        frame.bind("<Configure>", lambda e: cls.update_font(e, frame, text, tamano))
+    def resize(cls, frame, text, tamano = 20, reescalamiento = 30):
+        frame.bind("<Configure>", lambda e: cls.update_font(e, frame, text, tamano, reescalamiento))
 
     # --- NUEVAS VARIABLES PARA PROGRAMADORES ---
     current_programador_index = -1
@@ -395,13 +391,13 @@ class Main:
         captionFrame.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
         caption = tk.Label(captionFrame, 
                            text="Bienvenido al panel de contratación de actores.",
-                           font= ("Calibri", 30))
+                           font= ("Calibri", 10))
         caption.place(relx = 0, rely = 0, relheight= 1, relwidth= 1)
         
         #reasignación de tamaño de letra
         captionFrame.bind(
             "<Configure>",
-            cls.resize(cls.content, caption, 20)
+            lambda e: cls.resize(captionFrame, caption, 20, 60)
         )
 
         #centerFrame está ubicado en el centro, en este frame se asignarán 
