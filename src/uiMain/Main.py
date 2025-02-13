@@ -357,6 +357,7 @@ class Main:
             global cliente
             cliente = Cliente(id = code)
             messagebox.showinfo("Éxito", f"Su nuevo ID es {cliente.id}")
+            Inicio_preguntas()
             
         
         def validar(a):
@@ -441,13 +442,17 @@ class Main:
             top_label = tk.Label(top_frame,text="Venta de tiquetes",font=("Calibri", 25), bg="black",fg="white")
             top_label.place(relx=0.5, rely=0.1, anchor="n")
 
+            label = tk.Label(cls.content,text="Desea mejorar su suscripcion?", font=("Calibri", 25), fg="black",bg="white")
+            label.place(relx=0.5, rely=0.3, anchor="center")
+
+            Button_Si = tk.Button(cls.content, text="Si", font=("Calibri", 15),command=Usuario_Nuevo)
+            Button_No = tk.Button(cls.content, text="No", font=("Calibri", 15),command=Usuario_Antiguo)
+            Button_Si.place(relx=0.48, rely=0.5, anchor="center")
+            Button_No.place(relx=0.53, rely=0.5, anchor="center")
+
             Main.wait()
 
-            respuesta = messagebox.askyesno("Confirmación", "¿Desea mejorar su suscripcion?")
-            if respuesta:
-                print("El usuario seleccionó 'Sí'.")
-            else:
-                print("El usuario seleccionó 'No'.")
+            
             
 
 
