@@ -118,8 +118,6 @@ class Main:
         cls.bottomFrame.bind("<Enter>", cls.cambiar_imagen)
         cls.bottomFrame.bind("<Configure>", cls.update_image)
 
-        
-        cls.bottomFrame.bind("<Enter>", cls.cambiar_imagen)
 
         #Frame izquierdo Superior
     
@@ -345,8 +343,20 @@ class Main:
             for widget in cls.content.winfo_children():
                 widget.destroy()
             cliente=Cliente(id=12)
-            a = int(input())
-            print(Cliente.verificar(a))
+            
+            frame = tk.Frame(cls.content, bg="white", padx=20, pady=20)
+            frame.place(relx=0.5, rely=0.5, anchor="center")
+
+        # Etiqueta
+            label = tk.Label(frame, text="Ingresa tu ID:", font=("Arial", 14), bg="white")
+            label.pack(pady=10)
+
+        # Cuadro de texto
+            entry = tk.Entry(frame, font=("Arial", 14))
+            entry.pack(pady=5)
+
+            boton = tk.Button(frame, text="Aceptar", font=("Arial", 12))
+            boton.pack(pady=10)
 
 
 
