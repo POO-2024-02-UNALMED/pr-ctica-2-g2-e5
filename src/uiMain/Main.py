@@ -24,7 +24,7 @@ class Main:
         """Actualiza el tamaño de la fuente del título al cambiar el tamaño de la ventana."""
         # new_size = max(tamano, event.width // reescalamiento)
         if event.height < 140 or event.width < 350:
-            new_size = max(8, min(event.height // 5, event.width // 20))
+            new_size = max(8, min(event.height // 8, event.width // 20))
         else:
             new_size = max(tamano, event.width // reescalamiento)
 
