@@ -3,6 +3,7 @@ from tkinter import Tk, Frame, ttk, messagebox
 from PIL import Image, ImageTk
 import sys
 import os
+import time 
 
 #AGREGAR SRC AL PATH
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -12,12 +13,21 @@ from baseDatos.Teatro import Teatro
 from gestorAplicacion.gestionVentas.Cliente import Cliente
 
 class Main:
+
+    debug = False
     root = None
     test = False
     fieldTest = False
     custom = False
     bg = "lightsteelblue3"
     custom = False
+
+    @classmethod
+    def wait(cls):
+        if cls.debug:
+            return 
+        else:
+            time.sleep(2)
 
     @classmethod
     def update_font(cls, event, frame, text, tamano, reescalamiento):
@@ -363,15 +373,37 @@ class Main:
                     messagebox.showerror("Error", "Id no existente")
                 else:
                     messagebox.showinfo("Éxito", "Iniciando sesion")
+                    Inicio_preguntas()
         def Usuario_Antiguo():
             for widget in cls.content.winfo_children():
                 widget.destroy()
+            
             cliente=Cliente(id=12)
+            
+            
+            frame_izq = tk.Frame(cls.content, bg="blue")
+            frame_izq.place(relx=0, rely=0, relwidth=0.15, relheight=1)  # Se ubica en la izquierda
 
-           
+            # Frame derecho
+            frame_der = tk.Frame(cls.content, bg="blue")
+            frame_der.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
+
+            frame_2 = tk.Frame(cls.content, bg="black", padx=15, pady=20)
+            frame_2.place(relx=0.5, rely=0.80,anchor="center")
             
             frame = tk.Frame(cls.content, bg="white", padx=20, pady=20)
             frame.place(relx=0.5, rely=0.5, anchor="center")
+
+            top_frame = Frame(cls.content,background="black")
+            top_frame.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
+
+            top_label = tk.Label(top_frame,text="Venta de tiquetes",font=("Calibri", 25), bg="black",fg="white")
+            top_label.place(relx=0.5, rely=0.1, anchor="n")
+
+            pregunta1= FieldFrame(root=frame,tituloCriterios="Ingresa tu ID",combobox=True)
+            #pregunta1.pack()
+
+            
 
         # Etiqueta
             label = tk.Label(frame, text="Ingresa tu ID:", font=("Arial", 14), bg="white")
@@ -384,6 +416,38 @@ class Main:
             boton = tk.Button(frame, text="Aceptar", font=("Arial", 12),command= lambda : validar(entry))
             boton.pack(pady=10)
 
+            boton = tk.Button(frame_2, text="Crear un nuevo usuario", font=("Arial", 12),command= Usuario_Nuevo)
+            boton.pack(pady=10)
+
+            
+        def Inicio_preguntas():
+            
+            frame_izq = tk.Frame(cls.content, bg="blue")
+            frame_izq.place(relx=0, rely=0, relwidth=0.15, relheight=1)  # Se ubica en la izquierda
+
+            # Frame derecho
+            frame_der = tk.Frame(cls.content, bg="blue")
+            frame_der.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
+
+            top_frame = Frame(cls.content,background="black")
+            top_frame.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
+
+            frame_central = tk.Frame(cls.content, bg="white")
+            frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+
+            frame_central = tk.Frame(cls.content, bg="white")
+            frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+
+            top_label = tk.Label(top_frame,text="Venta de tiquetes",font=("Calibri", 25), bg="black",fg="white")
+            top_label.place(relx=0.5, rely=0.1, anchor="n")
+
+            Main.wait()
+
+            respuesta = messagebox.askyesno("Confirmación", "¿Desea mejorar su suscripcion?")
+            if respuesta:
+                print("El usuario seleccionó 'Sí'.")
+            else:
+                print("El usuario seleccionó 'No'.")
             
 
 
@@ -392,11 +456,11 @@ class Main:
         for widget in cls.content.winfo_children():
             widget.destroy()
         
-        frame_izq = tk.Frame(cls.content, bg="black")
+        frame_izq = tk.Frame(cls.content, bg="blue")
         frame_izq.place(relx=0, rely=0, relwidth=0.15, relheight=1)  # Se ubica en la izquierda
 
         # Frame derecho
-        frame_der = tk.Frame(cls.content, bg="black")
+        frame_der = tk.Frame(cls.content, bg="blue")
         frame_der.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
 
         top_frame = Frame(cls.content,background="black")
