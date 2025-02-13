@@ -9,7 +9,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from baseDatos.Teatro import Teatro
 
-from src.gestorAplicacion.gestionVentas.Cliente import Cliente
+from gestorAplicacion.gestionVentas.Cliente import Cliente
 
 
 
