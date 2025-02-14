@@ -128,3 +128,8 @@ class Teatro:
 
     def setTiquetes(self, value):
         self.__tiquetes = value
+
+    @classmethod
+    def createInstancia(cls):
+        if cls.__instancia is None:
+            cls.__instancia = Teatro()

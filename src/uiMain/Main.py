@@ -12,6 +12,8 @@ from baseDatos.Teatro import Teatro
 
 from gestorAplicacion.gestionVentas.Cliente import Cliente
 
+Teatro.createInstancia()
+
 class Main:
 
     debug = False
@@ -569,6 +571,28 @@ class Main:
         historialEmpresa = None
         empresa = None
 
+        Teatro.getInstancia().getClientes().append( Cliente(id = 426, tipo= "Empresa")  )
+
+        def locateId(fieldframe: FieldFrame):
+            fieldframe.gatherEntries()
+            id = fieldframe.getValue("Inserte ID existente")
+
+            try:
+                id = int(id)
+            except Exception:
+                messagebox.showerror("Error", "La entrada no puede convertirse a entero")
+                return
+            
+            idFlag = False
+            for cliente in Teatro.getInstancia().getClientes():
+                if cliente.getId() == id and cliente.getTipo() == "Empresa":
+                    messagebox.showinfo("Success", "Cliente confirmado en base de datos")
+                    historialEmpresa = cliente.getHistorial()
+                    empresa = cliente
+                    idFlag = True
+                if not idFlag:
+                    messagebox.showerror("Error", "El número de identificación no existe en la base de datos de empresa.\nRevise si el cliente es de tipo Empresa o si se digitó correctamente.")
+
         def definirTipoEmpresa(fieldframe: FieldFrame, topFrame: Frame) -> None:
             fieldframe.gatherEntries()
 
@@ -578,31 +602,25 @@ class Main:
                 print(choice == "Empresa registrada")
                 
                 if choice == "Empresa registrada":
-                    idFlag = False
-                    id = FieldFrame(topFrame, criterios= ["Inserte ID existente"], tituloCriterios= "", tituloValores= "", valores = [""])
+                    id = FieldFrame(topFrame, 
+                                    criterios= ["Inserte ID existente"], 
+                                    tituloCriterios= "", 
+                                    tituloValores= "", 
+                                    valores = [""],
+                                    command= lambda: locateId(id))
                     id.place(relwidth= 1, relheight= 1)
-
-                    for cliente in Teatro.getInstancia().getClientes():
-                        if cliente.getId() == id and cliente.getTipo() == "Empresa":
-                            messagebox.showerror("Error", "Id no existente")
-                            tk.Label(topFrame, text= "Cliente confirmado en base de datos").pack()
-                            historialEmpresa = cliente.getHistorial()
-                            empresa = cliente
-                            idFlag = True
                     
-                    if not idFlag:
-                        tk.label(topFrame, "El número de identificación no existe en la base de datos de empresa.\nRevise si el cliente es de tipo Empresa o si se digitó correctamente.").pack()
-
                 elif choice == "Empresa Nueva":
-                    id = FieldFrame(topFrame, criterios= ["Generar nuevo ID"], tituloCriterios= "", tituloValores= "", valores = [""])
+                    id = FieldFrame(topFrame,
+                                    criterios= ["Generar nuevo ID"], 
+                                    tituloCriterios= "", 
+                                    tituloValores= "", 
+                                    valores = [""])
                     id.place(relwidth= 1, relheight= .3)
-
-
-                        
 
             else:
                 ##MANEJO DE EXCEPCION
-                tk.Label(topFrame, text= "Opción inválida").pack()
+                messagebox.showerror("Error", "Opción Inválida")
 
         pregunta1 = FieldFrame(root = centerFrame, 
                                criterios = criteriosTipoEmpresa,

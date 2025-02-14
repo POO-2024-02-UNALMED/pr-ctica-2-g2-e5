@@ -11,13 +11,13 @@ class Cliente:
                  correo: str= None, tipo: str= None, cuenta_bancaria= None, tiquete= None):
         self.obra = obra
         self.suscripcion = suscripcion
-        self.id = id
+        self.__id = id
         self.genero_favorito = genero_favorito
         self.actor_favorito = actor_favorito
         self.ultimas_compras = []
-        self.historial = []
+        self.__historial = []
         self.correo = correo
-        self.tipo = tipo
+        self.__tipo = tipo
         self.cuenta_bancaria = cuenta_bancaria
         self.tiquete = tiquete
         Cliente.clientes.append(self)  # Agregar instancia a la lista de clientes
@@ -57,6 +57,14 @@ class Cliente:
         
         return perfil + ultima_compra + suscripcion
 
+    def getId(self):
+        return self.__id
+    
+    def getTipo(self):
+        return self.__tipo
+    
+    def getHistorial(self):
+        return self.__historial
 
 
 
