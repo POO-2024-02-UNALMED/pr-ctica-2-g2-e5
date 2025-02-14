@@ -95,6 +95,11 @@ class Main:
         cls.window_main() 
 
     @classmethod
+    def exit(cls):
+        Teatro.serializar()
+        cls.root.destroy()
+
+    @classmethod
     def window_main(cls):
 
         menuBar = tk.Menu(cls.root)
@@ -102,7 +107,7 @@ class Main:
         menuInicio = tk.Menu(menuBar, tearoff=False)
         menuBar.add_cascade(menu=menuInicio, label="Inicio")
     
-        menuInicio.add_command( label="Salir")
+        menuInicio.add_command( label="Salir", command = cls.exit)
         menuInicio.add_command( label="Descripcion",  command = lambda: cls.titleLabel.config(text = "Lorem ipsum")) 
         cls.clear_frame()
 
