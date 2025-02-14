@@ -583,7 +583,6 @@ class Main:
         historialEmpresa = None
         empresa = None
 
-        #Teatro.getInstancia().getClientes().append( Cliente(id = 426, tipo= "Empresa")  )
 
         def locateId(fieldframe: FieldFrame):
             fieldframe.gatherEntries()
