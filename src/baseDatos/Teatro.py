@@ -1,13 +1,16 @@
 from __future__ import annotations
-from gestorAplicacion.gestionFinanciera.Tesoreria import Tesoreria
+from pickle import dump, load
+#from gestorAplicacion.gestionVentas.Cliente import Cliente
+#from gestorAplicacion.gestionFinanciera.Tesoreria import Tesoreria
 
 class Teatro:
 
     __instancia = None
+    DATADIR = "src/baseDatos/temp/teatro.pkl"
 
     def __init__(self):
 
-        self.tesoreria = Tesoreria(100, 10)
+ #       self.tesoreria = Tesoreria(100, 10)
 
         # empleados
         self.__empleadosPorRendimiento = []
@@ -133,3 +136,19 @@ class Teatro:
     def createInstancia(cls):
         if cls.__instancia is None:
             cls.__instancia = Teatro()
+
+    @classmethod
+    def serializar(cls):
+        picklefile = open(cls.DATADIR, "wb")
+        dump(cls.__instancia, picklefile)
+        picklefile.close
+
+    @classmethod
+    def deserializar(cls):
+        try:
+            picklefile = open(cls.DATADIR, "rb")
+            teatro = load(picklefile)
+            picklefile.close()
+            cls.__instancia = teatro
+        except Exception:
+            cls.createInstancia()

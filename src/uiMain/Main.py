@@ -12,7 +12,6 @@ from baseDatos.Teatro import Teatro
 
 from gestorAplicacion.gestionVentas.Cliente import Cliente
 
-Teatro.createInstancia()
 
 class Main:
 
@@ -334,6 +333,8 @@ class Main:
     
     @classmethod
     def runApp(cls):
+        Teatro.deserializar()
+
         cls.initRoot()
         ico = Image.open("src/media/icon.jpg")
         logo = ImageTk.PhotoImage(ico)
@@ -571,7 +572,7 @@ class Main:
         historialEmpresa = None
         empresa = None
 
-        Teatro.getInstancia().getClientes().append( Cliente(id = 426, tipo= "Empresa")  )
+        #Teatro.getInstancia().getClientes().append( Cliente(id = 426, tipo= "Empresa")  )
 
         def locateId(fieldframe: FieldFrame):
             fieldframe.gatherEntries()
@@ -590,6 +591,7 @@ class Main:
                     historialEmpresa = cliente.getHistorial()
                     empresa = cliente
                     idFlag = True
+                    Teatro.serializar()
                 if not idFlag:
                     messagebox.showerror("Error", "El número de identificación no existe en la base de datos de empresa.\nRevise si el cliente es de tipo Empresa o si se digitó correctamente.")
 
