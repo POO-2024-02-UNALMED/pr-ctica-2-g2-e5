@@ -583,6 +583,38 @@ class Main:
         historialEmpresa = None
         empresa = None
 
+        
+        def parseInt(fieldframe : FieldFrame, value: str) -> int | None:
+            fieldframe.gatherEntries()
+            ans = fieldframe.getValue(value)
+
+            try:
+                ans = int(ans)
+                return ans
+            except Exception:
+                messagebox.showerror("Error", "La entrada no puede convertirse a entero")
+                return None
+            
+        def idExists(id: int) -> bool:
+            for cliente in Teatro.getInstancia().getClientes():
+                if cliente.getId() == id and cliente.getTipo() == "Empresa":
+                    return True
+            return False
+        
+        
+        def createId(fieldframe: FieldFrame):
+            fieldframe.gatherEntries()
+
+            id = parseInt(fieldframe, "Generar nuevo ID")
+
+            if id is None: 
+                return
+
+            if not idExists(id):
+                Cliente(id= id, tipo = "Empresa")
+                messagebox.showinfo("Success", "Cliente nuevo agregado a la base de datos")
+            else:
+                messagebox.showerror("Error", "La identificación ya existe, intente con un número diferente")
 
         def locateId(fieldframe: FieldFrame):
             fieldframe.gatherEntries()
@@ -602,8 +634,8 @@ class Main:
                     empresa = cliente
                     idFlag = True
                     Teatro.serializar()
-                if not idFlag:
-                    messagebox.showerror("Error", "El número de identificación no existe en la base de datos de empresa.\nRevise si el cliente es de tipo Empresa o si se digitó correctamente.")
+            if not idFlag:
+                 messagebox.showerror("Error", "El número de identificación no existe en la base de datos de empresa.\nRevise si el cliente es de tipo Empresa o si se digitó correctamente.")
 
         def definirTipoEmpresa(fieldframe: FieldFrame, topFrame: Frame) -> None:
             fieldframe.gatherEntries()
@@ -614,21 +646,22 @@ class Main:
                 print(choice == "Empresa registrada")
                 
                 if choice == "Empresa registrada":
-                    id = FieldFrame(topFrame, 
+                    idFrame = FieldFrame(topFrame, 
                                     criterios= ["Inserte ID existente"], 
                                     tituloCriterios= "", 
                                     tituloValores= "", 
                                     valores = [""],
-                                    command= lambda: locateId(id))
-                    id.place(relwidth= 1, relheight= 1)
+                                    command= lambda: locateId(idFrame))
+                    idFrame.place(relwidth= 1, relheight= 1)
                     
-                elif choice == "Empresa Nueva":
-                    id = FieldFrame(topFrame,
+                elif choice == "Empresa nueva":
+                    idFrame = FieldFrame(topFrame,
                                     criterios= ["Generar nuevo ID"], 
                                     tituloCriterios= "", 
                                     tituloValores= "", 
-                                    valores = [""])
-                    id.place(relwidth= 1, relheight= .3)
+                                    valores = [""],
+                                    command= lambda: createId(idFrame))
+                    idFrame.place(relwidth= 1, relheight= 1)
 
             else:
                 ##MANEJO DE EXCEPCION

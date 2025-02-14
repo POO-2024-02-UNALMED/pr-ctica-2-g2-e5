@@ -1,6 +1,7 @@
 
 
 import random
+from baseDatos.Teatro import Teatro
 
 
 class Cliente:
@@ -20,7 +21,7 @@ class Cliente:
         self.__tipo = tipo
         self.cuenta_bancaria = cuenta_bancaria
         self.tiquete = tiquete
-        Cliente.clientes.append(self)  # Agregar instancia a la lista de clientes
+        Teatro.getInstancia().getClientes().append(self)
 
 
     def verificar(elemento):
