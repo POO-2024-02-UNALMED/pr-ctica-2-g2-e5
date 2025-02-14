@@ -31,22 +31,27 @@ class Main:
             time.sleep(2)
 
     @classmethod
-    def update_font(cls, event, frame, text, tamano, reescalamiento):
+    def update_font(cls, event, frame, text, tamano, reescalamiento, aplicar):
         """Actualiza el tamaño de la fuente del título al cambiar el tamaño de la ventana."""
         # new_size = max(tamano, event.width // reescalamiento)
-        if event.height < 140 or event.width < 350:
-            new_size = max(8, min(event.height // 8, event.width // 20))
+        if aplicar:
+            if event.height < 140 or event.width < 350:
+                new_size = max(8, min(event.height // 8, event.width // 20))
+                wrap_length = min(frame.winfo_height() * 5, frame.winfo_width() * 0.85)
+            else:
+                new_size = max(tamano, event.width // reescalamiento)
+                wrap_length = min(frame.winfo_height() * 5, frame.winfo_width() * 0.85)
         else:
             new_size = max(tamano, event.width // reescalamiento)
+            wrap_length = frame.winfo_width() * 0.9
 
         new_font = ("Calibri", new_size)
-
-        wrap_length = min(frame.winfo_height() * 5, frame.winfo_width() * 0.85)
+        
         text.config(font=new_font, wraplength=wrap_length)
     
     @classmethod
-    def resize(cls, frame, text, tamano = 18, reescalamiento = 30):
-        frame.bind("<Configure>", lambda e: cls.update_font(e, frame, text, tamano, reescalamiento))
+    def resize(cls, frame, text, tamano = 18, reescalamiento = 30, aplicar = True):
+        frame.bind("<Configure>", lambda e: cls.update_font(e, frame, text, tamano, reescalamiento, aplicar))
 
     # --- NUEVAS VARIABLES PARA PROGRAMADORES ---
     current_programador_index = -1
@@ -228,7 +233,7 @@ class Main:
 
     @classmethod
     def abrir_ventana_funcionalidades(cls):
-        cls.root.withdraw()
+        cls.root.destroy()
 
         cls.new_window = tk.Tk()
         cls.new_window.title("Teatro Escuela Carlos Mayolo")
@@ -349,10 +354,6 @@ class Main:
     @classmethod
     def gestionVentas(cls):
 
-        
-        
-
-    
 
         def Usuario_Nuevo():
             for widget in cls.content.winfo_children():
@@ -510,6 +511,13 @@ class Main:
     def gestionEmpleados(cls):
         for widget in cls.content.winfo_children():
             widget.destroy()
+            
+        # Encabezado
+        Titulo = Frame(cls.content, bg="white")
+        Titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1)
+        TituloLabel = tk.Label(Titulo, text="Bienvenido a la gestion de empleados", font=("Calibri"))
+        TituloLabel.pack(fill="both", expand=True)
+        TituloLabel.bind("<Configure>", lambda e: cls.resize(Titulo, TituloLabel, 8, 60, False))
 
     @classmethod
     def gestionObras(cls):
@@ -548,7 +556,7 @@ class Main:
         #reasignación de tamaño de letra
         captionFrame.bind(
             "<Configure>",
-            lambda e: cls.resize(captionFrame, caption, 20, 60)
+            lambda e: cls.resize(captionFrame, caption, 10, 60, False)
         )
 
         centerFrame.columnconfigure(0, weight=1) 
