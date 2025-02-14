@@ -1,7 +1,6 @@
 from __future__ import annotations
 from pickle import dump, load
-#from gestorAplicacion.gestionVentas.Cliente import Cliente
-#from gestorAplicacion.gestionFinanciera.Tesoreria import Tesoreria
+from gestorAplicacion.gestionFinanciera.Tesoreria import Tesoreria
 
 class Teatro:
 
@@ -10,7 +9,7 @@ class Teatro:
 
     def __init__(self):
 
- #       self.tesoreria = Tesoreria(100, 10)
+        self.tesoreria = Tesoreria(0, 5000000)
 
         # empleados
         self.__empleadosPorRendimiento = []
