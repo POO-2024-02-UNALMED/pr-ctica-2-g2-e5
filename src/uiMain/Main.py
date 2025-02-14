@@ -80,8 +80,8 @@ class Main:
     img_actual_tamano = (0, 0)
 
     @classmethod
-    def clear_frame(cls):
-        for widget in cls.main_frame.winfo_children():
+    def clear_frame(cls, frame):
+        for widget in frame.winfo_children():
             widget.destroy()
 
     #Esta función se encargará de inicializar todo lo referente a la ventana raíz
@@ -114,7 +114,7 @@ class Main:
     
         menuInicio.add_command( label="Salir", command = cls.exit)
         menuInicio.add_command( label="Descripcion",  command = lambda: cls.titleLabel.config(text = "Lorem ipsum")) 
-        cls.clear_frame()
+        
 
         # CREACIÓN DEL RIGHT FRAME (usado para programadores)
         Main.rightFrame = Frame(cls.main_frame, borderwidth= 10, bg = Main.bg, width = 800, height = 900)
