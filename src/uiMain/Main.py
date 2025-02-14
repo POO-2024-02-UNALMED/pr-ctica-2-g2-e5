@@ -507,15 +507,63 @@ class Main:
 
     @classmethod
     def gestionEmpleados(cls):
+
         for widget in cls.content.winfo_children():
             widget.destroy()
+        
+        def run():
+            cls.clear_frame(f1)
+
+            Anuncio = tk.Frame(f1, bg="#ffb48a")
+            Anuncio.place(relx = 0.5, rely=0.4, anchor="center", relwidth=0.8, relheight=0.5)
+            texto = tk.Label(Anuncio, text="Se estan pagando las deudas pendientes \nPorfavor espere...", font=("Calibri", 18), bg="#ffb48a", bd = 10, relief="raised")
+            texto.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.5, anchor="center")
+
+            NOMBRES = ["Juan", "Pedro", "Maria", "Ana", "Luis", "Carlos", "Jose", "Andres", "Sofia", "Laura", "Miguel", "Danna", "Oscar", "Frank", "Pablo"]
+            APELLIDOS = ["Gomez", "Perez", "Rodriguez", "Gonzalez", "Martinez", "Hernandez", "Lopez", "Torres", "Ramirez", "Diaz", "Sanchez", "Cruz", "Jimenez", "Rojas", "Vargas", "VELEZ"]
+            
+            Teatro.getInstancia().tesoreria.transferenciaFondos()
+            
+            # Verificar si hay deudas y pagar
+
+            Deudas = ""
+            for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                if Persona.getDeuda() != 0:
+                    if Teatro.getInstancia().tesoreria.getCuenta().getSaldo > Persona.getDeuda():
+                       transaccion = Teatro.getInstancia().tesoreria.getCuenta().transferencia(Persona.getCuenta(), Persona.getDeuda())
+                       if transaccion:
+                           Deudas = Deudas + "Se realizo el pago a: " + Persona.getNombre() + " por un valor de: " + str(Persona.getDeuda()) + "\n"
+                           Persona.setDeuda(0)
+     
+            Saldo = Teatro.getInstancia().tesoreria.getCuenta().getSaldo()
+            def continuar():
+                cls.wait()
+                cls.clear_frame(Anuncio)
+                texto = tk.Label(Anuncio, text= "Deudas" + "El saldo actual de la tesoreria es: " + "str(Saldo)", font=("Calibri", 18), bg="#ffb48a", bd = 10, relief="raised")
+                texto.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.5, anchor="center")
+            
+            Anuncio.after(50, continuar)
+            
+            
             
         # Encabezado
-        Titulo = Frame(cls.content, bg="white")
+        Titulo = tk.Frame(cls.new_window, bg="white")
         Titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1)
         TituloLabel = tk.Label(Titulo, text="Bienvenido a la gestion de empleados", font=("Calibri"))
         TituloLabel.pack(fill="both", expand=True)
-        TituloLabel.bind("<Configure>", lambda e: cls.resize(Titulo, TituloLabel, 8, 60, False))
+        TituloLabel.bind("<Configure>", lambda e: cls.resize(Titulo, TituloLabel, 8, 50, False))
+
+        # --- Partes del contenido --- #
+        f1 = tk.Frame(cls.content, bg = "#ffb48a", highlightbackground="#5d2417", highlightthickness=10)
+        f1.place(relx=0.02, rely = 0.15, relwidth = 0.95, relheight= 0.8)
+        ask = tk.Frame(f1)
+        ask.place(relx=0.1, rely = 0.1, relwidth= 0.8, relheight=0.3)
+        Question = tk.Label(ask, text="¿Deseas empezar a correr la funcionalidad?", font=("Calibri", 25), bg="#ffb48a")
+        Question.pack(fill="both", expand=True)
+        # ask.bind("<Configure>", lambda e: )
+        cls.resize(ask, Question, 8, 45, False)
+        button_yes = tk.Button(f1, bg = "#571F1C", text = "Si", fg="White", font=("Calibri", 16), command= run)
+        button_yes.place(relx = 0.5, rely=0.6, relwidth=0.3, relheight=0.1, anchor="center")
 
     @classmethod
     def gestionObras(cls):
