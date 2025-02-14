@@ -17,11 +17,8 @@ class Main:
 
     debug = False
     root = None
-    test = False
     fieldTest = False
-    custom = False
     bg = "lightsteelblue3"
-    custom = False
 
     @classmethod
     def wait(cls):
@@ -586,7 +583,6 @@ class Main:
         historialEmpresa = None
         empresa = None
 
-        #Teatro.getInstancia().getClientes().append( Cliente(id = 426, tipo= "Empresa")  )
 
         def locateId(fieldframe: FieldFrame):
             fieldframe.gatherEntries()
@@ -794,15 +790,15 @@ class FieldFrame(Frame):
 
 if __name__ == "__main__":
 
-    #datos de prueba
-    criterios = ["Name"]#, "Age", "Email", "Bitcoin", "Country", "Number"]
-    valores = ["John Doe"]#, "25", "john@example.com", "293090237hjkhjk2j", "Rhodesia", "892962"]
-
-    Main.runApp()
-    #root = Tk()
-    #Main.initRoot()
-    #window = FieldFrame(root, criterios= criterios, valores= valores, habilitado= ["Age", "Country"]).pack()
-    #print(window.getValue("Age")) #25
-    Main.root.mainloop()
-    #Main.runApp()
-    #root.mainloop()
+    if Main.fieldTest:
+        #datos de prueba para fieldframe
+        criterios = ["Name", "Age", "Email", "Bitcoin", "Country", "Number"]
+        valores = ["John Doe", "25", "john@example.com", "293090237hjkhjk2j", "Rhodesia", "892962"]
+        root = Tk()
+        window = FieldFrame(root, criterios= criterios, valores= valores, habilitado= ["Age", "Country"])
+        window.pack()
+        print(window.getValue("Age")) #25
+        root.mainloop()
+    
+    else:
+        Main.runApp()
