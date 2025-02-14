@@ -161,7 +161,7 @@ class Main:
         cls.titleLabel.place(relx=0.5, rely=0.5, anchor="center")
     
         # Vinculacion de eventos
-        cls.titleLabel.bind("<Button-1>", lambda e: cls.abrir_ventana_funcionalidades())
+        cls.titleLabel.bind("<Button-1>", lambda e: cls.abrir_nueva_ventana())
         cls.resize(cls.topFrame, cls.titleLabel)
 
         #En este método está todo lo relacionado a la sección de programadores
@@ -232,7 +232,7 @@ class Main:
             label.grid(row=idx // 2, column=idx % 2, sticky="nsew", padx=5, pady=5)
 
     @classmethod
-    def abrir_ventana_funcionalidades(cls):
+    def abrir_nueva_ventana(cls):
         cls.root.destroy()
 
         cls.new_window = tk.Tk()
@@ -269,7 +269,8 @@ class Main:
     @classmethod
     def volver(cls):
         cls.new_window.destroy()
-        cls.root.deiconify()
+        cls.initRoot()
+        cls.root.focus_force()
 
     @classmethod
     def ventanaDialogo(cls):
