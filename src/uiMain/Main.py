@@ -1,10 +1,10 @@
 import tkinter as tk
 from tkinter import Tk, Frame, ttk, messagebox
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime, time
 from PIL import Image, ImageTk
 import sys
 import os
-import time 
+import time as t
 
 #AGREGAR SRC AL PATH
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -29,7 +29,7 @@ class Main:
         if cls.debug:
             return 
         else:
-            time.sleep(2)
+            t.sleep(2)
 
     @classmethod
     def getWeek(cls):
@@ -718,8 +718,64 @@ class Main:
         
         CALIFICACION_ALTA = 4
 
-        def setSchedule():
+        def busquedaAvanzada():
             pass
+
+        def setSchedule(fieldframe: FieldFrame, fecha: str):
+            global actorsForRental
+
+            fieldframe.gatherEntries()
+            
+            horaInicio = fieldframe.values[1].get()
+            horaFin = fieldframe.values[2].get()
+            
+            try:
+                horaInicio = datetime.strptime(horaInicio, "%H:%M").time()
+                horaFin = datetime.strptime(horaFin, "%H:%M").time()
+            except Exception:
+                messagebox.showerror("Error", "Los horarios deben estar en formato 24 horas")
+                return
+
+            fecha = datetime.strptime(fecha, "%Y-%m-%d").date()
+
+            fechaInicio = datetime.combine(fecha, horaInicio)
+            fechaFin = datetime.combine(fecha, horaFin)
+
+            horaMin =  datetime.combine(fecha, time(8, 0, 0))
+            horaMax = datetime.combine(fecha, time(22, 0, 0))
+            duracionMinHoras = 4
+            duracionMaxHoras = 8
+
+            advertenciaHorario = "Existe una incompatibilidad del horario con el lineamiento.\n\nRevise si:\n1. El inicio del horario ocurre antes del fin del horario.\n2. Se exceden los límites de horario (muy temprano o muy tarde).\nIntente de nuevo."
+            advertenciaDuracion = "La duración del horario escogido es incompatible con los lineamientos\n(entre 4 y 8 horas)"
+
+            if (fechaInicio < horaMin) or (fechaFin > horaMax) or (fechaFin < fechaInicio) or (fechaInicio > fechaFin):
+                messagebox.showerror("Error", advertenciaHorario)
+                return
+            
+            duration = (fechaFin - fechaInicio).total_seconds() / 3600
+
+            if (duration < duracionMinHoras) or (duration > duracionMaxHoras):
+                messagebox.showerror("Error", advertenciaDuracion)
+                return
+            
+            actorsForRental = filter(lambda actor: actor.isDisponible(horaInicio, horaFin), actorsForRental)
+
+            busquedaAvanzada()
+
+
+        def askSchedule(fecha: str, topFrame: Frame):
+            
+            schedule = FieldFrame(
+                topFrame,
+                criterios = ["Hora de inicio", "Hora de fin"],
+                tituloCriterios = "Horario de actor",
+                tituloValores = "Respuesta",
+                valores = ["", ""],
+                command= lambda: setSchedule(schedule, fecha)
+            )
+
+            schedule.place(relheight= 1, relwidth= 1)
 
 
         def filtrado(fieldframe: FieldFrame):
@@ -744,7 +800,7 @@ class Main:
                     actorsForRental = filter(lambda actor: gen in actor.getGeneros(), actorsForRental)
                     break            
 
-            setSchedule()      
+            askSchedule(fecha, centerFrame)      
 
 
 
