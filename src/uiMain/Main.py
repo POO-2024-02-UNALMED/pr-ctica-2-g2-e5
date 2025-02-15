@@ -709,13 +709,32 @@ class Main:
         criteriosTipoEmpresa = ["Tipo de Empresa"]
         valoresTipoEmpresa = [["Empresa registrada", "Empresa nueva"]]
 
+        actorsForRental = None
         historialEmpresa = None
         empresa = None
         
         CALIFICACION_ALTA = 4
 
-        def primerFiltrado(topframe: Frame):
-            #fieldframe.gatherEntries()
+
+        def filtrado(fieldframe: FieldFrame):
+
+            responses = [entry.get() for i, entry in enumerate(fieldframe.values) if i > 0]
+            
+            rol, genero, aptitud, fecha = responses
+
+            if rol == "Rol Principal":
+                actorsForRental = filter(actorsForRental, lambda actor: actor.getCalificacion() >= CALIFICACION_ALTA)
+            else:
+                actorsForRental = filter(actorsForRental, lambda actor: actor.getCalificacion() <= CALIFICACION_ALTA)
+
+            #filtrar genero y aptitud cuando sepa como usar enums
+
+
+
+
+
+        def initPrimeraRonda(topframe: Frame):
+            global actorsForRental
 
             actorsForRental = Teatro.getInstancia().getActores().copy()
             actorsForRental = filter(lambda actor: not actor.isReevaluacion(), actorsForRental)
@@ -739,11 +758,14 @@ class Main:
                              "Emocionalidad", "Improvisación"],
                              
                              [day for day in Main.getWeek()]],
-                command= None,
+                command= lambda: filtrado(primeraRonda),
                 combobox= True
             )
 
             primeraRonda.place(relwidth= 1, relheight= 1)
+
+
+
 
 
         def parseInt(fieldframe : FieldFrame, value: str) -> int | None:
@@ -780,7 +802,7 @@ class Main:
                 empresa = Cliente(id= id, tipo = "Empresa")
                 historialEmpresa = empresa.getHistorial()
                 messagebox.showinfo("Success", "Cliente nuevo agregado a la base de datos")
-                primerFiltrado(centerFrame)
+                initPrimeraRonda(centerFrame)
 
             else:
                 messagebox.showerror("Error", "La identificación ya existe, intente con un número diferente")
@@ -802,7 +824,7 @@ class Main:
                 messagebox.showinfo("Success", "Cliente confirmado en base de datos")
                 historialEmpresa = cliente.getHistorial()
                 empresa = cliente
-                primerFiltrado(centerFrame)
+                initPrimeraRonda(centerFrame)
             else:
                  messagebox.showerror("Error", "El número de identificación no existe en la base de datos de empresa.\nRevise si el cliente es de tipo Empresa o si se digitó correctamente.")
 
