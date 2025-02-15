@@ -972,14 +972,16 @@ class FieldFrame(Frame):
             label.grid(row = i, column = 0, padx= 3, pady= 5)
             self.rowconfigure(i, weight=1)
 
-        self.criteriosStringVar = [tk.StringVar(self, value="") for _ in self.valores]
+        #self.criteriosStringVar = [tk.StringVar(self, value = "") for valor in self.valores]
         
         if not combobox:
             self.values = [tituloValoresWidget] + [tk.Entry(self, text= value) for value in self.valores]
         else:
-            self.values = [tituloValoresWidget] + [ttk.Combobox(self, values= value, textvariable= self.criteriosStringVar[i]) for i, value in enumerate(self.valores)]
-        
+            self.values = [tituloValoresWidget] + [ttk.Combobox(self, values= value) for value in self.valores]
+            #, textvariable= self.criteriosStringVar[i]
 
+            for value in self.values[1:]:
+                value['state'] = 'readonly'
 
         habilitadoExists = habilitado is not None
 
