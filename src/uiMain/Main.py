@@ -522,27 +522,103 @@ class Main:
             NOMBRES = ["Juan", "Pedro", "Maria", "Ana", "Luis", "Carlos", "Jose", "Andres", "Sofia", "Laura", "Miguel", "Danna", "Oscar", "Frank", "Pablo"]
             APELLIDOS = ["Gomez", "Perez", "Rodriguez", "Gonzalez", "Martinez", "Hernandez", "Lopez", "Torres", "Ramirez", "Diaz", "Sanchez", "Cruz", "Jimenez", "Rojas", "Vargas", "VELEZ"]
             
-            Teatro.getInstancia().getTesoreria().transferenciaFondos
+            # Teatro.getInstancia().getTesoreria().transferenciaFondos
             
-            # Verificar si hay deudas y pagar
+            # # Verificar si hay deudas y pagar
 
-            Deudas = ""
-            for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
-                if Persona.getDeuda() != 0:
-                    if Teatro.getInstancia().getTesoreria().getCuenta().getSaldo > Persona.getDeuda():
-                       transaccion = Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), Persona.getDeuda())
-                       if transaccion:
-                           Deudas = Deudas + "Se realizo el pago a: " + Persona.getNombre() + " por un valor de: " + str(Persona.getDeuda()) + "\n"
-                           Persona.setDeuda(0)
+            # Deudas = ""
+            # for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+            #     if Persona.getDeuda() != 0:
+            #         if Teatro.getInstancia().getTesoreria().getCuenta().getSaldo > Persona.getDeuda():
+            #            transaccion = Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), Persona.getDeuda())
+            #            if transaccion:
+            #                Deudas = Deudas + "Se realizo el pago a: " + Persona.getNombre() + " por un valor de: " + str(Persona.getDeuda()) + "\n"
+            #                Persona.setDeuda(0)
      
-            Saldo = Teatro.getInstancia().getTesoreria().getCuenta().getSaldo()
-            def continuar():
+            # Saldo = Teatro.getInstancia().getTesoreria().getCuenta().getSaldo()
+            def mostrarSaldo():
                 cls.wait()
                 cls.clear_frame(Anuncio)
                 texto = tk.Label(Anuncio, text= "Deudas" + "El saldo actual de la tesoreria es: " + "str(Saldo)", font=("Calibri", 18), bg="#ffb48a", bd = 10, relief="raised")
                 texto.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.5, anchor="center")
+                Anuncio.after(50, continuar)
             
-            Anuncio.after(50, continuar)
+            def continuar():
+                cls.wait()
+                cls.clear_frame(f1)
+                p1 = tk.Frame(f1, bg="#ffb48a")
+                p1.pack(side= "left", fill="both", expand= True, padx=5)
+                p2 = tk.Frame(f1, bg="#ffb48a")
+                p2.pack(side= "left", fill="both", expand= True, padx=5)
+                p3 = tk.Frame(f1, bg="#ffb48a")
+                p3.pack(side= "left", fill="both", expand= True, padx=5)
+
+                #Organizar tabla de empleados
+                #Estilo tablas
+                style = ttk.Style()
+                style.configure("Treeview", background = "white", relief = "solid", borderwidth = 4)
+                style.configure("Treeview.Heading", background = "#ffb48a", foreground = "black", font = ("Calibri", 14, "bold"))
+                #Seguridad
+                seguridad = tk.Label(p1, text="Seguridad", font=("Calibri", 18), bg="#ffb48a")
+                seguridad.pack()
+                cls.resize(p1, seguridad,10, 25,False)
+                #Tabla Seguridad
+                datos = [
+                    ("Juan", 25),
+                    ("Ana", 30),
+                    ("Luis", 22)
+                ]
+                tablaS = ttk.Treeview(p1, columns=("Nombre", "IDs"), show="headings", style= "Treeview")
+                tablaS.heading("Nombre", text="Nombre")
+                tablaS.heading("IDs", text="IDs")
+                tablaS.column("Nombre", width=100, anchor="center")
+                tablaS.column("IDs", width=50, anchor="center")
+                #Agregar los empleados
+                #caso prueba
+                for emp in datos:
+                    tablaS.insert("", "end", values = emp)
+                # for emp in Teatro.getInstancia().getTipoSeguridad():
+                #     tablaS.insert("", "end", values=(emp.getNombre(), emp.getId()))
+                tablaS.pack(expand=True, fill="both", padx=10, pady=5)
+                #Aseador
+                Aseador = tk.Label(p2, text="Aseador", font=("Calibri", 18), bg="#ffb48a")
+                Aseador.pack()
+                cls.resize(p2, Aseador,10, 25,False)
+
+                #Tabla Aseador
+                tablaA = ttk.Treeview(p2, columns=("Nombre", "IDs"), show="headings", style= "Treeview")
+                tablaA.heading("Nombre", text="Nombre")
+                tablaA.heading("IDs", text="IDs")
+                tablaA.column("Nombre", width=100, anchor="center")
+                tablaA.column("IDs", width=50, anchor="center")
+                #Agregar los empleados
+                #caso prueba
+                for emp in datos:
+                    tablaA.insert("", "end", values = emp)
+                # for emp in Teatro.getInstancia().getTipoAseador():
+                #     tablaA.insert("", "end", values=(emp.getNombre(), emp.getId()))
+                tablaA.pack(expand=True, fill="both", padx=10, pady=5)
+
+                #Profesor
+                Profesor = tk.Label(p3, text="Profesor", font=("Calibri", 18), bg="#ffb48a")
+                Profesor.pack()
+                cls.resize(p3, Profesor,10, 25,False)
+
+                #Tabla Profesor
+                tablaP = ttk.Treeview(p3, columns=("Nombre", "IDs"), show="headings", style= "Treeview")
+                tablaP.heading("Nombre", text="Nombre")
+                tablaP.heading("IDs", text="IDs")
+                tablaP.column("Nombre", width=100, anchor="center")
+                tablaP.column("IDs", width=50, anchor="center")
+                #Agregar los empleados
+                #caso prueba
+                for emp in datos:
+                    tablaP.insert("", "end", values = emp)
+                # for emp in Teatro.getInstancia().getTipoSeguridad():
+                #     tablaP.insert("", "end", values=(emp.getNombre(), emp.getId()))
+                tablaP.pack(expand=True, fill="both", padx=10, pady=5)
+
+            Anuncio.after(50, mostrarSaldo)
             
             
             
