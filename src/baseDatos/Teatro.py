@@ -9,7 +9,7 @@ class Teatro:
 
     def __init__(self):
 
-        self.tesoreria = Tesoreria(0, 5000000)
+        self.__tesoreria = Tesoreria(0, 5000000)
 
         # empleados
         self.__empleadosPorRendimiento = []
@@ -130,6 +130,12 @@ class Teatro:
 
     def setTiquetes(self, value):
         self.__tiquetes = value
+
+    def getTesoreria(self):
+        return self.__tesoreria
+    
+    def setTesoreria(self, value):
+        self.__tesoreria = value
 
     @classmethod
     def createInstancia(cls):

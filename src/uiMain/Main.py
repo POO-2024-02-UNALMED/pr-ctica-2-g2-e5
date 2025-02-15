@@ -630,7 +630,6 @@ class Main:
 
         historialEmpresa = None
         empresa = None
-
         
         def parseInt(fieldframe : FieldFrame, value: str) -> int | None:
             fieldframe.gatherEntries()
@@ -643,14 +642,16 @@ class Main:
                 messagebox.showerror("Error", "La entrada no puede convertirse a entero")
                 return None
             
-        def idExists(id: int) -> bool:
+        def idExists(id: int) -> Cliente | bool:
             for cliente in Teatro.getInstancia().getClientes():
                 if cliente.getId() == id and cliente.getTipo() == "Empresa":
-                    return True
+                    return cliente
             return False
         
-        
         def createId(fieldframe: FieldFrame):
+            global empresa
+            global historialEmpresa
+
             fieldframe.gatherEntries()
 
             id = parseInt(fieldframe, "Generar nuevo ID")
@@ -658,31 +659,33 @@ class Main:
             if id is None: 
                 return
 
-            if not idExists(id):
-                Cliente(id= id, tipo = "Empresa")
+            cliente = idExists(id)
+
+            if not cliente:
+                empresa = Cliente(id= id, tipo = "Empresa")
+                historialEmpresa = empresa.getHistorial()
                 messagebox.showinfo("Success", "Cliente nuevo agregado a la base de datos")
             else:
                 messagebox.showerror("Error", "La identificación ya existe, intente con un número diferente")
 
         def locateId(fieldframe: FieldFrame):
-            fieldframe.gatherEntries()
-            id = fieldframe.getValue("Inserte ID existente")
+            global empresa
+            global historialEmpresa
 
-            try:
-                id = int(id)
-            except Exception:
-                messagebox.showerror("Error", "La entrada no puede convertirse a entero")
+            fieldframe.gatherEntries()
+
+            id = parseInt(fieldframe, "Inserte ID existente")
+
+            if id is None:
                 return
             
-            idFlag = False
-            for cliente in Teatro.getInstancia().getClientes():
-                if cliente.getId() == id and cliente.getTipo() == "Empresa":
-                    messagebox.showinfo("Success", "Cliente confirmado en base de datos")
-                    historialEmpresa = cliente.getHistorial()
-                    empresa = cliente
-                    idFlag = True
-                    Teatro.serializar()
-            if not idFlag:
+            cliente = idExists(id)
+            
+            if cliente:
+                messagebox.showinfo("Success", "Cliente confirmado en base de datos")
+                historialEmpresa = cliente.getHistorial()
+                empresa = cliente
+            else:
                  messagebox.showerror("Error", "El número de identificación no existe en la base de datos de empresa.\nRevise si el cliente es de tipo Empresa o si se digitó correctamente.")
 
         def definirTipoEmpresa(fieldframe: FieldFrame, topFrame: Frame) -> None:
@@ -691,7 +694,6 @@ class Main:
             choice = fieldframe.getValue("Tipo de Empresa")
             if choice in ["Empresa registrada", "Empresa nueva"]:
                 tk.Label(topFrame, text= "Opción escogida: " + choice).pack()
-                print(choice == "Empresa registrada")
                 
                 if choice == "Empresa registrada":
                     idFrame = FieldFrame(topFrame, 
@@ -722,9 +724,6 @@ class Main:
                                command= lambda: definirTipoEmpresa(pregunta1, centerFrame))
 
         pregunta1.place(relx = 0, rely = 0, relheight = 1, relwidth = 1)
-        
-        #continuar = tk.Button(centerFrame, text="Continuar")
-        #continuar.place(relx=0.4, rely=0.82, relwidth= .2, relheight= .06)
 
 
 
