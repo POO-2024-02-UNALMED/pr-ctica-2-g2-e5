@@ -522,20 +522,20 @@ class Main:
             NOMBRES = ["Juan", "Pedro", "Maria", "Ana", "Luis", "Carlos", "Jose", "Andres", "Sofia", "Laura", "Miguel", "Danna", "Oscar", "Frank", "Pablo"]
             APELLIDOS = ["Gomez", "Perez", "Rodriguez", "Gonzalez", "Martinez", "Hernandez", "Lopez", "Torres", "Ramirez", "Diaz", "Sanchez", "Cruz", "Jimenez", "Rojas", "Vargas", "VELEZ"]
             
-            Teatro.getInstancia().tesoreria.transferenciaFondos()
+            Teatro.getInstancia().getTesoreria().transferenciaFondos
             
             # Verificar si hay deudas y pagar
 
             Deudas = ""
             for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
                 if Persona.getDeuda() != 0:
-                    if Teatro.getInstancia().tesoreria.getCuenta().getSaldo > Persona.getDeuda():
-                       transaccion = Teatro.getInstancia().tesoreria.getCuenta().transferencia(Persona.getCuenta(), Persona.getDeuda())
+                    if Teatro.getInstancia().getTesoreria().getCuenta().getSaldo > Persona.getDeuda():
+                       transaccion = Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), Persona.getDeuda())
                        if transaccion:
                            Deudas = Deudas + "Se realizo el pago a: " + Persona.getNombre() + " por un valor de: " + str(Persona.getDeuda()) + "\n"
                            Persona.setDeuda(0)
      
-            Saldo = Teatro.getInstancia().tesoreria.getCuenta().getSaldo()
+            Saldo = Teatro.getInstancia().getTesoreria().getCuenta().getSaldo()
             def continuar():
                 cls.wait()
                 cls.clear_frame(Anuncio)
