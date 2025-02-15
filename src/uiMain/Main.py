@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import Tk, Frame, ttk, messagebox
+from datetime import date, timedelta
 from PIL import Image, ImageTk
 import sys
 import os
@@ -26,6 +27,10 @@ class Main:
             return 
         else:
             time.sleep(2)
+
+    @classmethod
+    def getWeek(cls):
+        return [date.today() + timedelta(days= i) for i in range(7) ]
 
     @classmethod
     def update_font(cls, event, frame, text, tamano, reescalamiento, aplicar):
@@ -707,6 +712,40 @@ class Main:
         historialEmpresa = None
         empresa = None
         
+        CALIFICACION_ALTA = 4
+
+        def primerFiltrado(topframe: Frame):
+            #fieldframe.gatherEntries()
+
+            actorsForRental = Teatro.getInstancia().getActores().copy()
+            actorsForRental = filter(lambda actor: not actor.isReevaluacion(), actorsForRental)
+
+            primeraRonda = FieldFrame(
+                topframe,
+                criterios= ["Tipo de papel", 
+                            "Tipo de Obra",
+                            "Aptitud principal",
+                            "Día de contratación"],
+
+                tituloCriterios = "Características del actor",
+                tituloValores = "Respuestas",
+
+                valores = [["Rol principal", "Rol secundario"], 
+                           
+                           ["Circo", "Comedia", "Drama", "Experimental", 
+                            "Fantasía", "Musical", "Romance", "Terror"],
+
+                            ["Canto", "Baile", "Discurso", 
+                             "Emocionalidad", "Improvisación"],
+                             
+                             [day for day in Main.getWeek()]],
+                command= None,
+                combobox= True
+            )
+
+            primeraRonda.place(relwidth= 1, relheight= 1)
+
+
         def parseInt(fieldframe : FieldFrame, value: str) -> int | None:
             fieldframe.gatherEntries()
             ans = fieldframe.getValue(value)
@@ -741,6 +780,8 @@ class Main:
                 empresa = Cliente(id= id, tipo = "Empresa")
                 historialEmpresa = empresa.getHistorial()
                 messagebox.showinfo("Success", "Cliente nuevo agregado a la base de datos")
+                primerFiltrado(centerFrame)
+
             else:
                 messagebox.showerror("Error", "La identificación ya existe, intente con un número diferente")
 
@@ -761,6 +802,7 @@ class Main:
                 messagebox.showinfo("Success", "Cliente confirmado en base de datos")
                 historialEmpresa = cliente.getHistorial()
                 empresa = cliente
+                primerFiltrado(centerFrame)
             else:
                  messagebox.showerror("Error", "El número de identificación no existe en la base de datos de empresa.\nRevise si el cliente es de tipo Empresa o si se digitó correctamente.")
 
