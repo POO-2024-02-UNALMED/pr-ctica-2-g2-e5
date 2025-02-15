@@ -10,16 +10,17 @@ class Genero(Enum):
     CIRCO = object() 
     EXPERIMENTAL = object()
 
-    def __init__(self, directores):
-        directores = self.getDirectores()
-        
-    def getDirectores(self):
-        from baseDatos import Teatro
-        dirgenero = []
-        for director in Teatro.getInstancia().getDirectors():
-            if director.genero == self:
-                dirgenero.append(director)
-            return dirgenero
-
-    def anadirDirector(self, director):
-        self.directores.append(director)
+#No funciona la importación, cuando se inicializa, la instancia Teatro no existe
+#    def __init__(self, directores):
+#        directores = self.getDirectores()
+#        
+#    def getDirectores(self):
+#        from baseDatos.Teatro import Teatro
+#        dirgenero = []
+#        for director in Teatro.getInstancia().getDirectors():
+#            if director.genero == self:
+#                dirgenero.append(director)
+#            return dirgenero
+#
+#    def anadirDirector(self, director):
+#        self.directores.append(director)

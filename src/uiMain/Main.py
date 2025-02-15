@@ -13,6 +13,9 @@ from baseDatos.Teatro import Teatro
 
 from gestorAplicacion.gestionVentas.Cliente import Cliente
 
+from gestorAplicacion.herramientas.Aptitud import Aptitud
+from gestorAplicacion.herramientas.Genero import Genero
+
 
 class Main:
 
@@ -715,21 +718,33 @@ class Main:
         
         CALIFICACION_ALTA = 4
 
+        def setSchedule():
+            pass
+
 
         def filtrado(fieldframe: FieldFrame):
+            global actorsForRental
 
             responses = [entry.get() for i, entry in enumerate(fieldframe.values) if i > 0]
             
             rol, genero, aptitud, fecha = responses
 
             if rol == "Rol Principal":
-                actorsForRental = filter(actorsForRental, lambda actor: actor.getCalificacion() >= CALIFICACION_ALTA)
+                actorsForRental = filter(lambda actor: actor.getCalificacion() >= CALIFICACION_ALTA, actorsForRental)
             else:
-                actorsForRental = filter(actorsForRental, lambda actor: actor.getCalificacion() <= CALIFICACION_ALTA)
+                actorsForRental = filter(lambda actor: actor.getCalificacion() < CALIFICACION_ALTA, actorsForRental)
 
-            #filtrar genero y aptitud cuando sepa como usar enums
+            for apt in Aptitud:
+                if apt.name == aptitud.upper():
+                    actorsForRental = filter(lambda actor: actor.getCalificacionPorAptitud(apt) >= CALIFICACION_ALTA, actorsForRental)
+                    break
+            
+            for gen in Genero:
+                if gen.name == genero.upper():
+                    actorsForRental = filter(lambda actor: gen in actor.getGeneros(), actorsForRental)
+                    break            
 
-
+            setSchedule()      
 
 
 
