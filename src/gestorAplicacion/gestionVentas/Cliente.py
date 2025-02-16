@@ -12,7 +12,7 @@ class Cliente:
     def __init__(self, obra: str = None, suscripcion = None, id: int = 0, genero_favorito= None, actor_favorito= None, 
                  correo: str= None, tipo: str= None, cuenta_bancaria= None, tiquete= None):
         self.obra = obra
-        self.suscripcion = suscripcion
+        self.__suscripcion = suscripcion
         self.__id = id
         self.genero_favorito = genero_favorito
         self.actor_favorito = actor_favorito
@@ -61,6 +61,11 @@ class Cliente:
 
     def getId(self):
         return self.__id
+    def set_suscripcion(self,susc):
+        self.__suscripcion=susc
+
+    def get_suscripcion(self):
+        return self.__suscripcion
     
     def getTipo(self):
         return self.__tipo
