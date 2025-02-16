@@ -609,6 +609,35 @@ class Main:
                 
             )
             obr.place(relheight= 1, relwidth= 1)
+            texto = Obra.generarTabla1()
+
+            tree = ttk.Treeview(frame_central, columns=("Nombre", "Género", "Duración", "Precio"), show="headings",height=5)
+
+            # Configurar encabezados
+            tree.heading("Nombre", text="Nombre")
+            tree.heading("Género", text="Género")
+            tree.heading("Duración", text="Duración")
+            tree.heading("Precio", text="Precio")
+
+            # Ajustar tamaños de columnas
+            tree.column("Nombre", width=180)
+            tree.column("Género", width=100)
+            tree.column("Duración", width=80)
+            tree.column("Precio", width=100, anchor="e")  # Alinear precios a la derecha
+
+            # Scrollbar vertical
+            scrollbar = ttk.Scrollbar(frame_central, orient="vertical", command=tree.yview)
+            tree.configure(yscrollcommand=scrollbar.set)
+
+            # Ubicar Treeview y Scrollbar en la ventana
+            tree.place(relx=0.2,rely=0.3,relwidth=0.7, relheight=0.3)
+            scrollbar.place(relx=0.90,rely=0.3, relwidth=0.03, relheight=0.3)
+
+            # Agregar datos al Treeview
+            for obra in Teatro.getInstancia().getObras():
+                tree.insert("", "end", values=(obra.getNombre(),"comedia", "10:00", "1.000"))
+
+
 
         def asignar_obra(fieldframe :FieldFrame):
             fieldframe.gatherEntries()

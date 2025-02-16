@@ -341,8 +341,8 @@ class Obra:
         self.funcionesSemana.append(funcion)
 
     @staticmethod
-    def generarTabla(cls):
-        from baseDatos import Teatro
+    def generarTabla():
+
         nuevo=""
         for obra in Teatro.getInstancia().getObras():
             if obra.getNombre() != "NOTFORITE":
@@ -351,7 +351,21 @@ class Obra:
                                     obra.precioObra(obra.getNombre()))+"\n")
                 nuevo = nuevo +string
         return nuevo
-    
+    @staticmethod
+    def generarTabla1():
+        nuevo = string = "{:>30} {:>20} {:>20} {:>20}".format(
+                    "Nombre", "Genero","Duracion","Precio"
+                )+ "\n"
+
+        for obra in Teatro.getInstancia().getObras():
+            if obra.getNombre() != "NOTFORITE":
+                string = "{:>30} {:>20} {:>20} {:>20}".format(
+                    obra.getNombre(), "comedia","10:00","1_000"
+                ) + "\n"
+                nuevo += string
+
+        return nuevo
+
     def getDuracionFormato(self):
         horas = self.getDuracion().total_seconds() // 3600
         minutos = (self.getDuracion.total_seconds() % 3600) // 60
