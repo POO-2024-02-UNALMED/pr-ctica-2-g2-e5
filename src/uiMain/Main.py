@@ -15,6 +15,7 @@ from gestorAplicacion.gestionVentas.Cliente import Cliente
 
 from gestorAplicacion.herramientas.Aptitud import Aptitud
 from gestorAplicacion.herramientas.Genero import Genero
+from gestorAplicacion.gestionObras.Artista import Artista
 
 from baseDatos.memory import resetMemory
 
@@ -965,7 +966,6 @@ class Main:
 
     @classmethod
     def gestionClases(cls):
-        # Se limpia el frame de contenido actual (línea ~320)
         for widget in cls.content.winfo_children():
             widget.destroy()
 
@@ -982,32 +982,33 @@ class Main:
         # --- FRAME PRINCIPAL PARA EL PROCESO ---
         process_frame = Frame(cls.content, bg="white")
         process_frame.place(relx=0, rely=0.1, relwidth=1, relheight=0.9)
-
-        # ----------- PASO 1: Mostrar Artistas existentes y solicitar ID -----------
+'''
+        # -------------------- PASO 1: Mostrar Artistas y solicitar ID --------------------
         def step1():
             for widget in process_frame.winfo_children():
                 widget.destroy()
-            
-            # Se obtienen los artistas existentes de la base de datos (suponiendo que Teatro.getInstancia().getArtistas() exista)
+
             artistas = Teatro.getInstancia().getArtistas()
             if artistas:
-                lbl_artistas = tk.Label(process_frame, text="Artistas existentes en la base de datos:", font=("Calibri", 14), bg="white")
+                lbl_artistas = tk.Label(process_frame, text="Artistas existentes en la base de datos:",
+                                        font=("Calibri", 14), bg="white")
                 lbl_artistas.pack(pady=10)
                 txt_artistas = tk.Text(process_frame, height=10, width=80, font=("Calibri", 12))
                 txt_artistas.pack(pady=10)
                 for artista in artistas:
-                    # Se diferencia actor de director (asumimos que si tiene atributo "edad" es actor)
+                    # Diferenciamos actores y directores: suponemos que si el artista tiene atributo "edad" es Actor.
                     if hasattr(artista, "edad"):
-                        linea = f"- Actor {artista.nombre} con ID {artista.id}\n"
+                        linea = f"- Actor {artista.getNombre()} con ID {artista.getId()}\n"
                     else:
-                        linea = f"- Director {artista.nombre} con ID {artista.id}\n"
+                        linea = f"- Director {artista.getNombre()} con ID {artista.getId()}\n"
                     txt_artistas.insert("end", linea)
                 txt_artistas.config(state="disabled")
             else:
-                tk.Label(process_frame, text="No hay artistas en la base de datos.", font=("Calibri", 14), bg="white").pack(pady=10)
-            
-            # Se solicita el ID del artista
-            lbl_id = tk.Label(process_frame, text="Ingrese el ID del artista para gestionar clases:", font=("Calibri", 14), bg="white")
+                tk.Label(process_frame, text="No hay artistas en la base de datos.",
+                         font=("Calibri", 14), bg="white").pack(pady=10)
+
+            lbl_id = tk.Label(process_frame, text="Ingrese el ID del artista para gestionar clases:",
+                              font=("Calibri", 14), bg="white")
             lbl_id.pack(pady=10)
             entry_id = tk.Entry(process_frame, font=("Calibri", 14))
             entry_id.pack(pady=5)
@@ -1015,7 +1016,360 @@ class Main:
                                    command=lambda: process_artist(entry_id.get()))
             btn_buscar.pack(pady=10)
 
+        # -------------------- PASO 2: Procesar el ID ingresado --------------------
+        def process_artist(id_str):
+            try:
+                id_num = int(id_str)
+            except ValueError:
+                messagebox.showerror("Error", "El ID debe ser un número entero.")
+                return
+            artista = Artista.buscarArtistaPorId(id_num)
+            if artista is None:
+                step_artist_not_found(id_num)
+            else:
+                step_artist_found(artista)
 
+        # -------------------- PASO 3: Artista no encontrado --------------------
+        def step_artist_not_found(id_num):
+            for widget in process_frame.winfo_children():
+                widget.destroy()
+            tk.Label(process_frame, text=f"Artista con ID {id_num} no encontrado.",
+                     font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
+            tk.Label(process_frame, text="¿Desea crear un nuevo Artista con este ID?",
+                     font=("Calibri", 14), bg="white").pack(pady=10)
+            tk.Button(process_frame, text="Sí", font=("Calibri", 14),
+                      command=lambda: step_create_artist(id_num)).pack(pady=5)
+            tk.Button(process_frame, text="No", font=("Calibri", 14),
+                      command=lambda: step_show_obras_criticas()).pack(pady=5)
+
+        # -------------------- PASO 4: Crear nuevo artista --------------------
+        def step_create_artist(id_num):
+            for widget in process_frame.winfo_children():
+                widget.destroy()
+            tk.Label(process_frame, text=f"Creación de nuevo Artista con ID {id_num}",
+                     font=("Calibri", 14), bg="white").pack(pady=10)
+            tk.Label(process_frame, text="Ingrese el nombre del nuevo artista:",
+                     font=("Calibri", 14), bg="white").pack(pady=5)
+            entry_nombre = tk.Entry(process_frame, font=("Calibri", 14))
+            entry_nombre.pack(pady=5)
+            tk.Label(process_frame, text="Ingrese el tipo de artista (director/actor):",
+                     font=("Calibri", 14), bg="white").pack(pady=5)
+            entry_tipo = tk.Entry(process_frame, font=("Calibri", 14))
+            entry_tipo.pack(pady=5)
+            tk.Label(process_frame, text="(Para actor se pedirá la edad)", font=("Calibri", 12), bg="white").pack(pady=5)
+            tk.Button(process_frame, text="Guardar", font=("Calibri", 14),
+                      command=lambda: process_new_artist(id_num, entry_nombre.get(), entry_tipo.get())).pack(pady=10)
+
+        def process_new_artist(id_num, nombre, tipo):
+            tipo = tipo.lower().strip()
+            if tipo not in ["director", "actor"]:
+                messagebox.showerror("Error", "Tipo de artista no válido. Debe ser 'director' o 'actor'.")
+                return
+            if tipo == "director":
+                # Se crea el director mediante su constructor (se asume que internamente se añade a la lista de directores)
+                # Ejemplo: Director(nombre, id_num)
+                director = Director(nombre, id_num)
+                messagebox.showinfo("Éxito", f"Nuevo director agregado: {nombre} con ID {id_num}.\nLos directores no reciben clases.")
+                cls.volver()  # Regresa al menú principal
+            else:
+                for widget in process_frame.winfo_children():
+                    widget.destroy()
+                tk.Label(process_frame, text="Ingrese la edad del nuevo actor (entre 4 y 80):",
+                         font=("Calibri", 14), bg="white").pack(pady=10)
+                entry_age = tk.Entry(process_frame, font=("Calibri", 14))
+                entry_age.pack(pady=5)
+                tk.Button(process_frame, text="Guardar", font=("Calibri", 14),
+                          command=lambda: process_new_actor(id_num, nombre, entry_age.get())).pack(pady=10)
+
+        def process_new_actor(id_num, nombre, age_str):
+            try:
+                edad = int(age_str)
+            except ValueError:
+                messagebox.showerror("Error", "La edad debe ser un número entero.")
+                return
+            if edad < 4 or edad > 80:
+                messagebox.showerror("Error", "La edad debe estar entre 4 y 80 años.")
+                return
+            # Se crea el actor (se asume que Actor(nombre, id_num, edad) lo agrega a la lista de actores)
+            actor = Actor(nombre, id_num, edad)
+            messagebox.showinfo("Éxito", f"Nuevo actor agregado: {nombre} con ID {id_num} y edad {edad}.")
+            step_artist_found(actor)
+
+        # -------------------- PASO 5: Artista encontrado --------------------
+        def step_artist_found(artista):
+            for widget in process_frame.winfo_children():
+                widget.destroy()
+            if not hasattr(artista, "edad"):
+                tk.Label(process_frame, text="El artista es un Director. Los directores no reciben clases.",
+                         font=("Calibri", 14), bg="white", fg="yellow").pack(pady=10)
+                tk.Button(process_frame, text="Finalizar", font=("Calibri", 14),
+                          command=cls.volver).pack(pady=10)
+            else:
+                # Si el actor no tiene calificaciones, se inicializan
+                if artista.sigueIgual():
+                    resultado = Teatro.getInstancia().casting(artista, Teatro.getInstancia().getTipoProfesor())
+                    if not resultado:
+                        messagebox.showerror("Error", "No hay profesores disponibles para inicializar las calificaciones del actor.")
+                    else:
+                        messagebox.showinfo("Información", "Se han inicializado las calificaciones del actor.")
+                if len(artista.getCalificacionesPublico()) == 0:
+                    Artista.inicializarCalificacionesPublico(artista)
+                # Mostrar información de calificaciones
+                txt_info = tk.Text(process_frame, height=8, width=80, font=("Calibri", 12))
+                txt_info.pack(pady=10)
+                info_text = f"Calificaciones de calificadores: {artista.getCalificacionesAptitudes()}\n"
+                info_text += f"Calificaciones del público: {artista.getCalificacionesPublico()}\n"
+                txt_info.insert("end", info_text)
+                txt_info.config(state="disabled")
+                # Mostrar obras críticas
+                tk.Label(process_frame, text="Obras en estado crítico del teatro:",
+                         font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
+                obras = Teatro.getInstancia().mostrarObrasCriticas()  # Se asume que este método existe
+                if not obras:
+                    tk.Label(process_frame, text="No hay obras en estado crítico.",
+                             font=("Calibri", 14), bg="white", fg="yellow").pack(pady=5)
+                else:
+                    txt_obras = tk.Text(process_frame, height=6, width=80, font=("Calibri", 12))
+                    txt_obras.pack(pady=5)
+                    for obra in obras:
+                        linea = f"- '{obra.nombre}' (Promedio: {obra.promedioCalificacion()})\n"
+                        txt_obras.insert("end", linea)
+                    txt_obras.config(state="disabled")
+                tk.Button(process_frame, text="Programar clase", font=("Calibri", 14),
+                          command=lambda: step_select_area(artista)).pack(pady=10)
+
+        # -------------------- PASO 6: Seleccionar área de mejora --------------------
+        def step_select_area(actor):
+            for widget in process_frame.winfo_children():
+                widget.destroy()
+            areas_recomendadas = actor.obtenerAreasDeMejora()
+            if not areas_recomendadas:
+                messagebox.showinfo("Información", "No hay áreas recomendadas para mejorar.")
+                cls.volver()
+                return
+            txt_areas = tk.Text(process_frame, height=6, width=80, font=("Calibri", 12))
+            txt_areas.pack(pady=10)
+            txt_areas.insert("end", "Áreas recomendadas para mejorar:\n")
+            for i, area in enumerate(areas_recomendadas[:3]):
+                cal = actor.getCalificacionPorAptitud(area)
+                txt_areas.insert("end", f"{i+1}. {area} (Calificación: {cal})\n")
+            txt_areas.config(state="disabled")
+            tk.Label(process_frame, text="¿Desea programar una clase basada en las áreas recomendadas?",
+                     font=("Calibri", 14), bg="white").pack(pady=10)
+            tk.Button(process_frame, text="Sí", font=("Calibri", 14),
+                      command=lambda: step_schedule_class(actor, areas_recomendadas[0])).pack(pady=5)
+            tk.Button(process_frame, text="No", font=("Calibri", 14),
+                      command=lambda: step_select_custom_area(actor)).pack(pady=5)
+
+        # -------------------- PASO 7: Selección personalizada de área --------------------
+        def step_select_custom_area(actor):
+            for widget in process_frame.winfo_children():
+                widget.destroy()
+            tk.Label(process_frame, text="Seleccione el área para programar la clase:",
+                     font=("Calibri", 14), bg="white").pack(pady=10)
+            areas = actor.getAptitudes()  # Se asume que retorna todas las aptitudes
+            var_area = tk.StringVar(value=areas[0] if areas else "")
+            for area in areas:
+                tk.Radiobutton(process_frame, text=str(area), variable=var_area,
+                               value=area, font=("Calibri", 12), bg="white").pack(anchor="w", padx=20)
+            tk.Button(process_frame, text="Siguiente", font=("Calibri", 14),
+                      command=lambda: step_schedule_class(actor, var_area.get())).pack(pady=10)
+
+        # -------------------- PASO 8: Programar la clase (solicitar horario) --------------------
+        def step_schedule_class(actor, areaSeleccionada):
+            for widget in process_frame.winfo_children():
+                widget.destroy()
+            # Determinar el nivel de clase basado en la calificación actual
+            calificacionActual = actor.getCalificacionPorAptitud(areaSeleccionada)
+            if calificacionActual < 3.0:
+                nivelClase = "Introducción"
+            elif calificacionActual < 4.0:
+                nivelClase = "Profundización"
+            else:
+                nivelClase = "Perfeccionamiento"
+            tk.Label(process_frame,
+                     text=f"Área seleccionada: {areaSeleccionada}\nNivel de clase: {nivelClase}",
+                     font=("Calibri", 14), bg="white").pack(pady=10)
+            tk.Label(process_frame, text="Programe la clase (Formato: YYYY-MM-DD HH:MM)",
+                     font=("Calibri", 14), bg="white").pack(pady=5)
+            tk.Label(process_frame, text="Inicio:", font=("Calibri", 14), bg="white").pack(pady=5)
+            entry_start = tk.Entry(process_frame, font=("Calibri", 14))
+            entry_start.pack(pady=5)
+            tk.Label(process_frame, text="Fin:", font=("Calibri", 14), bg="white").pack(pady=5)
+            entry_end = tk.Entry(process_frame, font=("Calibri", 14))
+            entry_end.pack(pady=5)
+            tk.Button(process_frame, text="Programar", font=("Calibri", 14),
+                      command=lambda: process_schedule(actor, areaSeleccionada, nivelClase,
+                                                        entry_start.get(), entry_end.get())).pack(pady=10)
+
+        # -------------------- PASO 9: Procesar horario y asignar sala y profesor --------------------
+        def process_schedule(actor, areaSeleccionada, nivelClase, inicio_str, fin_str):
+            from datetime import datetime
+            try:
+                inicio = datetime.strptime(inicio_str, "%Y-%m-%d %H:%M")
+                fin = datetime.strptime(fin_str, "%Y-%m-%d %H:%M")
+            except ValueError:
+                messagebox.showerror("Error", "Formato de fecha/hora incorrecto.")
+                return
+            if fin <= inicio:
+                messagebox.showerror("Error", "El fin debe ser después del inicio.")
+                return
+            duration = (fin - inicio).total_seconds() / 3600
+            if duration < 2 or duration > 4:
+                messagebox.showerror("Error", "La duración debe ser entre 2 y 4 horas.")
+                return
+            # Validación de horario: se asume que las clases deben programarse entre las 10 y las 22
+            if not (10 <= inicio.hour < 22 and 10 < fin.hour <= 22):
+                messagebox.showerror("Error", "Las clases deben programarse entre las 10:00 y las 22:00.")
+                return
+            # Buscar sala disponible (usando anadir_horario, que en este caso es el método con guion bajo)
+            salaAsignada = None
+            for sala in Teatro.getInstancia().getSalas():
+                if sala.getAseado() and sala.isDisponible(inicio, fin):
+                    salaAsignada = sala
+                    break
+            if salaAsignada is None:
+                messagebox.showerror("Error", "No hay salas disponibles en el horario deseado o no están limpias.")
+                return
+            salaAsignada.anadir_horario([inicio, fin])
+            # Selección de profesor especializado (simulación de disponibilidad)
+            profesorAsignado = None
+            import random
+            profesores = Teatro.getInstancia().getTipoProfesor()
+            random.shuffle(profesores)
+            for empleado in profesores:
+                # Se asume que podemos identificar a un profesor mediante isinstance o similar
+                if hasattr(empleado, "tiene_especializacion") and empleado.tiene_especializacion(areaSeleccionada):
+                    if random.random() > 0.5:
+                        profesorAsignado = empleado
+                        break
+            if profesorAsignado is None:
+                messagebox.showerror("Error", "No hay profesores disponibles con especialización en el área seleccionada.")
+                return
+            msg = f"Sala asignada: {salaAsignada.getNumeroSala()}\nProfesor asignado: {profesorAsignado.getNombre()}\n"
+            messagebox.showinfo("Clase Programada", msg)
+            step_payment(actor, areaSeleccionada, nivelClase, profesorAsignado)
+
+        # -------------------- PASO 10: Procesar pago y evaluación --------------------
+        def step_payment(actor, areaSeleccionada, nivelClase, profesorAsignado):
+            for widget in process_frame.winfo_children():
+                widget.destroy()
+            if nivelClase == "Introducción":
+                costoClase = 50000
+            elif nivelClase == "Profundización":
+                costoClase = 75000
+            else:
+                costoClase = 90000
+            tk.Label(process_frame, text=f"El costo de la clase es: ${costoClase}",
+                     font=("Calibri", 14), bg="white").pack(pady=10)
+            tk.Button(process_frame, text="Procesar Pago", font=("Calibri", 14),
+                      command=lambda: process_payment(actor, costoClase, areaSeleccionada,
+                                                       profesorAsignado, nivelClase)).pack(pady=10)
+
+        def process_payment(actor, costoClase, areaSeleccionada, profesorAsignado, nivelClase):
+            if actor.getCuenta().retirar(costoClase):
+                tesoreria = Teatro.getInstancia().getTesoreria()
+                tesoreria.setTotal(tesoreria.getTotal() + costoClase)
+                tesoreria.setDineroEnCaja(tesoreria.getDineroEnCaja() + costoClase)
+                messagebox.showinfo("Pago", "Pago procesado exitosamente.")
+                # Se asigna profesor evaluador (simulación)
+                profesor_evaluador = None
+                import random
+                profesores = Teatro.getInstancia().getTipoProfesor()
+                random.shuffle(profesores)
+                for empleado in profesores:
+                    if hasattr(empleado, "tiene_especializacion") and empleado.tiene_especializacion(areaSeleccionada):
+                        if random.random() > 0.5:
+                            profesor_evaluador = empleado
+                            break
+                if profesor_evaluador:
+                    calificacion = round(random.random() * 5, 1)
+                    messagebox.showinfo("Evaluación", f"El profesor {profesor_evaluador.getNombre()} calificó al actor con un: {calificacion}")
+                    if calificacion == 5:
+                        if Teatro.getInstancia().getTesoreria().getCuenta().transferencia(actor.getCuenta(), costoClase):
+                            messagebox.showinfo("Reembolso", f"Calificación perfecta. Se ha reembolsado ${costoClase} al actor.")
+                        else:
+                            messagebox.showerror("Error", "Error al procesar el reembolso.")
+                    if not actor.huboMejora(areaSeleccionada):
+                        tk.Button(process_frame, text="Reprogramar clase por falta de mejora", font=("Calibri", 14),
+                                  command=lambda: step_reprogramar(actor, areaSeleccionada, profesor_evaluador, nivelClase)).pack(pady=10)
+                    else:
+                        messagebox.showinfo("Proceso Finalizado", "La clase se ha realizado exitosamente.")
+                        puntos = 1 if nivelClase == "Introducción" else (2 if nivelClase == "Profundización" else 3)
+                        profesorAsignado.agregar_puntos(puntos)
+                        messagebox.showinfo("Puntos", f"El profesor {profesorAsignado.getNombre()} ha recibido {puntos} puntos positivos.")
+                        cls.volver()
+                else:
+                    messagebox.showerror("Error", "No hay profesores disponibles para calificar la función.")
+            else:
+                messagebox.showerror("Error", "El actor cuenta con saldo insuficiente para pagar la clase.")
+
+        # -------------------- PASO 11: Reprogramar clase en caso de falta de mejora --------------------
+        def step_reprogramar(actor, areaSeleccionada, profesorEvaluador, nivelClase):
+            for widget in process_frame.winfo_children():
+                widget.destroy()
+            tk.Label(process_frame, text="Reprogramar clase por falta de mejora",
+                     font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
+            tk.Label(process_frame, text="Ingrese nuevo horario (debe ser posterior al anterior)",
+                     font=("Calibri", 14), bg="white").pack(pady=10)
+            tk.Label(process_frame, text="Nuevo Inicio (YYYY-MM-DD HH:MM):",
+                     font=("Calibri", 14), bg="white").pack(pady=5)
+            entry_start = tk.Entry(process_frame, font=("Calibri", 14))
+            entry_start.pack(pady=5)
+            tk.Label(process_frame, text="Nuevo Fin (YYYY-MM-DD HH:MM):",
+                     font=("Calibri", 14), bg="white").pack(pady=5)
+            entry_end = tk.Entry(process_frame, font=("Calibri", 14))
+            entry_end.pack(pady=5)
+            tk.Button(process_frame, text="Reprogramar", font=("Calibri", 14),
+                      command=lambda: process_reprogramar(actor, areaSeleccionada, entry_start.get(), entry_end.get(), nivelClase, profesorEvaluador)).pack(pady=10)
+
+        def process_reprogramar(actor, areaSeleccionada, inicio_str, fin_str, nivelClase, profesorEvaluador):
+            from datetime import datetime
+            try:
+                inicio = datetime.strptime(inicio_str, "%Y-%m-%d %H:%M")
+                fin = datetime.strptime(fin_str, "%Y-%m-%d %H:%M")
+            except ValueError:
+                messagebox.showerror("Error", "Formato de fecha/hora incorrecto.")
+                return
+            if fin <= inicio:
+                messagebox.showerror("Error", "El fin debe ser después del inicio.")
+                return
+            salaAsignada = None
+            for sala in Teatro.getInstancia().getSalas():
+                if sala.getAseado() and sala.isDisponible(inicio, fin):
+                    salaAsignada = sala
+                    break
+            if salaAsignada is None:
+                messagebox.showerror("Error", "No hay salas disponibles en el nuevo horario deseado o no están limpias.")
+                return
+            salaAsignada.anadir_horario([inicio, fin])
+            profesorAsignado = None
+            import random
+            profesores = Teatro.getInstancia().getTipoProfesor()
+            random.shuffle(profesores)
+            for empleado in profesores:
+                if hasattr(empleado, "tiene_especializacion") and empleado.tiene_especializacion(areaSeleccionada):
+                    if random.random() > 0.5:
+                        profesorAsignado = empleado
+                        break
+            if profesorAsignado is None:
+                messagebox.showerror("Error", "No hay profesores disponibles para la nueva clase en el área seleccionada.")
+                return
+            messagebox.showinfo("Clase Reprogramada",
+                                f"Clase reprogramada con el profesor {profesorAsignado.getNombre()} en la sala {salaAsignada.getNumeroSala()}.")
+            if actor.noHaMejoradoEnCuatroIntentos(areaSeleccionada):
+                nuevaCalificacion = max(0, actor.getCalificacionPorAptitud(areaSeleccionada) - 1)
+                actor.registrarCalificacion(areaSeleccionada, nuevaCalificacion)
+                messagebox.showinfo("Reducción de Nivel", f"El nuevo nivel del área {areaSeleccionada} es: {nuevaCalificacion}")
+            puntos = 1 if nivelClase == "Introducción" else (2 if nivelClase == "Profundización" else 3)
+            profesorAsignado.agregar_puntos(puntos)
+            messagebox.showinfo("Puntos", f"El profesor {profesorAsignado.getNombre()} ha recibido {puntos} puntos positivos.")
+            cls.volver()
+
+        # -------------------- Inicio del proceso: arranca por el Paso 1 --------------------
+        step1()
+
+'''
         
 
 

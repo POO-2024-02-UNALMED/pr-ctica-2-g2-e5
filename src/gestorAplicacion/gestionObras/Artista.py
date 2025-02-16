@@ -36,7 +36,7 @@ class Artista(ABC):
         return True
     
     @classmethod
-    def buscarArtistaPorId(id: int) -> Artista | None:
+    def buscarArtistaPorId(cls, id: int) -> Artista | None:
         for artista in Teatro.getInstancia().getArtistas():
             if (artista.getId() == id):
                 return artista
