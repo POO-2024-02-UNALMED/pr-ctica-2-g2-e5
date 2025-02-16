@@ -31,7 +31,7 @@ class Artista(ABC):
     #revisa en cada intervalo de horarios guardados si el nuevo horario se solapa
     def isDisponible(self, inicio: datetime, fin: datetime) -> bool:
         for evento in self.__horario:
-            if ((inicio < evento[0]) and (fin > evento[1])):
+            if ((inicio < evento[1]) and (fin > evento[0])):
                 return False
         return True
     
