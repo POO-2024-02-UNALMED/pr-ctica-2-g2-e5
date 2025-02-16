@@ -547,24 +547,24 @@ class Main:
             NOMBRES = ["Juan", "Pedro", "Maria", "Ana", "Luis", "Carlos", "Jose", "Andres", "Sofia", "Laura", "Miguel", "Danna", "Oscar", "Frank", "Pablo"]
             APELLIDOS = ["Gomez", "Perez", "Rodriguez", "Gonzalez", "Martinez", "Hernandez", "Lopez", "Torres", "Ramirez", "Diaz", "Sanchez", "Cruz", "Jimenez", "Rojas", "Vargas", "VELEZ"]
             
-            # Teatro.getInstancia().getTesoreria().transferenciaFondos
+            Teatro.getInstancia().getTesoreria().transferenciaFondos
             
-            # # Verificar si hay deudas y pagar
+            # Verificar si hay deudas y pagar
 
-            # Deudas = ""
-            # for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
-            #     if Persona.getDeuda() != 0:
-            #         if Teatro.getInstancia().getTesoreria().getCuenta().getSaldo > Persona.getDeuda():
-            #            transaccion = Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), Persona.getDeuda())
-            #            if transaccion:
-            #                Deudas = Deudas + "Se realizo el pago a: " + Persona.getNombre() + " por un valor de: " + str(Persona.getDeuda()) + "\n"
-            #                Persona.setDeuda(0)
+            Deudas = ""
+            for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                if Persona.getDeuda() != 0:
+                    if Teatro.getInstancia().getTesoreria().getCuenta().getSaldo > Persona.getDeuda():
+                        transaccion = Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), Persona.getDeuda())
+                        if transaccion:
+                            Deudas = Deudas + "Se realizo el pago a: " + Persona.getNombre() + " por un valor de: " + str(Persona.getDeuda()) + "\n"
+                            Persona.setDeuda(0)
      
-            # Saldo = Teatro.getInstancia().getTesoreria().getCuenta().getSaldo()
+            Saldo = Teatro.getInstancia().getTesoreria().getCuenta().getSaldo()
             def mostrarSaldo():
                 cls.wait()
                 cls.clear_frame(Anuncio)
-                texto = tk.Label(Anuncio, text= "Deudas" + "El saldo actual de la tesoreria es: " + "str(Saldo)", font=("Calibri", 18), bg="#ffb48a", bd = 10, relief="raised")
+                texto = tk.Label(Anuncio, text= "Deudas:\n" + "El saldo actual de la tesoreria es: " + str(Saldo), font=("Calibri", 18), bg="#ffb48a", bd = 10, relief="raised")
                 texto.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.5, anchor="center")
                 Anuncio.after(50, continuar)
             
@@ -1154,6 +1154,7 @@ class Main:
 
     @classmethod
     def gestionObras(cls):
+        pass
         
 
     @classmethod

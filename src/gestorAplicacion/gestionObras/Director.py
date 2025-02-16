@@ -1,4 +1,4 @@
-from gestionObras import Artista
+from gestorAplicacion.gestionObras.Artista import Artista
 class Director(Artista):
     directors = []
     def __init__(self, nombre = "", id = 0, genero = None):
