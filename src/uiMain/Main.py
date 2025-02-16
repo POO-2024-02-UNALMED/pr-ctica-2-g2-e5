@@ -10,6 +10,8 @@ import random
 
 
 
+
+
 #AGREGAR SRC AL PATH
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -24,6 +26,7 @@ from gestorAplicacion.gestionObras.Artista import Artista
 from gestorAplicacion.gestionObras.Actor import Actor
 from gestorAplicacion.gestionObras.Obra import Obra
 from gestorAplicacion.gestionObras.Director import Director
+from gestorAplicacion.herramientas.Suscripcion import Suscripcion
 
 from baseDatos.memory import resetMemory
 
@@ -389,7 +392,7 @@ class Main:
 
             global cliente
             cliente = Cliente(id = code)
-            messagebox.showinfo("Éxito", f"Su nuevo ID es {cliente.id}")
+            messagebox.showinfo("Éxito", f"Su nuevo ID es {cliente.getId()}")
             Inicio_preguntas()
             
         
@@ -456,6 +459,7 @@ class Main:
 
             
         def Inicio_preguntas():
+            global frame_central
             
             frame_izq = tk.Frame(cls.content, bg="blue")
             frame_izq.place(relx=0, rely=0, relwidth=0.15, relheight=1)  # Se ubica en la izquierda
@@ -476,15 +480,84 @@ class Main:
             top_label = tk.Label(top_frame,text="Venta de tiquetes",font=("Calibri", 25), bg="black",fg="white")
             top_label.place(relx=0.5, rely=0.1, anchor="n")
 
-            label = tk.Label(cls.content,text="Desea mejorar su suscripcion?", font=("Calibri", 25), fg="black",bg="white")
+            label = tk.Label(cls.content,text="Desea mejorar su suscripcion?", font=("Calibri", 25), fg="black",bg="white",name="suscripcion")
             label.place(relx=0.5, rely=0.3, anchor="center")
 
-            Button_Si = tk.Button(cls.content, text="Si", font=("Calibri", 15),command=Usuario_Nuevo)
-            Button_No = tk.Button(cls.content, text="No", font=("Calibri", 15),command=Usuario_Antiguo)
+            Button_Si = tk.Button(cls.content, text="Si", font=("Calibri", 15),command=adquirir_suscripcion,name="no")
+            Button_No = tk.Button(cls.content, text="No", font=("Calibri", 15),command=continuar,name="si")
+            
             Button_Si.place(relx=0.48, rely=0.5, anchor="center")
             Button_No.place(relx=0.53, rely=0.5, anchor="center")
 
             Main.wait()
+        
+        def adquirir_suscripcion():
+            
+            global frame_central
+            
+            try:
+                widget = cls.content.nametowidget("si") 
+                widget.destroy()
+                widget = cls.content.nametowidget("no") 
+                widget.destroy()
+                widget = cls.content.nametowidget("suscripcion") 
+                widget.destroy()
+            except KeyError:
+                None
+            susc = FieldFrame(
+                frame_central,
+                tituloCriterios= "tipos de suscripcion",
+                tituloValores= "Respuesta",
+                criterios=["Eleccion"],
+                valores= [["BASICA","PREMIUM","VIP","GOLD"]],
+                combobox= True,
+                command=lambda :asignar_suscripcion(susc)
+                
+            )
+            
+            
+            susc.place(relheight= 1, relwidth= 1)
+            main_label = tk.Label(frame_central,bg = "slategray1",text="BÁSICA $0.00 -------\n\nPREMIUM \n$11,900.00\n 10% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\n\nVIP \n$18,900.00\n 25% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\n\nELITE \n$39,900.00 \nFUNCIONES GRATIS\nILIMITADAS Y\nASIENTO GOLD GRATIS")
+            main_label.place(relx=0.53, rely=0.5, anchor="center")
+            
+        def asignar_suscripcion(fieldframe: FieldFrame):
+            global cliente
+            
+            fieldframe.gatherEntries()
+            suscripcion = fieldframe.getValue("Eleccion")
+            if suscripcion == "BASICA":
+                cliente.set_suscripcion(Suscripcion.BASICA.value)
+            elif suscripcion == "VIP":
+                cliente.set_suscripcion(Suscripcion.VIP.value)
+            elif suscripcion == "PREMIUM":
+                cliente.set_suscripcion(Suscripcion.PREMIUM.value)
+            elif suscripcion == "ELITE":
+                cliente.set_suscripcion(Suscripcion.ELITE.value)
+            else:
+                raise ValueError("Suscripción no válida")
+            print(cliente.get_suscripcion())
+        
+   
+
+
+
+
+
+
+
+        def continuar():
+            try:
+                widget = cls.content.nametowidget("si") 
+                widget.destroy()
+                widget = cls.content.nametowidget("no") 
+                widget.destroy()
+                widget = cls.content.nametowidget("suscripcion") 
+                widget.destroy()
+            except KeyError:
+                None
+            
+
+
 
             
             
