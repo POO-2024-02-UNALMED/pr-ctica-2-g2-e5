@@ -8,7 +8,7 @@ def format_cop(amount):
     return f"${amount:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
 class Actor(Artista):
-    __TASA = 1_000_000
+    TASA = 1_000_000
     __BAJA_CALIFICACION = 3
 
     def __init__(self, nombre: str, id: int):
@@ -39,8 +39,8 @@ class Actor(Artista):
 
     #cálculo que devuelve el contrato de un actor según las horas de trabajo y su calificación promedio
     def getPrecioContrato(self, horas: float) -> float:
-        self.__precioContrato = ((((self.__calificacion**2) / 5) * Actor.TASA) / 8) * horas
-        return self.__precioContrato
+        self.__precioContrato = ((((super().getCalificacion()**2) / 5) * Actor.TASA) / 8) * horas
+        return round(self.__precioContrato, 2)
     
     #halla la posición de la aptitud en la lista aptitudes, y en esa misma posición agrega la
     # calificación en calificacionesAptitudes
