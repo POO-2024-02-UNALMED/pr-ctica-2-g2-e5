@@ -301,7 +301,7 @@ class Obra:
     
     @classmethod
     def mostrarObrasCriticas(cls):
-        from baseDatos import Teatro
+        from baseDatos.Teatro import Teatro
         obrasCriticas = []
         obrasCriticas.extend(
             obra
