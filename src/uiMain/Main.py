@@ -380,6 +380,8 @@ class Main:
 
     @classmethod
     def gestionVentas(cls):
+        for i in Teatro.getInstancia().getClientes():
+            print(i.getId())
 
 
         def Usuario_Nuevo():
@@ -395,8 +397,8 @@ class Main:
             Inicio_preguntas()
             
         
-        def validar(a):
-                texto =a.get()
+        def validar(texto):
+                
                 value = False
                 try:
                     numero = int(texto)  # Intenta convertir a entero
@@ -418,11 +420,11 @@ class Main:
             cliente=Cliente(id=12)
             
             
-            frame_izq = tk.Frame(cls.content, bg="blue")
+            frame_izq = tk.Frame(cls.content, bg="slategray")
             frame_izq.place(relx=0, rely=0, relwidth=0.15, relheight=1)  # Se ubica en la izquierda
 
             # Frame derecho
-            frame_der = tk.Frame(cls.content, bg="blue")
+            frame_der = tk.Frame(cls.content, bg="slategray")
             frame_der.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
 
             
@@ -447,7 +449,7 @@ class Main:
             
 
         # Etiqueta
-            label = tk.Label(frame, text="Ingresa tu ID:", font=("Arial", 14), bg="slategray3")
+            """label = tk.Label(frame, text="Ingresa tu ID:", font=("Arial", 14), bg="slategray3")
             label.pack(pady=10)
 
         # Cuadro de texto
@@ -458,7 +460,24 @@ class Main:
             boton.pack(pady=10)
 
             boton = tk.Button(frame_2, text="Crear un nuevo usuario", font=("Arial", 12),command= Usuario_Nuevo)
-            boton.pack(pady=10)
+            boton.pack(pady=10)"""
+
+            id = FieldFrame(
+                frame_central,
+                tituloCriterios= "Inicia Sesion",
+                tituloValores= "INGRESA TU ID",
+                criterios=["ID"],
+                valores= [""],
+                command= lambda : validar_id(id)
+                
+            )
+            id.place(relheight= 1, relwidth= 1)
+        def validar_id(fieldframe : FieldFrame):
+            fieldframe.gatherEntries()
+            suscripcion = fieldframe.getValue("ID")
+            validar(suscripcion)
+
+
 
             
         def Inicio_preguntas():
@@ -466,11 +485,11 @@ class Main:
                 widget.destroy()
             global frame_central
             
-            frame_izq = tk.Frame(cls.content, bg="blue")
+            frame_izq = tk.Frame(cls.content, bg="slategray")
             frame_izq.place(relx=0, rely=0, relwidth=0.15, relheight=1)  # Se ubica en la izquierda
 
             # Frame derecho
-            frame_der = tk.Frame(cls.content, bg="blue")
+            frame_der = tk.Frame(cls.content, bg="slategray")
             frame_der.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
 
             top_frame = Frame(cls.content,background="black")
@@ -569,6 +588,38 @@ class Main:
                 print("error label")
             frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
             frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+            lista=[]
+
+            obra1 = Obra(nombre="pepe")
+            obra2 = Obra(nombre="dante")
+            obra3 = Obra(nombre="labella")
+            for obra in Teatro.getInstancia().getObras():
+                if obra.getNombre() != "NOTFORITE":
+                    lista.append(obra.getNombre())
+
+
+            obr = FieldFrame(
+                frame_central,
+                tituloCriterios= "Obras",
+                tituloValores= "Respuesta",
+                criterios=["Eleccion"],
+                valores= [lista],
+                combobox= True,
+                command=lambda :asignar_obra(obr)
+                
+            )
+            obr.place(relheight= 1, relwidth= 1)
+
+        def asignar_obra(fieldframe :FieldFrame):
+            fieldframe.gatherEntries()
+            suscripcion = fieldframe.getValue("Eleccion")
+
+            global cliente
+
+            cliente.obra=suscripcion
+
+
+
             
 
 
@@ -582,11 +633,11 @@ class Main:
         for widget in cls.content.winfo_children():
             widget.destroy()
         
-        frame_izq = tk.Frame(cls.content, bg="blue")
+        frame_izq = tk.Frame(cls.content, bg="slategray")
         frame_izq.place(relx=0, rely=0, relwidth=0.15, relheight=1)  # Se ubica en la izquierda
 
         # Frame derecho
-        frame_der = tk.Frame(cls.content, bg="blue")
+        frame_der = tk.Frame(cls.content, bg="slategray")
         frame_der.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
 
         top_frame = Frame(cls.content,background="black")
