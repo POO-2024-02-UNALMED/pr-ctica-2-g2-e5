@@ -16,12 +16,18 @@ from gestorAplicacion.gestionVentas.Cliente import Cliente
 from gestorAplicacion.herramientas.Aptitud import Aptitud
 from gestorAplicacion.herramientas.Genero import Genero
 
+from baseDatos.memory import resetMemory
+
+
+
 
 class Main:
 
     debug = False
     root = None
     fieldTest = False
+    reset = True
+    filterDebug = True
     bg = "lightsteelblue3"
 
     @classmethod
@@ -350,6 +356,9 @@ class Main:
     @classmethod
     def runApp(cls):
         Teatro.deserializar()
+        
+        if cls.reset:
+            resetMemory()
 
         cls.initRoot()
         ico = Image.open("src/media/icon.jpg")
@@ -724,6 +733,9 @@ class Main:
         def setSchedule(fieldframe: FieldFrame, fecha: str):
             global actorsForRental
 
+            if cls.filterDebug:
+                print("al entrar a setSchedule", [actor.getNombre() for actor in actorsForRental])
+
             fieldframe.gatherEntries()
             
             horaInicio = fieldframe.values[1].get()
@@ -759,12 +771,18 @@ class Main:
                 messagebox.showerror("Error", advertenciaDuracion)
                 return
             
-            actorsForRental = filter(lambda actor: actor.isDisponible(horaInicio, horaFin), actorsForRental)
+            actorsForRental = list(filter(lambda actor: actor.isDisponible(horaInicio, horaFin), actorsForRental))
+            
+            if cls.filterDebug:
+                print("al salir de setSchedule", [actor.getNombre() for actor in actorsForRental])
 
             busquedaAvanzada()
 
 
         def askSchedule(fecha: str, topFrame: Frame):
+            global actorsForRental
+
+            actorsForRental = actorsForRental
             
             schedule = FieldFrame(
                 topFrame,
@@ -777,6 +795,9 @@ class Main:
 
             schedule.place(relheight= 1, relwidth= 1)
 
+            if cls.filterDebug:
+                print("al terminar askSchedule", [actor.getNombre() for actor in actorsForRental])
+
 
         def filtrado(fieldframe: FieldFrame):
             global actorsForRental
@@ -785,20 +806,23 @@ class Main:
             
             rol, genero, aptitud, fecha = responses
 
-            if rol == "Rol Principal":
-                actorsForRental = filter(lambda actor: actor.getCalificacion() >= CALIFICACION_ALTA, actorsForRental)
+            if rol == "Rol principal":
+                actorsForRental = list(filter(lambda actor: actor.getCalificacion() >= CALIFICACION_ALTA, actorsForRental))
             else:
-                actorsForRental = filter(lambda actor: actor.getCalificacion() < CALIFICACION_ALTA, actorsForRental)
+                actorsForRental = list(filter(lambda actor: actor.getCalificacion() < CALIFICACION_ALTA, actorsForRental))
 
             for apt in Aptitud:
                 if apt.name == aptitud.upper():
-                    actorsForRental = filter(lambda actor: actor.getCalificacionPorAptitud(apt) >= CALIFICACION_ALTA, actorsForRental)
+                    actorsForRental = list(filter(lambda actor: actor.getCalificacionPorAptitud(apt) >= CALIFICACION_ALTA, actorsForRental))
                     break
             
             for gen in Genero:
                 if gen.name == genero.upper():
-                    actorsForRental = filter(lambda actor: gen in actor.getGeneros(), actorsForRental)
+                    actorsForRental = list(filter(lambda actor: gen in actor.getGeneros(), actorsForRental))
                     break            
+
+            if cls.filterDebug:
+                print("al acabar filtrado",[actor.getNombre() for actor in actorsForRental])
 
             askSchedule(fecha, centerFrame)      
 
@@ -808,7 +832,7 @@ class Main:
             global actorsForRental
 
             actorsForRental = Teatro.getInstancia().getActores().copy()
-            actorsForRental = filter(lambda actor: not actor.isReevaluacion(), actorsForRental)
+            actorsForRental = list(filter(lambda actor: not actor.isReevaluacion(), actorsForRental))
 
             primeraRonda = FieldFrame(
                 topframe,
@@ -820,15 +844,15 @@ class Main:
                 tituloCriterios = "Características del actor",
                 tituloValores = "Respuestas",
 
-                valores = [["Rol principal", "Rol secundario"], 
+                valores = [
+                            ["Rol principal", "Rol secundario"], 
                            
-                           ["Circo", "Comedia", "Drama", "Experimental", 
-                            "Fantasía", "Musical", "Romance", "Terror"],
+                            [genero.name.title() for genero in Genero],
 
-                            ["Canto", "Baile", "Discurso", 
-                             "Emocionalidad", "Improvisación"],
+                            [aptitud.name.title() for aptitud in Aptitud],
                              
-                             [day for day in Main.getWeek()]],
+                            [day for day in Main.getWeek()]],
+
                 command= lambda: filtrado(primeraRonda),
                 combobox= True
             )

@@ -19,7 +19,7 @@ class Cliente:
         self.__historial = []
         self.correo = correo
         self.__tipo = tipo
-        self.cuenta_bancaria = cuenta_bancaria
+        self.__cuentaBancaria = cuenta_bancaria
         self.tiquete = tiquete
         Teatro.getInstancia().getClientes().append(self)
 
@@ -66,6 +66,9 @@ class Cliente:
     
     def getHistorial(self):
         return self.__historial
+    
+    def getCuentaBancaria(self):
+        return self.__cuentaBancaria
 
 
 

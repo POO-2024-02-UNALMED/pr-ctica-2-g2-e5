@@ -1,7 +1,7 @@
 from gestorAplicacion.gestionObras.Artista import Artista
 from baseDatos.Teatro import Teatro
 from gestorAplicacion.herramientas.Aptitud import Aptitud
-from gestionFinanciera.CuentaBancaria import CuentaBancaria
+from gestorAplicacion.gestionFinanciera.CuentaBancaria import CuentaBancaria
 from functools import cmp_to_key
 
 def format_cop(amount):
@@ -12,16 +12,18 @@ class Actor(Artista):
     __BAJA_CALIFICACION = 3
 
     def __init__(self, nombre: str, id: int):
-        super.__init__(nombre, id)
+        super().__init__(nombre, id)
 
         self.__generos = []
         self.__notas = []
         self.__tiempoActuado = []
         self.__reevaluacion = False
         self.__precioContrato = None
+        self.__sexo = None
+        self.__edad = None
 
         # segun las aptitudes que estén en el enum
-        self.__aptitudes = [aptitud.value for aptitud in Aptitud]
+        self.__aptitudes = [aptitud for aptitud in Aptitud]
 
         # inicializar calificaciones en 0
         self.__calificacionesAptitudes = [0] * len(self.__aptitudes)
@@ -123,7 +125,7 @@ class Actor(Artista):
     def setTiempoActuado(self, value):
         self.__tiempoActuado = value
 
-    def getReevaluacion(self):
+    def isReevaluacion(self):
         return self.__reevaluacion
 
     def setReevaluacion(self, value):
@@ -152,3 +154,15 @@ class Actor(Artista):
 
     def setCuenta(self, value):
         self.__cuenta = value
+
+    def getSexo(self):
+        return self.__sexo
+    
+    def setSexo(self, value):
+        self.__sexo = value
+
+    def getEdad(self):
+        return self.__edad
+    
+    def setEdad(self, value):
+        self.__edad = value

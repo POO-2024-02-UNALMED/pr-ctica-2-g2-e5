@@ -1,5 +1,5 @@
 import random
-from gestorAplicacion.gestionFinanciera import Empleado
+from gestorAplicacion.gestionFinanciera.Empleado import Empleado
 from gestorAplicacion.herramientas import Aptitud
 
 class Profesor(Empleado):

@@ -1,9 +1,9 @@
 from __future__ import annotations
 from abc import ABC
-from src.gestorAplicacion.gestionFinanciera.CuentaBancaria import CuentaBancaria
-from src.gestorAplicacion.gestionClases.Clase import Clase
+from gestorAplicacion.gestionFinanciera.CuentaBancaria import CuentaBancaria
+from gestorAplicacion.gestionClases.Clase import Clase
 from datetime import datetime
-from baseDatos import Teatro
+from baseDatos.Teatro import Teatro
 from random import random
 
 
@@ -15,14 +15,14 @@ class Artista(ABC):
         self.__id = id
         self.__calificacion = calificacion
         self.__promedio = promedio
-        self.__cuenta = CuentaBancaria()
+        self.__cuenta = CuentaBancaria(id, 999999999999999999999999999.9)
         self.__clase = clase
 
         self.__horario = []
         self.__calificaciones = []
         self.__calificacionesPublico = []
 
-        Teatro.getInstancia().getArtistas().add(self)
+        Teatro.getInstancia().getArtistas().append(self)
 
     #promedio de la lista de calificaciones
     def calcularCalificacion(self) -> None:

@@ -1,5 +1,4 @@
-from gestionFinanciera.CuentaBancaria import CuentaBancaria
-from gestorAplicacion.gestionObras.Actor import Actor
+from gestorAplicacion.gestionFinanciera.CuentaBancaria import CuentaBancaria
 from random import random
 from gestorAplicacion.herramientas.Aptitud import Aptitud
 class Empleado: 
@@ -40,6 +39,7 @@ class Empleado:
     
     #Casting
     def casting(self, artista, profesores):
+        from gestorAplicacion.gestionObras.Actor import Actor
         if not isinstance(artista, Actor):
             return False
         if not profesores:
