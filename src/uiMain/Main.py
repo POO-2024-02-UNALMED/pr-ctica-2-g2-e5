@@ -725,14 +725,123 @@ class Main:
         actorsForRental = None
         historialEmpresa = None
         empresa = None
+        fechaInicio = None
+        fechaFin = None
+        duration = None
         
         CALIFICACION_ALTA = 4
 
-        def busquedaAvanzada():
-            pass
-
-        def setSchedule(fieldframe: FieldFrame, fecha: str):
+        def presupuesto(topFrame: Frame):
             global actorsForRental
+            global duration
+
+            minActorPrecio = min(actorsForRental, key= lambda actor: actor.getPrecioContrato(duration)).getPrecioContrato(duration)
+            maxActorPrecio = max(actorsForRental, key= lambda actor: actor.getPrecioContrato(duration)).getPrecioContrato(duration)
+
+            messagebox.showinfo("Información", "Antes de elegir el presupuesto de contratación, tenga en cuenta que el rango de los precios es de " + str(minActorPrecio) + " a " + str(maxActorPrecio))
+
+            presupuesto = FieldFrame(
+                topFrame,
+                tituloCriterios= "Precio de contratación",
+                tituloValores= "Respuesta",
+                criterios= ["Presupuesto"],
+                valores= [""],
+                command= None
+            )
+
+            presupuesto.place(relheight= 1, relwidth= 1)
+
+
+        def preseleccion(topFrame: Frame, avanzado = False):
+            global actorsForRental
+            global historialEmpresa
+
+            if cls.filterDebug:
+                print("historial de la empresa", [actor.getNombre() for actor in historialEmpresa])
+            
+            if len(actorsForRental) == 0:
+                messagebox.showerror("Error", "No hay artistas disponibles con los requerimientos pedidos.")
+            else:
+                if not avanzado:
+                    messagebox.showinfo("Success", str(len(actorsForRental)) + " actor/es encontrado/s durante la preselección")
+                
+                actorsForRental.sort(key=lambda actor: actor not in historialEmpresa)
+
+                if cls.filterDebug:
+                    print("lista reordenada", [actor.getNombre() for actor in actorsForRental])
+
+                presupuesto(topFrame)
+
+
+        def filtradoAvanzado(fieldframe: FieldFrame, topFrame: Frame):
+            global actorsForRental
+
+            fieldframe.gatherEntries()
+
+            contadores = [[actor, 0] for actor in actorsForRental]
+
+            edad = fieldframe.getValue("Intervalo de edad")
+
+            if edad == "Infantil":
+                interv = (0, 15)
+            elif edad == "Juvenil":
+                interv = (16, 24)
+            elif edad == "Adulto":
+                interv = (25, 70)
+            else:
+                interv = (71, float("inf"))
+
+            actorsForRental = list(filter(lambda actor: actor.getEdad() >= interv[0] and actor.getEdad() < interv[1], actorsForRental))
+
+            if cls.filterDebug:
+                print("filtrados por edad", [actor.getNombre() for actor in actorsForRental])
+
+            for contador in contadores:
+                if contador[0] in actorsForRental:
+                    contador[1] += 1
+            
+            sexo = fieldframe.getValue("Sexo")
+
+            actorsForRental = list(filter(lambda actor: actor.getSexo() == sexo, actorsForRental))
+
+            if cls.filterDebug:
+                print("filtrados por sexo", [actor.getNombre() for actor in actorsForRental])
+
+            contadores = list(filter(lambda contador: contador[1] > 0, contadores))
+
+            if len(contadores) == 0:
+                messagebox.showerror("Error", "No se encontraron actores que se ajusten bien a las características")
+                return
+            else:
+                messagebox.showinfo("Success", str(len(contadores)) + " actor/es se ajustaron a una o más características avanzadas.")
+                contadorActores = [tupla[0] for tupla in contadores]
+
+                if cls.filterDebug:
+                    print("actores que aparecen al menos una vez en el contador", [actor.getNombre() for actor in contadorActores])
+
+                actorsForRental = contadorActores
+                preseleccion(topFrame, avanzado= True)
+
+
+        def busquedaAvanzada(topFrame: Frame):
+            global actorsForRental
+
+            edad = FieldFrame(
+                topFrame,
+                tituloCriterios= "Búsqueda avanzada",
+                tituloValores= "Respuestas",
+                criterios= ["Intervalo de edad", "Sexo"],
+                valores = [["Infantil", "Juvenil", "Adulto", "Adulto mayor"], 
+                           ["Masculino", "Femenino"]],
+                combobox= True,
+                command= lambda: filtradoAvanzado(edad, topFrame)
+            )
+
+            edad.place(relheight= 1, relwidth= 1)
+
+        def setSchedule(fieldframe: FieldFrame, fecha: str, topFrame: str):
+            global actorsForRental
+            global duration
 
             if cls.filterDebug:
                 print("al entrar a setSchedule", [actor.getNombre() for actor in actorsForRental])
@@ -777,7 +886,12 @@ class Main:
             if cls.filterDebug:
                 print("al salir de setSchedule", [actor.getNombre() for actor in actorsForRental])
 
-            busquedaAvanzada()
+            msgAvanzado = messagebox.askyesno("Contratación de Actores", "¿Desea hacer búsqueda avanzada?")
+
+            if msgAvanzado:
+                busquedaAvanzada(topFrame)
+            else:
+                preseleccion(topFrame)
 
 
         def askSchedule(fecha: str, topFrame: Frame):
@@ -791,7 +905,7 @@ class Main:
                 tituloCriterios = "Horario de actor",
                 tituloValores = "Respuesta",
                 valores = ["", ""],
-                command= lambda: setSchedule(schedule, fecha)
+                command= lambda: setSchedule(schedule, fecha, topFrame)
             )
 
             schedule.place(relheight= 1, relwidth= 1)
