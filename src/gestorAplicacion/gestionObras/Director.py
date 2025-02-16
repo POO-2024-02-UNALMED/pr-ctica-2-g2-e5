@@ -1,7 +1,7 @@
 from gestionObras import Artista
 class Director(Artista):
     directors = []
-    def __init__(self, nombre, id, genero):
+    def __init__(self, nombre = "", id = 0, genero = None):
         from baseDatos import Teatro
         self.genero = genero
         self.horario = []
