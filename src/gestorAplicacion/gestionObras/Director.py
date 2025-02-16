@@ -5,11 +5,11 @@ class Director(Artista):
         from baseDatos.Teatro import Teatro
         self.genero = genero
         self.horario = []
-        super.__init__(nombre, id)
-        Teatro.getInstancia().directors.append(self)
-        Teatro.getInstancia().artistas.append(self)
+        super().__init__(nombre, id)
+        Teatro.getInstancia().getDirectors().append(self)
+        Teatro.getInstancia().getArtistas().append(self)
         Director.directors.append(self)
-        genero.anadirDirector(self)
+       # genero.anadirDirector(self) Comentado por razones de prueba
     
     def str(self):
         return "Nombre: " + self.nombre + "\n" + "Identificación: " + self.id + "\n" + "Género: " + self.genero

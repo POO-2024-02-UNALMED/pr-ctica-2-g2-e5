@@ -1421,7 +1421,7 @@ class Main:
         frame_bienvenida = Frame(cls.content, bg="red")
         frame_bienvenida.place(relx=0, rely=0, relwidth=1, relheight=0.1)
         saludo = tk.Label(frame_bienvenida,
-                            text="Bienvenido a la gestión de clases",
+                            text="Gestion de clases",
                             font=("Calibri", 16),
                             bg="black", fg="white")
         saludo.place(relx=0, rely=0, relwidth=1, relheight=1)
@@ -1466,6 +1466,7 @@ class Main:
             btn_buscar.pack(pady=10)
 
         # -------------------- PASO 2: Procesar el ID ingresado --------------------
+        '''AVALADA'''
         def process_artist(id_str):
             try:
                 id_num = int(id_str)
@@ -1479,6 +1480,7 @@ class Main:
                 step_artist_found(artista)
 
         # -------------------- PASO 3: Artista no encontrado --------------------
+        '''AVALADA'''
         def step_artist_not_found(id_num):
             for widget in process_frame.winfo_children():
                 widget.destroy()
@@ -1492,6 +1494,7 @@ class Main:
                         command=lambda: step_show_obras_criticas_and_fin()).pack(pady=5)
 
         # -------------------- MÉTODO REQUERIDO: Obras críticas y terminar -------------------- 
+        '''AVALADA'''
         def step_show_obras_criticas_and_fin():
             # Limpia el frame donde se mostrará la información
             for widget in process_frame.winfo_children():
@@ -1559,7 +1562,7 @@ class Main:
                             tituloValores="Ingrese valor",
                             valores=valores,
                             combobox=False,
-                            command=lambda: process_new_artist(id_num, ff.valores[0], ff.valores[1]))
+                            command=lambda: (ff.gatherEntries(), process_new_artist(id_num, ff.valores[0], ff.valores[1])))
             ff.pack(pady=10, fill="both", expand=True)
             tk.Label(process_frame, text="(Si se ingresa 'actor' se pedirá la edad posteriormente)",
                     font=("Calibri", 12), bg="white").pack(pady=5)
@@ -1574,7 +1577,13 @@ class Main:
                 # Ejemplo: Director(nombre, id_num)
                 director = Director(nombre, id_num)
                 messagebox.showinfo("Éxito", f"Nuevo director agregado: {nombre} con ID {id_num}.\nLos directores no reciben clases.")
-                cls.volver()  # Regresa al menú principal
+                for widget in process_frame.winfo_children():
+                    widget.destroy()
+                tk.Label(process_frame, text="Fin de la funcionalidad",
+                            font=("Calibri", 14), bg="white").pack(pady=10)
+                tk.Button(process_frame, text="Salir del sistema", font=("Calibri", 14),
+                        command=cls.volver).pack(pady=10)
+
             else:
                 for widget in process_frame.winfo_children():
                     widget.destroy()
