@@ -1402,7 +1402,34 @@ class Main:
             tk.Button(process_frame, text="Sí", font=("Calibri", 14),
                         command=lambda: step_create_artist(id_num)).pack(pady=5)
             tk.Button(process_frame, text="No", font=("Calibri", 14),
-                        command=lambda: Obra.mostrarObrasCriticas()).pack(pady=5)
+                        command=lambda: step_show_obras_criticas()).pack(pady=5)
+
+        def step_show_obras_criticas():
+            # Limpia el frame donde se mostrará la información
+            for widget in process_frame.winfo_children():
+                widget.destroy()
+            
+            # Se llama al método de clase que retorna la lista de obras críticas.
+            # Asegúrate de que Obra.mostrarObrasCriticas() esté decorado con @classmethod y retorne una lista.
+            obras_criticas = Obra.mostrarObrasCriticas()  
+            if not obras_criticas:
+                tk.Label(process_frame, text="No hay obras en estado crítico en el teatro.",
+                        font=("Calibri", 14), bg="white", fg="yellow").pack(pady=10)
+            else:
+                tk.Label(process_frame, text="Obras en estado crítico del teatro:",
+                        font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
+                txt_obras = tk.Text(process_frame, height=10, width=80, font=("Calibri", 12))
+                txt_obras.pack(pady=10)
+                # Itera sobre la lista de obras y agrega una línea para cada obra
+                for obra in obras_criticas:
+                    # Se asume que cada obra tiene métodos getNombre() y promedioCalificacion()
+                    linea = f"- '{obra.getNombre()}' (Promedio: {obra.promedioCalificacion()})\n"
+                    txt_obras.insert("end", linea)
+                txt_obras.config(state="disabled")
+            
+            # Puedes agregar un botón para continuar o regresar al menú principal
+            tk.Button(process_frame, text="Continuar", font=("Calibri", 14),
+                    command=cls.volver).pack(pady=10)
 
         # -------------------- PASO 4: Crear nuevo artista --------------------
         def step_create_artist(id_num):
