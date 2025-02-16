@@ -173,7 +173,7 @@ class Obra:
             if obra.checkEstadoCritico():
                 cls.estadoCriticoS.append(obra)
     
-    @staticmethod
+    @classmethod
     def mostrarObrasCriticas(cls):
         from baseDatos import Teatro
         obrasCriticas = []

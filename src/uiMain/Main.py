@@ -6,6 +6,9 @@ import sys
 import os
 import time as t
 
+
+
+
 #AGREGAR SRC AL PATH
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -16,6 +19,8 @@ from gestorAplicacion.gestionVentas.Cliente import Cliente
 from gestorAplicacion.herramientas.Aptitud import Aptitud
 from gestorAplicacion.herramientas.Genero import Genero
 from gestorAplicacion.gestionObras.Artista import Artista
+from gestorAplicacion.gestionObras.Actor import Actor
+from gestorAplicacion.gestionObras.Obra import Obra
 
 from baseDatos.memory import resetMemory
 
@@ -1096,8 +1101,9 @@ class Main:
         # --- FRAME PRINCIPAL PARA EL PROCESO ---
         process_frame = Frame(cls.content, bg="white")
         process_frame.place(relx=0, rely=0.1, relwidth=1, relheight=0.9)
-'''
-        # -------------------- PASO 1: Mostrar Artistas y solicitar ID --------------------
+
+        # -------------------- PASO 1: Mostrar Artistas y solicitar ID -------------------- 
+        '''AVALADA'''
         def step1():
             for widget in process_frame.winfo_children():
                 widget.destroy()
@@ -1111,7 +1117,7 @@ class Main:
                 txt_artistas.pack(pady=10)
                 for artista in artistas:
                     # Diferenciamos actores y directores: suponemos que si el artista tiene atributo "edad" es Actor.
-                    if hasattr(artista, "edad"):
+                    if isinstance(artista, Actor):
                         linea = f"- Actor {artista.getNombre()} con ID {artista.getId()}\n"
                     else:
                         linea = f"- Director {artista.getNombre()} con ID {artista.getId()}\n"
@@ -1154,7 +1160,7 @@ class Main:
             tk.Button(process_frame, text="Sí", font=("Calibri", 14),
                       command=lambda: step_create_artist(id_num)).pack(pady=5)
             tk.Button(process_frame, text="No", font=("Calibri", 14),
-                      command=lambda: step_show_obras_criticas()).pack(pady=5)
+                      command=lambda: Obra.mostrarObrasCriticas()).pack(pady=5)
 
         # -------------------- PASO 4: Crear nuevo artista --------------------
         def step_create_artist(id_num):
@@ -1482,7 +1488,7 @@ class Main:
 
         # -------------------- Inicio del proceso: arranca por el Paso 1 --------------------
         step1()
-
+'''
 '''
         
 
