@@ -5,6 +5,7 @@ from PIL import Image, ImageTk
 import sys
 import os
 import time as t
+import random
 
 
 
@@ -561,10 +562,11 @@ class Main:
                             Persona.setDeuda(0)
      
             Saldo = Teatro.getInstancia().getTesoreria().getCuenta().getSaldo()
+
             def mostrarSaldo():
                 cls.wait()
                 cls.clear_frame(Anuncio)
-                texto = tk.Label(Anuncio, text= "Deudas:\n" + "El saldo actual de la tesoreria es: " + str(Saldo), font=("Calibri", 18), bg="#ffb48a", bd = 10, relief="raised")
+                texto = tk.Label(Anuncio, text= Deudas + "El saldo actual de la tesoreria es: " + str(Saldo), font=("Calibri", 18), bg="#ffb48a", bd = 10, relief="raised")
                 texto.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.5, anchor="center")
                 Anuncio.after(50, continuar)
             
@@ -572,21 +574,21 @@ class Main:
                 cls.wait()
                 cls.clear_frame(f1)
                 p1 = tk.Frame(f1, bg="#ffb48a")
-                p1.pack(side= "left", fill="both", expand= True, padx=5)
+                p1.pack(side= "left", fill="both", expand= True, padx=5, pady=5)
                 p2 = tk.Frame(f1, bg="#ffb48a")
-                p2.pack(side= "left", fill="both", expand= True, padx=5)
+                p2.pack(side= "left", fill="both", expand= True, padx=5, pady=5)
                 p3 = tk.Frame(f1, bg="#ffb48a")
-                p3.pack(side= "left", fill="both", expand= True, padx=5)
+                p3.pack(side= "left", fill="both", expand= True, padx=5, pady=5)
 
                 #Organizar tabla de empleados
                 #Estilo tablas
                 style = ttk.Style()
-                style.configure("Treeview", background = "white", relief = "solid", borderwidth = 4)
+                style.configure("Treeview", background = "white", relief = "solid", rowheight = 25)
                 style.configure("Treeview.Heading", background = "#ffb48a", foreground = "black", font = ("Calibri", 14, "bold"))
                 #Seguridad
                 seguridad = tk.Label(p1, text="Seguridad", font=("Calibri", 18), bg="#ffb48a")
                 seguridad.pack()
-                cls.resize(p1, seguridad,10, 25,False)
+                cls.resize(p1, seguridad,10, 20,False)
                 #Tabla Seguridad
                 datos = [
                     ("Juan", 25),
@@ -600,15 +602,16 @@ class Main:
                 tablaS.column("IDs", width=50, anchor="center")
                 #Agregar los empleados
                 #caso prueba
-                for emp in datos:
-                    tablaS.insert("", "end", values = emp)
-                # for emp in Teatro.getInstancia().getTipoSeguridad():
-                #     tablaS.insert("", "end", values=(emp.getNombre(), emp.getId()))
+                # for emp in datos:
+                #     tablaS.insert("", "end", values = emp)
+                for emp in Teatro.getInstancia().getTipoSeguridad():
+                    tablaS.insert("", "end", values=(emp.getNombre(), emp.getId()))
                 tablaS.pack(expand=True, fill="both", padx=10, pady=5)
+
                 #Aseador
                 Aseador = tk.Label(p2, text="Aseador", font=("Calibri", 18), bg="#ffb48a")
                 Aseador.pack()
-                cls.resize(p2, Aseador,10, 25,False)
+                cls.resize(p2, Aseador,10, 20,False)
 
                 #Tabla Aseador
                 tablaA = ttk.Treeview(p2, columns=("Nombre", "IDs"), show="headings", style= "Treeview")
@@ -618,16 +621,16 @@ class Main:
                 tablaA.column("IDs", width=50, anchor="center")
                 #Agregar los empleados
                 #caso prueba
-                for emp in datos:
-                    tablaA.insert("", "end", values = emp)
-                # for emp in Teatro.getInstancia().getTipoAseador():
-                #     tablaA.insert("", "end", values=(emp.getNombre(), emp.getId()))
+                # for emp in datos:
+                #     tablaA.insert("", "end", values = emp)
+                for emp in Teatro.getInstancia().getTipoAseador():
+                    tablaA.insert("", "end", values=(emp.getNombre(), emp.getId()))
                 tablaA.pack(expand=True, fill="both", padx=10, pady=5)
 
                 #Profesor
                 Profesor = tk.Label(p3, text="Profesor", font=("Calibri", 18), bg="#ffb48a")
                 Profesor.pack()
-                cls.resize(p3, Profesor,10, 25,False)
+                cls.resize(p3, Profesor,10, 20,False)
 
                 #Tabla Profesor
                 tablaP = ttk.Treeview(p3, columns=("Nombre", "IDs"), show="headings", style= "Treeview")
@@ -637,11 +640,175 @@ class Main:
                 tablaP.column("IDs", width=50, anchor="center")
                 #Agregar los empleados
                 #caso prueba
-                for emp in datos:
-                    tablaP.insert("", "end", values = emp)
-                # for emp in Teatro.getInstancia().getTipoSeguridad():
-                #     tablaP.insert("", "end", values=(emp.getNombre(), emp.getId()))
+                # for emp in datos:
+                #     tablaP.insert("", "end", values = emp)
+                for emp in Teatro.getInstancia().getTipoProfesor():
+                    tablaP.insert("", "end", values=(emp.getNombre(), emp.getId()))
                 tablaP.pack(expand=True, fill="both", padx=10, pady=5)
+
+                #Botones de acciones para cada tipo de empleado
+                #Seguridad
+                p12 = tk.Frame(p1, bg="#ffb48a")
+                p12.pack(side="bottom", fill="both", pady = 5, padx=5)
+                contratarS = tk.Button(p12, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 14), fg="White")
+                contratarS.pack(side="left", expand=True, fill="x", pady= 10, padx=10, anchor="center")
+                despedirS = tk.Button(p12, bg="#571F1C", text="Despedir", font=("calibri", 14), fg = "white")
+                despedirS.pack(side="left", expand= True, fill= "x", pady=10, padx=10, anchor="center")
+
+                #Aseador
+                p22 = tk.Frame(p2, bg="#ffb48a")
+                p22.pack(side="bottom", fill="both", pady = 5, padx=5)
+                contratarA = tk.Button(p22, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 14), fg="White")
+                contratarA.pack(side="left", expand=True, fill="x", pady= 10, padx=10, anchor="center")
+                despedirA = tk.Button(p22, bg="#571F1C", text="Despedir", font=("calibri", 14), fg = "white")
+                despedirA.pack(side="left", expand= True, fill= "x", pady=10, padx=10, anchor="center")
+
+                #Profesor
+                p32 = tk.Frame(p3, bg="#ffb48a")
+                p32.pack(side="bottom", fill="both", pady = 5, padx=5)
+                contratarP = tk.Button(p32, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 14), fg="White")
+                contratarP.pack(side="left", expand=True, fill="x", pady= 10, padx=10, anchor="center")
+                despedirP = tk.Button(p32, bg="#571F1C", text="Despedir", font=("calibri", 14), fg = "white")
+                despedirP.pack(side="left", expand= True, fill= "x", pady=10, padx=10, anchor="center")
+
+
+                #Modificar para los empleados de la lista
+                def despedirEmpleado(tabla):
+                    selected_item = tabla.selection()  # Obtiene la fila seleccionada
+                    if selected_item:
+                        tabla.delete(selected_item)  # Elimina la fila de la tabla
+
+                # Modificar cada botón de "Despedir"
+                despedirS.config(command=lambda: despedirEmpleado(tablaS))
+                despedirA.config(command=lambda: despedirEmpleado(tablaA))
+                despedirP.config(command=lambda: despedirEmpleado(tablaP))
+
+                def contratarSeguridad():
+                    cls.clear_frame(f1)
+                    seguridad = tk.Label(f1, text="Candidatos a Seguridad", font=("Calibri", 18), bg="#ffb48a")
+                    seguridad.pack(pady=5)
+                    cls.resize(f1, seguridad,18, 40,False)
+                    #Tabla
+                    candidatos = []
+                    idS = []
+
+                    n = 0
+                    while n<10:
+                        nombre = random.choice(NOMBRES)
+                        apellido = random.choice(APELLIDOS)
+                        id = random.randint(100, 1000000)
+                        Nombre = f"{nombre} {apellido}"
+                        candidatos.append(Nombre)
+                        idS.append(id)
+                        n+=1
+                    
+                    tabla = ttk.Treeview(f1, columns=("Nombre", "IDs"), show="headings", style= "Treeview")
+                    tabla.heading("Nombre", text="Nombre")
+                    tabla.heading("IDs", text="IDs")
+                    tabla.column("Nombre", width=100, anchor="center")
+                    tabla.column("IDs", width=50, anchor="center")
+                    #Agregar los empleados
+                    
+                    for j in range(0, len(candidatos)):
+                        tabla.insert("", "end", values=(candidatos[j], idS[j]))
+                    
+                    tabla.pack(expand=True, fill="both", padx=30, pady=10)
+
+                    p1 = tk.Frame(f1, bg="#ffb48a")
+                    p1.pack(side="bottom", fill="both", pady = 5, padx=5)
+                    contratar = tk.Button(p1, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 14), fg="White")
+                    contratar.pack(side="left", expand=True, fill="x", pady= 10, padx=25, anchor="center")
+
+                    def contrato():
+                        pass
+
+                    contratar.config(command=lambda: contrato())
+
+                def contratarAseador():
+                    cls.clear_frame(f1)
+                    Aseador = tk.Label(f1, text="Candidatos a Aseador", font=("Calibri", 18), bg="#ffb48a")
+                    Aseador.pack(pady=5)
+                    cls.resize(f1, Aseador,10, 45,False)
+                    #Tabla
+                    candidatos = []
+                    idS = []
+
+                    n = 0
+                    while n<10:
+                        nombre = random.choice(NOMBRES)
+                        apellido = random.choice(APELLIDOS)
+                        id = random.randint(100, 1000000)
+                        Nombre = f"{nombre} {apellido}"
+                        candidatos.append(Nombre)
+                        idS.append(id)
+                        n+=1
+                    
+                    tabla = ttk.Treeview(f1, columns=("Nombre", "IDs"), show="headings", style= "Treeview")
+                    tabla.heading("Nombre", text="Nombre")
+                    tabla.heading("IDs", text="IDs")
+                    tabla.column("Nombre", width=100, anchor="center")
+                    tabla.column("IDs", width=50, anchor="center")
+                    #Agregar los empleados
+                    
+                    for j in range(0, len(candidatos)):
+                        tabla.insert("", "end", values=(candidatos[j], idS[j]))
+                    
+                    tabla.pack(expand=True, fill="both", padx=30, pady=10)
+
+                    p1 = tk.Frame(f1, bg="#ffb48a")
+                    p1.pack(side="bottom", fill="both", pady = 5, padx=5)
+                    contratar = tk.Button(p1, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 14), fg="White")
+                    contratar.pack(side="left", expand=True, fill="x", pady= 10, padx=25, anchor="center")
+
+                    def contrato():
+                        pass
+                    
+                    contratar.config(command=lambda: contrato())
+
+                def contratarProfesor():
+                    cls.clear_frame(f1)
+                    Profesor = tk.Label(f1, text="candidatos a Profesor", font=("Calibri", 18), bg="#ffb48a")
+                    Profesor.pack(pady=5)
+                    cls.resize(f1, Profesor,10, 45,False)
+                    #Tabla
+                    candidatos = []
+                    idS = []
+
+                    n = 0
+                    while n<10:
+                        nombre = random.choice(NOMBRES)
+                        apellido = random.choice(APELLIDOS)
+                        id = random.randint(100, 1000000)
+                        Nombre = f"{nombre} {apellido}"
+                        candidatos.append(Nombre)
+                        idS.append(id)
+                        n+=1
+                    
+                    tabla = ttk.Treeview(f1, columns=("Nombre", "IDs"), show="headings", style= "Treeview")
+                    tabla.heading("Nombre", text="Nombre")
+                    tabla.heading("IDs", text="IDs")
+                    tabla.column("Nombre", width=100, anchor="center")
+                    tabla.column("IDs", width=50, anchor="center")
+                    #Agregar los empleados
+                    
+                    for j in range(0, len(candidatos)):
+                        tabla.insert("", "end", values=(candidatos[j], idS[j]))
+                    
+                    tabla.pack(expand=True, fill="both", padx=30, pady=10)
+
+                    p1 = tk.Frame(f1, bg="#ffb48a")
+                    p1.pack(side="bottom", fill="both", pady = 5, padx=5)
+                    contratar = tk.Button(p1, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 14), fg="White")
+                    contratar.pack(side="left", expand=True, fill="x", pady= 10, padx=25, anchor="center")
+
+                    def contrato():
+                        pass
+
+                    contratar.config(command=lambda: contrato())
+                
+                contratarS.config(command=lambda: contratarSeguridad())
+                contratarA.config(command=lambda: contratarAseador())
+                contratarP.config(command=lambda: contratarProfesor())
 
             Anuncio.after(50, mostrarSaldo)
             
