@@ -12,7 +12,7 @@ class Actor(Artista):
     TASA = 1_000_000
     __BAJA_CALIFICACION = 3
 
-    def __init__(self, nombre: str, id: int):
+    def __init__(self, nombre: str, id: int, edad: int):
         super().__init__(nombre, id)
 
         self.__generos = []
@@ -21,7 +21,7 @@ class Actor(Artista):
         self.__reevaluacion = False
         self.__precioContrato = None
         self.__sexo = None
-        self.__edad = None
+        self.__edad = edad
 
         # segun las aptitudes que estén en el enum
         self.__aptitudes = [aptitud for aptitud in Aptitud]

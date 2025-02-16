@@ -1548,6 +1548,7 @@ class Main:
                 txt_obras.config(state="disabled")
 
         # -------------------- PASO 4: Crear nuevo artista --------------------
+        '''AVALADA'''
         def step_create_artist(id_num):
             for widget in process_frame.winfo_children():
                 widget.destroy()
@@ -1603,7 +1604,6 @@ class Main:
             if edad < 4 or edad > 80:
                 messagebox.showerror("Error", "La edad debe estar entre 4 y 80 años.")
                 return
-            # Se crea el actor (se asume que Actor(nombre, id_num, edad) lo agrega a la lista de actores)
             actor = Actor(nombre, id_num, edad)
             messagebox.showinfo("Éxito", f"Nuevo actor agregado: {nombre} con ID {id_num} y edad {edad}.")
             step_artist_found(actor)
@@ -1612,7 +1612,7 @@ class Main:
         def step_artist_found(artista):
             for widget in process_frame.winfo_children():
                 widget.destroy()
-            if not hasattr(artista, "edad"):
+            if isinstance(artista, Director):
                 tk.Label(process_frame, text="El artista es un Director. Los directores no reciben clases.",
                         font=("Calibri", 14), bg="white", fg="yellow").pack(pady=10)
                 tk.Button(process_frame, text="Finalizar", font=("Calibri", 14),
