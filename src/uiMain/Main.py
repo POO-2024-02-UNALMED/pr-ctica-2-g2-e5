@@ -1402,15 +1402,45 @@ class Main:
             tk.Button(process_frame, text="Sí", font=("Calibri", 14),
                         command=lambda: step_create_artist(id_num)).pack(pady=5)
             tk.Button(process_frame, text="No", font=("Calibri", 14),
-                        command=lambda: step_show_obras_criticas()).pack(pady=5)
+                        command=lambda: step_show_obras_criticas_and_fin()).pack(pady=5)
 
-        def step_show_obras_criticas():
+        # -------------------- MÉTODO REQUERIDO: Obras críticas y terminar -------------------- 
+        def step_show_obras_criticas_and_fin():
             # Limpia el frame donde se mostrará la información
             for widget in process_frame.winfo_children():
                 widget.destroy()
             
             # Se llama al método de clase que retorna la lista de obras críticas.
             # Asegúrate de que Obra.mostrarObrasCriticas() esté decorado con @classmethod y retorne una lista.
+            obras_criticas = Obra.mostrarObrasCriticas()  
+            if not obras_criticas:
+                tk.Label(process_frame, text="No hay obras en estado crítico en el teatro.",
+                        font=("Calibri", 20), bg="white", fg="yellow").pack(pady=10)
+            else:
+                tk.Label(process_frame, text="Obras en estado crítico del teatro:",
+                        font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
+                txt_obras = tk.Text(process_frame, height=10, width=80, font=("Calibri", 12))
+                txt_obras.pack(pady=10)
+                # Itera sobre la lista de obras y agrega una línea para cada obra
+                for obra in obras_criticas:
+                    # Se asume que cada obra tiene métodos getNombre() y promedioCalificacion()
+                    linea = f"- '{obra.getNombre()}' (Promedio: {obra.promedioCalificacion()})\n"
+                    txt_obras.insert("end", linea)
+                txt_obras.config(state="disabled")
+            
+            # Puedes agregar un botón para continuar o regresar al menú principal
+            tk.Label(process_frame, text="Fin de la funcionalidad",
+                        font=("Calibri", 14), bg="white").pack(pady=10)
+            tk.Button(process_frame, text="Salir del sistema", font=("Calibri", 14),
+                    command=cls.volver).pack(pady=10)
+
+        # -------------------- MÉTODO REQUERIDO: Obras críticas --------------------            
+        def step_show_obras_criticas():
+            # Limpia el frame donde se mostrará la información
+            for widget in process_frame.winfo_children():
+                widget.destroy()
+            
+            # Se llama al método de clase que retorna la lista de obras críticas.
             obras_criticas = Obra.mostrarObrasCriticas()  
             if not obras_criticas:
                 tk.Label(process_frame, text="No hay obras en estado crítico en el teatro.",
@@ -1426,28 +1456,26 @@ class Main:
                     linea = f"- '{obra.getNombre()}' (Promedio: {obra.promedioCalificacion()})\n"
                     txt_obras.insert("end", linea)
                 txt_obras.config(state="disabled")
-            
-            # Puedes agregar un botón para continuar o regresar al menú principal
-            tk.Button(process_frame, text="Continuar", font=("Calibri", 14),
-                    command=cls.volver).pack(pady=10)
 
         # -------------------- PASO 4: Crear nuevo artista --------------------
         def step_create_artist(id_num):
             for widget in process_frame.winfo_children():
                 widget.destroy()
-            tk.Label(process_frame, text=f"Creación de nuevo Artista con ID {id_num}",
-                    font=("Calibri", 14), bg="white").pack(pady=10)
-            tk.Label(process_frame, text="Ingrese el nombre del nuevo artista:",
-                    font=("Calibri", 14), bg="white").pack(pady=5)
-            entry_nombre = tk.Entry(process_frame, font=("Calibri", 14))
-            entry_nombre.pack(pady=5)
-            tk.Label(process_frame, text="Ingrese el tipo de artista (director/actor):",
-                    font=("Calibri", 14), bg="white").pack(pady=5)
-            entry_tipo = tk.Entry(process_frame, font=("Calibri", 14))
-            entry_tipo.pack(pady=5)
-            tk.Label(process_frame, text="(Para actor se pedirá la edad)", font=("Calibri", 12), bg="white").pack(pady=5)
-            tk.Button(process_frame, text="Guardar", font=("Calibri", 14),
-                    command=lambda: process_new_artist(id_num, entry_nombre.get(), entry_tipo.get())).pack(pady=10)
+            # Configuramos los criterios y valores iniciales para ingresar el nombre y el tipo de artista
+            criterios = ["Nombre", "Tipo de artista"]
+            valores = ["", ""]  # valores vacíos inicialmente
+            # Se crea el FieldFrame; al presionar "Guardar" se llamará a la función lambda
+            # que invoca process_new_artist con los datos ingresados.
+            ff = FieldFrame(process_frame,
+                            tituloCriterios="Datos del nuevo artista",
+                            criterios=criterios,
+                            tituloValores="Ingrese valor",
+                            valores=valores,
+                            combobox=False,
+                            command=lambda: process_new_artist(id_num, ff.valores[0], ff.valores[1]))
+            ff.pack(pady=10, fill="both", expand=True)
+            tk.Label(process_frame, text="(Si se ingresa 'actor' se pedirá la edad posteriormente)",
+                    font=("Calibri", 12), bg="white").pack(pady=5)
 
         def process_new_artist(id_num, nombre, tipo):
             tipo = tipo.lower().strip()
