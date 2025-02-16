@@ -1,3 +1,4 @@
+from __future__ import annotations
 from gestorAplicacion.gestionObras.Artista import Artista
 from baseDatos.Teatro import Teatro
 from gestorAplicacion.herramientas.Aptitud import Aptitud

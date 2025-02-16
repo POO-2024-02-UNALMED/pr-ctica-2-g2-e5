@@ -736,6 +736,73 @@ class Main:
         
         CALIFICACION_ALTA = 4
 
+        def mostrarActores(fieldframe: FieldFrame, topFrame: Frame):
+            global actorsForRental
+            global duration
+            global empresa
+            global fechaInicio
+            global fechaFin
+
+            fieldframe.gatherEntries()
+
+            presupuesto = fieldframe.getValue("Presupuesto")
+            try:
+                presupuesto = float(presupuesto)
+            except Exception:
+                messagebox.showerror("Error", "La entrada debe ser numérica")
+                return
+            
+            actorsForRental = list(filter(lambda actor: actor.getPrecioContrato(duration) <= presupuesto, actorsForRental))
+
+            actors = [(actor.getNombre(), actor.getId(), actor.getEdad(), actor.getCalificacion(), actor.getPrecioContrato(duration))
+                      for actor in actorsForRental]
+
+            if len(actorsForRental) == 0:
+                messagebox.showerror("Error", "No se hallaron actores para el presupuesto")
+                return
+            else:
+
+                columns = ("Nombre", "Id", "Edad", "Calificación", "Precio de contratación")
+                widths = (60, 10, 10, 10, 60)
+                tree = ttk.Treeview(topFrame,
+                                    columns= columns,
+                                    show= "headings")
+                for col, width in zip(columns, widths):
+                    tree.heading(col, text=col)
+                    tree.column(column = col, width = width)
+                scrollbar = ttk.Scrollbar(topFrame, orient=tk.VERTICAL, command=tree.yview)
+                tree.configure(yscroll=scrollbar.set)
+
+                for actor in actors:
+                    tree.insert('', tk.END, values=actor)
+
+                tree.place(relheight=1, relwidth= .98, relx= 0)
+                scrollbar.place(relheight=1, relwidth=.02, relx= .98)
+
+                def actorEscogido(event):
+
+                    if cls.filterDebug:
+                        print(fechaInicio, fechaFin)
+
+                    actorEscogido, id, edad, calificacion, precio = tree.item(tree.selection()[0])["values"]
+
+                    contratar = messagebox.askyesno("Contratación de actores", 
+                                        f"Actor seleccionado:\n\nNombre: {actorEscogido}\nEdad: {edad}\nCalificación: {calificacion}\nPrecio de contratación: {precio}\n\n¿Desea contratarlo?")
+                    if contratar:
+                        actor = Artista.buscarArtistaPorId(id)
+                        empresa.pagarContratoActor(actor, float(precio))
+
+                        actor.getHorario().append((fechaInicio, fechaFin))
+
+
+                        if cls.filterDebug:
+                            print("horario nuevo", actor.getHorario())
+
+                        messagebox.showinfo("Success", f"¡Actor contratado!\n\nEl actor escogido fue {actorEscogido} por un precio de {precio}")
+                        Main.contratarActores()
+                
+                tree.bind('<<TreeviewSelect>>', actorEscogido)
+
         def presupuesto(topFrame: Frame):
             global actorsForRental
             global duration
@@ -751,7 +818,7 @@ class Main:
                 tituloValores= "Respuesta",
                 criterios= ["Presupuesto"],
                 valores= [""],
-                command= None
+                command= lambda: mostrarActores(presupuesto, topFrame)
             )
 
             presupuesto.place(relheight= 1, relwidth= 1)
@@ -847,6 +914,8 @@ class Main:
         def setSchedule(fieldframe: FieldFrame, fecha: str, topFrame: str):
             global actorsForRental
             global duration
+            global fechaInicio
+            global fechaFin
 
             if cls.filterDebug:
                 print("al entrar a setSchedule", [actor.getNombre() for actor in actorsForRental])
@@ -886,7 +955,7 @@ class Main:
                 messagebox.showerror("Error", advertenciaDuracion)
                 return
             
-            actorsForRental = list(filter(lambda actor: actor.isDisponible(horaInicio, horaFin), actorsForRental))
+            actorsForRental = list(filter(lambda actor: actor.isDisponible(fechaInicio, fechaFin), actorsForRental))
             
             if cls.filterDebug:
                 print("al salir de setSchedule", [actor.getNombre() for actor in actorsForRental])

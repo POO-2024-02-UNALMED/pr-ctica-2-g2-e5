@@ -2,6 +2,7 @@
 
 import random
 from baseDatos.Teatro import Teatro
+from gestorAplicacion.gestionObras.Actor import Actor
 
 
 class Cliente:
@@ -69,6 +70,21 @@ class Cliente:
     
     def getCuentaBancaria(self):
         return self.__cuentaBancaria
+    
+    def pagarContratoActor(self, actor: Actor, precio: float) -> bool:
+
+        if self.__tipo != "Empresa":
+            return False
+        
+        if actor not in self.__historial:
+            self.__historial.append(actor)
+
+        transf = self.__cuentaBancaria.transferencia(Teatro.getInstancia().getTesoreria().getCuenta(), precio)
+        
+        if transf:
+            return True
+        else:
+            return False
 
 
 
