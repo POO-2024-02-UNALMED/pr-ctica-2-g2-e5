@@ -26,8 +26,8 @@ class Cliente:
 
 
     def verificar(elemento):
-        for i in Cliente.clientes:
-            if i.id==elemento:
+        for i in Teatro.getInstancia().getClientes():
+            if i.getId()==elemento:
                 return True
         return False
     

@@ -405,13 +405,14 @@ class Main:
                     messagebox.showerror("Error", "Ingrese un numero entero")
                 elif not Cliente.verificar(numero):  # Si está vacío
                     messagebox.showerror("Error", "Id no existente")
+                    
                 else:
                     messagebox.showinfo("Éxito", "Iniciando sesion")
                     Inicio_preguntas()
         def Usuario_Antiguo():
             for widget in cls.content.winfo_children():
                 widget.destroy()
-            
+            global cliente
             cliente=Cliente(id=12)
             
             
