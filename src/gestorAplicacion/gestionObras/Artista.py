@@ -41,9 +41,9 @@ class Artista(ABC):
         return None
     
     @classmethod
-    def inicializarCalificacionesPublico(artista: Artista) -> None:
-        artista.__calificacionesPublico += [ round(random() * 5, 2) for i in range(5)]
- 
+    def inicializarCalificacionesPublico(cls, artista: Artista) -> None:
+        artista.__calificacionesPublico += [ round(random() * 50)/10.0 for i in range(5)]
+
     def getNombre(self):
         return self.__nombre
 

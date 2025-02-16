@@ -12,12 +12,15 @@ import random
 
 
 
+
+
 #AGREGAR SRC AL PATH
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from baseDatos.Teatro import Teatro
 
 from gestorAplicacion.gestionVentas.Cliente import Cliente
+from gestorAplicacion.gestionFinanciera.Empleado import Empleado
 from gestorAplicacion import gestionObras
 
 from gestorAplicacion.herramientas.Aptitud import Aptitud
@@ -1689,6 +1692,7 @@ class Main:
             step_artist_found(actor)
 
         # -------------------- PASO 5: Artista encontrado --------------------
+        '''Avalada'''
         def step_artist_found(artista):
             for widget in process_frame.winfo_children():
                 widget.destroy()
@@ -1700,7 +1704,7 @@ class Main:
             else:
                 # Si el actor no tiene calificaciones, se inicializan
                 if artista.sigueIgual():
-                    resultado = Teatro.getInstancia().casting(artista, Teatro.getInstancia().getTipoProfesor())
+                    resultado = Empleado.casting(artista, Teatro.getInstancia().getTipoProfesor())
                     if not resultado:
                         messagebox.showerror("Error", "No hay profesores disponibles para inicializar las calificaciones del actor.")
                     else:
@@ -1717,7 +1721,7 @@ class Main:
                 # Mostrar obras críticas
                 tk.Label(process_frame, text="Obras en estado crítico del teatro:",
                         font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
-                obras = Teatro.getInstancia().mostrarObrasCriticas()  # Se asume que este método existe
+                obras = Obra.mostrarObrasCriticas()  # Se asume que este método existe
                 if not obras:
                     tk.Label(process_frame, text="No hay obras en estado crítico.",
                             font=("Calibri", 14), bg="white", fg="yellow").pack(pady=5)
@@ -1730,6 +1734,9 @@ class Main:
                     txt_obras.config(state="disabled")
                 tk.Button(process_frame, text="Programar clase", font=("Calibri", 14),
                             command=lambda: step_select_area(artista)).pack(pady=10)
+                
+                tk.Button(process_frame, text="Salir del sistema", font=("Calibri", 14),
+                command=cls.volver).pack(pady=10)
 
         # -------------------- PASO 6: Seleccionar área de mejora --------------------
         def step_select_area(actor):
