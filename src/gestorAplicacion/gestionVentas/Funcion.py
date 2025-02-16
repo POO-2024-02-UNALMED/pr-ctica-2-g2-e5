@@ -5,28 +5,88 @@ class Funcion:
     funcionesALaVenta = []  # Lista estática de funciones a la venta
 
     def __init__(self, obra = None, tiquetesVendidos = 0, horario = [], sillas = [], sala = None, calificador = False,
-                 audienciaEsperada = 0, trabajador = False, asistentes = [], precio = 0.0):
-        self.obra = obra
-        self.tiquetesVendidos = tiquetesVendidos
-        self.horario = horario
-        self.sillas  = sillas
-        self.sala = sala
-        self.calificador = calificador
-        self.audienciaEsperada = audienciaEsperada
-        self.trabajador = trabajador
-        self.asistentes = asistentes
-        self.precio = precio
+            audienciaEsperada = 0, trabajador = False, asistentes = [], precio = 0.0):
+        self.__obra = obra
+        self.__tiquetesVendidos = tiquetesVendidos
+        self.__horario = horario
+        self.__sillas  = sillas
+        self.__sala = sala
+        self.__calificador = calificador
+        self.__audienciaEsperada = audienciaEsperada
+        self.__trabajador = trabajador
+        self.__asistentes = asistentes
+        self.__precio = precio
         Funcion.funcionesCreadas.append(self)
+        
+    def getObra(self):
+        return self.__obra
+    
+    def setObra(self, obra):
+        self.__obra = obra
+        
+    def getTiquetesVendidos(self):
+        return self.__tiquetesVendidos
+    
+    def setTiquetesVendidos(self, tiquetesVendidos):
+        self.__tiquetesVendidos = tiquetesVendidos
+        
+    def getHorario(self):
+        return self.__horario
+    
+    def setHorario(self, horario):  
+        self.__horario = horario
+        
+    def getSillas(self):
+        return self.__sillas
+    
+    def setSillas(self, sillas):
+        self.__sillas = sillas
+        
+    def getSala(self):
+        return self.__sala
+    
+    def setSala(self, sala):
+        self.__sala = sala
+        
+    def getCalificador(self):
+        return self.__calificador
+    
+    def setCalificador(self, calificador):
+        self.__calificador = calificador
+        
+    def getAudienciaEsperada(self):
+        return self.__audienciaEsperada
+    
+    def setAudienciaEsperada(self, audienciaEsperada):
+        self.__audienciaEsperada = audienciaEsperada
+        
+    def getTrabajador(self):
+        return self.__trabajador
+    
+    def setTrabajador(self, trabajador):    
+        self.__trabajador = trabajador
+        
+    def getAsistentes(self):
+        return self.__asistentes
+    
+    def setAsistentes(self, asistentes):
+        self.__asistentes = asistentes
+        
+    def getPrecio(self):
+        return self.__precio
+    
+    def setPrecio(self, precio):
+        self.__precio = precio
 
     def tablaSillas(self):
         Nuevo=""
-        sillas = self.sala.sillas
-        for  i in range(len(sillas)):        
-            if (sillas[i].codigo != 88):
-                Nuevo=Nuevo+"        "
+        sillas = self.getSala().getSillas()
+        for i in range(len(sillas)):    
+            if (sillas[i].getCodigo() != 88):
+                Nuevo = f"{Nuevo}        "
             else:
-                primerCaracter = sillas[i].tipo.name().charAt(0)
-                Nuevo=Nuevo+primerCaracter+"-"+str.format("%04d", sillas[i].codigo)+"  "
+                primerCaracter = sillas[i].getTipo().name().charAt(0)
+                Nuevo=Nuevo+primerCaracter+"-"+str.format("%04d", sillas[i].getCodigo())+"  "
 
             if ((i + 1) % 8 == 0):
                 Nuevo = Nuevo+"\n"
@@ -36,59 +96,57 @@ class Funcion:
     def eliminarSilla(self, i):
         from gestionVentas import Silla
         sillaVacia = Silla(codigo = 88)
-        sillas = self.sala.sillas
+        sillas = self.getSala().getSillas()
         for k in range (len(sillas)):
-            if sillas[k].codigo == i:
+            if sillas[k].getCodigo() == i:
                 sillas[k] = sillaVacia
 
     def salaDisponible(self, sala):
         return sala
     
+    @staticmethod
     def actualizarFuncionesVenta(cls, funcionesCreadas):
-        funcionesALaVenta = []
         if len(funcionesCreadas) > 0:
+            funcionesALaVenta = []
             for funcion in funcionesCreadas:
-                if len(funcion.horario) > 0:
-                    if funcion.horario[0] > datetime.now():
-                        funcionesALaVenta.append(funcion)
-
-                else:
+                if len(funcion.getHorario()) <= 0:
                     break
+                if funcion.getHorario()[0] > datetime.now():
+                    funcionesALaVenta.append(funcion)
+
             return funcionesALaVenta
 
     def createHorario(self, week):
         from baseDatos import Teatro
         import datetime
         horario = []
-        inicioFranja = self.obra.franjaHoraria[0]
+        inicioFranja = self.getObra().getFranjaHoraria()[0]
         for sala in Teatro.getInstancia().getSalas():
-            if sala.capacidad > self.obra.audienciaEsperada:
+            if sala.getCapacidad() > self.getObra().getAudienciaEsperada():
                 for day in week:
                     inicioFranjaITE = inicioFranja
-                    while inicioFranjaITE < self.obra.franjaHoraria[1] and inicioFranjaITE + self.obra.getDuracionFormatoS()<(datetime.datetime(22,00)):
+                    while inicioFranjaITE < self.getObra().getFranjaHoraria()[1] and inicioFranjaITE + self.getObra().getDuracionFormatoS()<(datetime.datetime(22,00)):
                         i = datetime.datetime(day, inicioFranjaITE)
-                        v = i + self.obra.getDuracionFormatoS()
-                        if self.obra.isRepartoDisponible(i, v) and sala.isDisponible(i,v):
-                            horario.append(i)
-                            horario.append(v)
-                            self.sala = sala
-                            self.sala.anadirHorario(horario)
+                        v = i + self.getObra().getDuracionFormatoS()
+                        if self.getObra().isRepartoDisponible(i, v) and sala.isDisponible(i,v):
+                            horario.extend((i, v))
+                            self.getSala() = sala
+                            self.getSala().anadirHorario(horario)
                             return horario
                         inicioFranjaITE = inicioFranjaITE.total_minutes() + 30
         return horario
 
-    def extraerHora(self, horario):
-        a = []
+    def extraerHora(self):
+        horario = self.getHorario()
         for tiempo in horario:
             hora = tiempo.total_hours()
             minutos = tiempo.total_minutes()
             segundos = tiempo.total_seconds()
-        a.append(datetime.datetime(hora, minutos, segundos))
-        return a
+        return [datetime.datetime(hora, minutos, segundos)]
     
     def doWeNeedACalificador(self):
         a = False
-        for actor in self.obra.reparto:
+        for actor in self.getObra().getReparto():
             if actor.getReevaluacion():
                 a = True
         return a
@@ -106,22 +164,20 @@ class Funcion:
                 Nuevo = Nuevo + "\n" + string
         return Nuevo
 
-    def indiceFuncion(sekf, i, nombre):
+    def indiceFuncion(self, i, nombre):
         from baseDatos import Teatro
         il = 0
         for funcion in Teatro.getInstancia().getFuncionesCreadas():
-            if funcion.obra != None:
-                if (funcion.obra.nombre.lower()) == nombre.lower():
-                    il = il + 1
+            if funcion.obra != None and (funcion.obra.nombre.lower()) == nombre.lower():
+                il = il + 1
         return il >= i
 
     def escogerFuncion(self, i, nombre):
         from baseDatos import Teatro
         il = 0
         for funcion in Teatro.getInstancia().getFuncionesCreadas():
-            if funcion.obra!=None:
-                if funcion.obra.nombre.lower() == nombre.lower():
-                    il = il + 1
+            if funcion.obra!=None and funcion.obra.nombre.lower() == nombre.lower():
+                il = il + 1
             if il==i:
                 return funcion
         return None
@@ -133,29 +189,37 @@ class Funcion:
         prom = self.obra.promedioCalificacion()
         precioBase = 10000
         ad = self.obra.asistencia*500
-        if prom > 8 :
-            precioBase = precioBase + prom * 800 + ad  * 500        
+        if prom > 8:
+            return precioBase + prom * 800 + ad  * 500
         elif prom > 5:
-            precioBase = precioBase + prom * 400 + ad
+            return precioBase + prom * 400 + ad
         elif prom > 3:
-            precioBase = precioBase + prom * 200 + ad
+            return precioBase + prom * 200 + ad
         else:
-            precioBase = precioBase + prom * 100 + ad
-        return precioBase
+            return precioBase + prom * 100 + ad
 
     def imprimirFuncion(self):
-        string = str.format("%30s %15s %10s %20s",self.obra.nombre,self.obra.genero,self.obra.duracion.total_minutes(),str.format("$%,.2f",self.precioFuncion()))
-        return string
+        return str.format(
+            "%30s %15s %10s %20s",
+            self.obra.nombre,
+            self.obra.genero,
+            self.obra.duracion.total_minutes(),
+            str.format("$%,.2f", self.precioFuncion()),
+        )
     
 
     @staticmethod
     def buscarFuncion(cls, nombre):
         from baseDatos import Teatro
-        for funcion in Teatro.getInstancia().getFuncionesCreadas():
-            if funcion.obra!=None:
-                if funcion.obra.nombre.lower() == nombre.lower():
-                    return funcion
-        return None
+        return next(
+            (
+                funcion
+                for funcion in Teatro.getInstancia().getFuncionesCreadas()
+                if funcion.obra != None
+                and funcion.obra.nombre.lower() == nombre.lower()
+            ),
+            None,
+        )
 
     @staticmethod
     def mostrarPrecioFuncion(cls, nombre):

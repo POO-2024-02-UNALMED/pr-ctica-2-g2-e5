@@ -15,12 +15,14 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from baseDatos.Teatro import Teatro
 
 from gestorAplicacion.gestionVentas.Cliente import Cliente
+from gestorAplicacion import gestionObras
 
 from gestorAplicacion.herramientas.Aptitud import Aptitud
 from gestorAplicacion.herramientas.Genero import Genero
 from gestorAplicacion.gestionObras.Artista import Artista
 from gestorAplicacion.gestionObras.Actor import Actor
 from gestorAplicacion.gestionObras.Obra import Obra
+from gestorAplicacion.gestionObras.Director import Director
 
 from baseDatos.memory import resetMemory
 
@@ -694,8 +696,8 @@ class Main:
 
         #captionframe contiene el mensaje de bienvenida la funcionalidad
         caption = tk.Label(captionFrame, 
-                           text="Bienvenido al panel de contratación de actores.",
-                           font= ("Calibri", 10))
+                            text="Bienvenido al panel de contratación de actores.",
+                            font= ("Calibri", 10))
         caption.place(relx = 0, rely = 0, relheight= 1, relwidth= 1)
         
         #reasignación de tamaño de letra
@@ -755,7 +757,7 @@ class Main:
             actorsForRental = list(filter(lambda actor: actor.getPrecioContrato(duration) <= presupuesto, actorsForRental))
 
             actors = [(actor.getNombre(), actor.getId(), actor.getEdad(), actor.getCalificacion(), actor.getPrecioContrato(duration))
-                      for actor in actorsForRental]
+                        for actor in actorsForRental]
 
             if len(actorsForRental) == 0:
                 messagebox.showerror("Error", "No se hallaron actores para el presupuesto")

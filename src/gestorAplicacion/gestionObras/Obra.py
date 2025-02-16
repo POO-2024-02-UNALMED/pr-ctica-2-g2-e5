@@ -6,31 +6,157 @@ class Obra:
     obras = []
     def __init__(self, audienciaEsperada = 0, nombre = "", calificacion = 0, reparto = [], papeles = [], director = None, costoProducción = 0, funcionesSemana = [], genero = None, tiquetesTotales = 0, estadoCriticoA = False, calificaciones = [], franjaHoraria = [],
                 duracion = None, funcionEstelar = None, funciones = [], funcionesRecomendadas = 0, promedioArt = 0, repartoDisponible = False, asistencia = 0, precio = 0):
-        self.audienciaEsperada = audienciaEsperada
-        self.nombre = nombre
-        self.calificacion = calificacion
-        self.reparto = reparto
-        self.papeles = papeles
-        self.director = director
-        self.costoProduccion = costoProducción
-        self.funcionesSemana = funcionesSemana
-        self.genero = genero
-        self.tiquetesTotales = tiquetesTotales
-        self.estadoCriticoA = estadoCriticoA
-        self.calificaciones = calificaciones
-        self.franjaHoraria = franjaHoraria
-        self.duracion = duracion
-        self.funcionEstelar = funcionEstelar
-        self.funciones = funciones
-        self.funcionesRecomendadas = funcionesRecomendadas
-        self.promedioArt = promedioArt
-        self.repartoDisponible = repartoDisponible
-        self.asistencia = asistencia
-        self.precio = precio
+        self.__audienciaEsperada = audienciaEsperada
+        self.__nombre = nombre
+        self.__calificacion = calificacion
+        self.__reparto = reparto
+        self.__papeles = papeles
+        self.__director = director
+        self.__costoProduccion = costoProducción
+        self.__funcionesSemana = funcionesSemana
+        self.__genero = genero
+        self.__tiquetesTotales = tiquetesTotales
+        self.__estadoCriticoA = estadoCriticoA
+        self.__calificaciones = calificaciones
+        self.__franjaHoraria = franjaHoraria
+        self.__duracion = duracion
+        self.__funcionEstelar = funcionEstelar
+        self.__funciones = funciones
+        self.__funcionesRecomendadas = funcionesRecomendadas
+        self.__promedioArt = promedioArt
+        self.__repartoDisponible = repartoDisponible
+        self.__asistencia = asistencia
+        self.__precio = precio
         self.calcularCalificacion(self.calificaciones)
         self.calcAudienciaEsperada(self.calificacion)
         self.checkEstadoCritico()
         Obra.obras.append(self)
+        
+    def getAudenciaEsperada(self):
+        return self.audienciaEsperada
+    
+    def setAudenciaEsperada(self, value):
+        self.audienciaEsperada = value  
+    
+    def getNombre(self):    
+        return self.nombre
+    
+    def setNombre(self, value):
+        self.nombre = value
+    
+    def getCalificacion(self):
+        return self.calificacion
+    
+    def setCalificacion(self, value):
+        self.calificacion = value
+        
+    def getReparto(self):
+        return self.reparto
+    
+    def setReparto(self, value):
+        self.reparto = value
+    
+    def getPapeles(self):
+        return self.papeles
+    
+    def setPapeles(self, value):
+        self.papeles = value
+    
+    def getDirector(self):
+        return self.director
+    
+    def setDirector(self, value):
+        self.director = value
+    
+    def getCostoProduccion(self):
+        return self.costoProduccion
+    
+    def setCostoProduccion(self, value):
+        self.costoProduccion = value
+        
+    def getFuncionesSemana(self):
+        return self.funcionesSemana
+    
+    def setFuncionesSemana(self, value):
+        self.funcionesSemana = value
+        
+    def getGenero(self):
+        return self.genero
+    
+    def setGenero(self, value):
+        self.genero = value
+        
+    def getTiquetesTotales(self):
+        return self.tiquetesTotales
+    
+    def setTiquetesTotales(self, value):
+        self.tiquetesTotales = value
+        
+    def getEstadoCriticoA(self):
+        return self.estadoCriticoA
+    
+    def setEstadoCriticoA(self, value):
+        self.estadoCriticoA = value
+        
+    def getCalificaciones(self):
+        return self.calificaciones
+    
+    def setCalificaciones(self, value):
+        self.calificaciones = value
+        
+    def getFranjaHoraria(self):
+        return self.franjaHoraria
+    
+    def setFranjaHoraria(self, value):
+        self.franjaHoraria = value
+        
+    def getDuracion(self):
+        return self.duracion
+    
+    def setDuracion(self, value):
+        self.duracion = value
+        
+    def getFuncionEstelar(self):
+        return self.funcionEstelar
+    
+    def setFuncionEstelar(self, value):
+        self.funcionEstelar = value
+        
+    def getFunciones(self):
+        return self.funciones
+    
+    def setFunciones(self, value):
+        self.funciones = value
+        
+    def getFuncionesRecomendadas(self):
+        return self.funcionesRecomendadas
+    
+    def setFuncionesRecomendadas(self, value):  
+        self.funcionesRecomendadas = value
+        
+    def getPromedioArt(self):
+        return self.promedioArt
+    
+    def setPromedioArt(self, value):
+        self.promedioArt = value
+        
+    def getRepartoDisponible(self):
+        return self.repartoDisponible
+    
+    def setRepartoDisponible(self, value):
+        self.repartoDisponible = value
+        
+    def getAsistencia(self):
+        return self.asistencia
+    
+    def setAsistencia(self, value):
+        self.asistencia = value
+        
+    def getPrecio(self):
+        return self.precio
+    
+    def setPrecio(self, value):
+        self.precio = value
 
     def funcionesRecomendadas(self, promedioArt):
         if promedioArt < 2:
@@ -44,7 +170,7 @@ class Obra:
 
     def calcAudienciaEsperada(self, calificacion):
         u = calificacion * 12
-        self.audienciaEsperada = u
+        self.setAudienciaEsperada(u)
     
     def calcularCalificacion(self, calificaciones):
         u = 0
@@ -53,7 +179,7 @@ class Obra:
             u = u + i
             t = t+1
         v = u / t
-        self.calificacion = v
+        self.setCalificacion(v)
 
     def franjaHoraria(self, genero):
         from gestionVentas import Funcion
@@ -62,11 +188,11 @@ class Obra:
         franja = [time(00,00),time(23,59)]
         obrasGenero = []
         for obra in Teatro.getInstancia().getObras():
-            u = obra.genero
+            u = obra.getGenero()
             if u == genero:
                 obrasGenero.append(obra)
         for obra in obrasGenero:
-            a = obra.funcionEstelar
+            a = obra.getFuncionEstelar()
             if a != None:
                 fstar = a.extraerHora(a.horario)
                 if fstar.size() >= 2:
@@ -74,50 +200,50 @@ class Obra:
                         franja[0] = fstar[0]
                     if fstar[1] < franja[1]:
                         franja[1] = fstar[1]
-        self.franjaHoraria = franja
+        self.setFranjaHoraria(franja)
 
     def  calcFuncionEstelar(self,funciones):
         from gestionVentas import Funcion
         u = Funcion()
         v = Funcion()
-        u.tiquetesVendidos = 0
-        s = u.tiquetesVendidos
+        u.setTiquetesVendidos(0)
+        s = u.getTiquetesVendidos()
         for funcion in funciones:
-            d = funcion.tiquetesVendidos
+            d = funcion.getTiquetesVendidos
             if s < d:
                 s = d
                 v = funcion
-        self.funcionEstelar = v
+        self.setFuncionEstelar(v)
 
     def checkEstadoCritico(self):
-        return self.calificacion < 1
+        return self.getCalificacion() < 1
 
     def calificacionVacia(self):
-        return len(self.calificaciones) != 0
+        return len(self.getCalificaciones()) != 0
 
     def promedioCalificacion(self):
         suma=0
         contador = 0
         if self.calificacionVacia() == False :
             return 0
-        for cal in  self.calificaciones:
+        for cal in  self.getCalificaciones():
             suma = suma + cal
             contador = contador + 1
         return (suma / contador)
         
     def recurrencia(self):
-        self.asistencia = self.asistencia + 1
+        self.setAsistencia(self.getAsistencia() + 1)
     
     def precioFuncion(self):
             prom = self.promedioCalificacion()
             precioBase = 10000
-            ad = self.asistencia*500
+            ad = self.getAsistencia()*500
             if prom > 8:
                 precioBase = precioBase + prom * 800 + ad
 
             elif prom > 5:
                 precioBase = precioBase + prom * 400 + ad
-             
+            
             elif prom > 3:
                 precioBase = precioBase + prom * 200 + ad
 
@@ -129,8 +255,8 @@ class Obra:
     def imprimirObra(self):
         return str.format(
             "%30s %20s %20s %20s",
-            self.nombre,
-            self.genero,
+            self.getNombre(),
+            self.getGenero(),
             self.getDuracionFormato(),
             str.format("$%,.2f", self.precioObra(self.nombre)) + "\n",
         )
@@ -141,7 +267,7 @@ class Obra:
             (
                 obra
                 for obra in Teatro.getInstancia().getObras()
-                if obra.nombre.lower() == nombre.lower()
+                if obra.getNombre().lower() == nombre.lower()
             ),
             None,
         )
@@ -152,7 +278,7 @@ class Obra:
             (
                 obra.precioFuncion()
                 for obra in Teatro.getInstancia().getObras()
-                if obra.nombre.lower() == nombre.lower()
+                if obra.getNombre().lower() == nombre.lower()
             ),
             0,
         )
@@ -162,7 +288,7 @@ class Obra:
         from baseDatos import Teatro
         listaNombres= []
         listaNombres.extend(
-            obra.nombre.lower() for obra in Teatro.getInstancia().getObras()
+            obra.getNombre().lower() for obra in Teatro.getInstancia().getObras()
         )
         return nombre not in listaNombres
 
@@ -180,7 +306,7 @@ class Obra:
         obrasCriticas.extend(
             obra
             for obra in Teatro.getInstancia().getObras()
-            if obra.promedioCalificacion() <= 2.0 and obra.nombre == "NOTFORITE"
+            if obra.promedioCalificacion() <= 2.0 and obra.getNombre() == "NOTFORITE"
         )
         return obrasCriticas
 
@@ -216,15 +342,17 @@ class Obra:
         from baseDatos import Teatro
         nuevo=""
         for obra in Teatro.getInstancia().getObras():
-            if obra.nombre != "NOTFORITE":
-                string = str.format("%30s %20s %20s %20s",obra.nombre,obra.genero,obra.getDuracionFormato(),str.format("$%,.2f",obra.precioObra(obra.nombre))+"\n")
+            if obra.getNombre() != "NOTFORITE":
+                string = str.format("%30s %20s %20s %20s",obra.getNombre(),obra.getGenero(),
+                                    obra.getDuracionFormato(),str.format("$%,.2f",
+                                    obra.precioObra(obra.getNombre()))+"\n")
                 nuevo = nuevo +string
         return nuevo
     
     def getDuracionFormato(self):
-        horas = self.duracion.total_seconds() // 3600
-        minutos = (self.duracion.total_seconds() % 3600) // 60
+        horas = self.getDuracion().total_seconds() // 3600
+        minutos = (self.getDuracion.total_seconds() % 3600) // 60
         return str.format("%d:%02d", horas, minutos)
     
     def getDuracionFormatoS(self):
-        return self.duracion.total_seconds()
+        return self.getDuracion.total_seconds()
