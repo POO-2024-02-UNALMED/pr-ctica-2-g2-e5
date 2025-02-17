@@ -755,10 +755,10 @@ class Main:
                 p2.pack(side= "left", fill="both", expand= True, padx=5, pady=1)
                 p3 = tk.Frame(frameSuperior, bg="#ffb48a")
                 p3.pack(side= "left", fill="both", expand= True, padx=5, pady=1)
-
-                botonContinuar = tk.Button(frameInferior, text="Continuar", font=("Calibri", 14),bg= "#571F1C", fg="white")
-                botonContinuar.pack(fill="both", padx=10, pady=5, anchor="center")
-                botonContinuar.config(command=lambda: continuar2)
+                
+                botonContinuar = tk.Button(frameInferior, text="Continuar", font=("Calibri", 14) ,bg= "#571F1C", fg="white")
+                botonContinuar.pack(fill="both", padx=10, pady=5)
+                botonContinuar.config(command=lambda: continuar2())
 
                 #Organizar tabla de empleados
                 #Estilo tablas
@@ -1026,7 +1026,432 @@ class Main:
                     cls.ventanaDialogo("se contrato a:" + valores[0], continuar)
 
             def continuar2():
-                pass
+                cls.clear_frame(f1)
+                #Tres frames
+                # 1 Asignando Trabajadores
+                infoTrabajadores = tk.Frame(f1, bg="#ffb48a")
+                infoTrabajadores.place(relx=0, rely=0, relwidth=1, relheight=0.1, anchor="nw")
+                info = tk.Label(infoTrabajadores, text="Asignando Trabajos, por favor espere...", font=("Calibri", 14), bg="#ffb48a")
+                info.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
+                # 2 informacion de los de seguridad
+                infoSeguridad = tk.Frame(f1, bg="#ffb48a")
+                infoSeguridad.place(relx = 0, rely=0.1, relwidth=1, relheight=0.45, anchor="nw")
+                info2 = tk.Frame(infoSeguridad, bg="#571F1C")
+                info2.place(relx=0, rely=0, relwidth=1, relheight=0.15)
+                infoS = tk.Label(info2, text="Asignacion para Seguridad", font=("Calibri", 12), bg="#571F1C", fg="white")
+                infoS.place(relx=0.5, rely=0.5, anchor="center")
+
+                # 3 informacion de los Aseadores
+                infoAseador = tk.Frame(f1, bg="White")
+                infoAseador.place(relx=0, rely=0.55, relwidth=1, relheight=0.45, anchor="nw")
+                info3 = tk.Frame(infoAseador, bg="#571F1C")
+                info3.place(relx=0, rely=0, relwidth=1, relheight=0.15)
+                infoA = tk.Label(info3, text="Asignacion para Aseador", font=("Calibri", 12), bg="#571F1C", fg="white")
+                infoA.place(relx=0.5, rely=0.5, anchor="center")
+
+                #ordenar listas
+                
+                aseador_order = Teatro.getInstancia().getTipoAseador()
+                Seguridad_order = Teatro.getInstancia().getTipoSeguridad()
+                Profesor_order = Teatro.getInstancia().getTipoProfesor()
+
+                aseador_order.sort(key = lambda e: e.getMetaSemanal(), reverse=True)
+                Seguridad_order.sort(key = lambda e: e.getMetaSemanal(), reverse=True)
+                Profesor_order.sort(key = lambda e: e.getMetaSemanal(), reverse=True)
+
+                Teatro.getInstancia().setTipoAseador(aseador_order)
+                Teatro.getInstancia().setTipoSeguridad(Seguridad_order)
+                Teatro.getInstancia().setTipoProfesor(Profesor_order)
+                
+
+                def asignarSeguridad():
+                    #Asignacion de trabajos
+                    trabajoAsignadoS = True                
+                    cant_trabajadores_principiantes = 0
+                    base = 6
+                    totalFunciones = len(Teatro.getInstancia().getFuncionesCreadas())
+                    totalTrabajadores_S = len(Teatro.getInstancia().getTipoSeguridad())
+                    funcionXTrabajador = 0
+                    if totalTrabajadores_S != 0:
+                        funcionXTrabajador = totalFunciones//totalTrabajadores_S
+                    funcionesDisponibles = Teatro.getInstancia().getFuncionesCreadas()
+                    try:
+                        funcionesDisponibles.sort(key=lambda f : f.getHorario()[0])
+                    except Exception as e:
+                        pass
+                
+                    #Verificacion de que las listas no este vacia
+                    if funcionXTrabajador != 0:
+                        for emp in Teatro.getInstancia().getTipoSeguridad():
+                            if emp.getMetaSemanal() == base:
+                                cant_trabajadores_principiantes += 1
+                        #Asignacion cuando todos son principiantes
+                        if cant_trabajadores_principiantes == len(Teatro.getInstancia().getTipoSeguridad()):
+                            #Se asignan en igual cantidad
+                            funcionesSinHorario = 0
+                            for Persona in Teatro.getInstancia().getTipoSeguridad():
+                                asignadas = 0
+                                localTime = list(Persona.getHorario())
+                                i = 0
+                                while i < len(funcionesDisponibles): 
+                                # for i in range(0, len(funcionesDisponibles)):
+                                    if asignadas < funcionXTrabajador:
+                                        Funciones = funcionesDisponibles[i]
+                                        #asignacion del horario y del trabajo
+                                        #Verificar que la funcion tenga un horario
+                                        if Funciones.getHorario():
+                                            if len(localTime) != 0:
+                                                if Funciones.getHorario()[0] > localTime[-1][1]:
+                                                    localTime.append(Funciones.getHorario())
+                                                    asignadas += 1
+                                                    #Calcular duracion de la Funcion
+                                                    inicio = Funciones.getHorario()[0]
+                                                    fin = Funciones.getHorario()[1]
+
+                                                    duracionFuncion = (fin - inicio).total_seconds() / 3600.0
+                                                    Persona.getTrabajos().append(duracionFuncion)
+                                                    Funciones.setTrabajador(True)
+                                                    funcionesDisponibles.pop(i)
+                                                    continue
+                                                else:
+                                                    i += 1
+                                            else:
+                                                localTime.append(Funciones.getHorario())
+                                                asignadas += 1
+
+                                                inicio = Funciones.getHorario()[0]
+                                                fin = Funciones.getHorario()[1]
+
+                                                duracionFuncion = (fin - inicio).total_seconds() / 3600.0
+                                                Persona.getTrabajos().append(duracionFuncion)
+                                                Funciones.setTrabajador(True)
+                                                funcionesDisponibles.pop(i)
+                                                continue
+                                        else:
+                                            funcionesSinHorario += 1
+                                            funcionesDisponibles.pop(i);
+                                            continue
+                                    else:
+                                        break      
+                                #Se organiza la lista para que no haya errores en caso de asignar las funciones restantes
+                                localTime.sort(key = lambda horario: horario[0])
+                                Persona.setHorario(localTime)
+                                Persona.setDisponible(False)
+
+                            if funcionesSinHorario == 1:
+                                horarios = tk.Frame(infoSeguridad, bg="red")
+                                horarios.pack(side="top", fill="x", expand=True)
+                                horarioLabel = tk.Label(horarios, text="Hay una funcion sin horarios", font=("Calibri", 12))
+                                horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
+                            elif funcionesSinHorario > 1:
+                                horarios = tk.Frame(infoSeguridad, bg="red")
+                                horarios.pack(side="top", fill="x", expand=True)
+                                horarioLabel = tk.Label(horarios, text="Hay " + str(funcionesSinHorario) + " Funciones sin horarios", font=("Calibri", 12))
+                                horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
+
+                            #Evaluacion de Salas sin trabajador
+                            if funcionesDisponibles != 0:
+                                for Persona in Teatro.getInstancia().getTipoSeguridad():
+                                    localTime = Persona.getHorario()
+                                    i = 0
+                                    while i < len(funcionesDisponibles):
+                                        Funciones = funcionesDisponibles[i]
+                                        horarioValido = True
+                                        inicioNuevo = Funciones.getHorario()[0]
+                                        finNuevo = Funciones.getHorario()[1]
+                                        #Verificar que no se solape
+                                        #Se itera sobre las sublistas de localTime
+                                        for j in range(len(localTime)):
+                                            horarioActual = localTime[j]
+                                            finActual = horarioActual[1]
+
+                                            #Verificar que hay una sublista despues
+                                            if j + 1 < len(localTime):
+                                                horarioSiguiente = localTime[j+1]
+                                                inicioSiguiente = horarioSiguiente[0]
+
+                                                #Verificar que el horario nuevo no se solape
+                                                if not (inicioNuevo > finActual and finNuevo < inicioSiguiente):
+                                                    horarioValido = False
+                                                    break
+                                            else:
+                                                if not (inicioNuevo > finActual):
+                                                    horarioValido = False
+                                                    break
+                                        if horarioValido:
+                                            localTime.append(Funciones.getHorario())
+                                            #Calcular Duracion
+                                            inicio = Funciones.getHorario()[0]
+                                            fin = Funciones.getHorario()[1]
+
+                                            duracionFuncion = (fin - inicio).total_seconds() / 3600.0
+                                            Persona.getTrabajos().append(duracionFuncion)
+                                            Funciones.setTrabajodor(True)
+                                            break
+                                        else:
+                                            i+=1
+                                    localTime.sort(key = lambda horario: horario[0])
+                                    Persona.setHorario(localTime)
+                                    Persona.setDisponible(False)
+                            #Se acaba la verificacion
+                            #Imprimir mensajes
+                            msg = "";
+                            for Persona in Teatro.getInstancia().getTipoSeguridad():
+                                if len(Persona.getHorario()) == 1:
+                                    msg = msg + Persona.getNombre() + " Cuidará: 1 Funcion\n"
+                                elif len(Persona.getHorario) > 1 or len(Persona.getHorario) == 0:
+                                    msg = msg + Persona.getNombre() + " Cuidará: " + str(len(Persona.getHorario())) + " Funciones\n"
+                            mensaje = tk.Label(infoSeguridad, text=msg, font=("Calibri", 12), bg="#ffb48a")
+                            mensaje.pack(expand=True, fill="both", padx= 8, pady= 8)
+                        #No todos son principiantes
+                        else:
+                            try:
+                                funcionPorDuracion = Teatro.getInstancia().getFuncionesCreadas()
+                                funcionPorDuracion.sort(
+                                    key = lambda f: (
+                                        -f.getHorario()[0].timestamp(),
+                                        -(f.getHorario()[1] - f.getHorario[0]).total_seconds()
+                                    )
+                                )
+                                funcionesDisponibles = funcionPorDuracion
+                            except Exception as e:
+                                pass
+
+                            #Evaluacion Normal, trabajos equitativos
+                            funcionesSinHorario = 0
+                            for Persona in Teatro.getInstancia().getTipoSeguridad():
+                                asignadas = 0
+                                localTime = list(Persona.getHorariO())
+                                i = 0
+                                while i < len(funcionesDisponibles): 
+                                # for i in range(0, len(funcionesDisponibles)):
+                                    if asignadas < funcionXTrabajador:
+                                        Funciones = funcionesDisponibles[i]
+                                        #asignacion del horario y del trabajo
+                                        #Verificar que la funcion tenga un horario
+                                        if Funciones.getHorario():
+                                            if len(localTime) != 0:
+                                                if Funciones.getHorario()[0] > localTime[-1][1]:
+                                                    localTime.append(Funciones.getHorario())
+                                                    asignadas += 1
+                                                    #Calcular duracion de la Funcion
+                                                    inicio = Funciones.getHorario()[0]
+                                                    fin = Funciones.getHorario()[1]
+
+                                                    duracionFuncion = (fin - inicio).total_seconds() / 3600.0
+                                                    Persona.getTrabajos().append(duracionFuncion)
+                                                    Funciones.setTrabajador(True)
+                                                    funcionesDisponibles.pop(i)
+                                                    continue
+                                                else:
+                                                    i += 1
+                                            else:
+                                                localTime.append(Funciones.getHorario())
+                                                asignadas += 1
+
+                                                inicio = Funciones.getHorario()[0]
+                                                fin = Funciones.getHorario()[1]
+
+                                                duracionFuncion = (fin - inicio).total_seconds() / 3600.0
+                                                Persona.getTrabajos().append(duracionFuncion)
+                                                Funciones.setTrabajador(True)
+                                                funcionesDisponibles.pop(i)
+                                                continue
+                                        else:
+                                            funcionesSinHorario += 1
+                                            funcionesDisponibles.pop(i);
+                                            continue
+                                    else:
+                                        break      
+                                #Se organiza la lista para que no haya errores en caso de asignar las funciones restantes
+                                localTime.sort(key = lambda horario: horario[0])
+                                Persona.setHorario(localTime)
+                                Persona.setDisponible(False)
+
+                            if funcionesSinHorario == 1:
+                                horarios = tk.Frame(infoSeguridad, bg="red")
+                                horarios.pack(side="top", fill="x", expand=True)
+                                horarioLabel = tk.Label(horarios, text="Hay una funcion sin horarios", font=("Calibri", 12))
+                                horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
+                            elif funcionesSinHorario > 1:
+                                horarios = tk.Frame(infoSeguridad, bg="red")
+                                horarios.pack(side="top", fill="x", expand=True)
+                                horarioLabel = tk.Label(horarios, text="Hay " + str(funcionesSinHorario) + " Funciones sin horarios", font=("Calibri", 12))
+                                horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
+                        
+                            #Evaluacion de salas sin trabajador
+                            if funcionesDisponibles != 0:
+                                for Persona in Teatro.getInstancia().getTipoSeguridad():
+                                    localTime = Persona.getHorario()
+                                    i = 0
+                                    while i < len(funcionesDisponibles):
+                                        Funciones = funcionesDisponibles[i]
+                                        horarioValido = True
+                                        inicioNuevo = Funciones.getHorario()[0]
+                                        finNuevo = Funciones.getHorario()[1]
+                                        #Verificar que no se solape
+                                        #Se itera sobre las sublistas de localTime
+                                        for j in range(len(localTime)):
+                                            horarioActual = localTime[j]
+                                            finActual = horarioActual[1]
+
+                                            #Verificar que hay una sublista despues
+                                            if j + 1 < len(localTime):
+                                                horarioSiguiente = localTime[j+1]
+                                                inicioSiguiente = horarioSiguiente[0]
+
+                                                #Verificar que el horario nuevo no se solape
+                                                if not (inicioNuevo > finActual and finNuevo < inicioSiguiente):
+                                                    horarioValido = False
+                                                    break
+                                            else:
+                                                if not (inicioNuevo > finActual):
+                                                    horarioValido = False
+                                                    break
+                                        if horarioValido:
+                                            localTime.append(Funciones.getHorario())
+                                            #Calcular Duracion
+                                            inicio = Funciones.getHorario()[0]
+                                            fin = Funciones.getHorario()[1]
+
+                                            duracionFuncion = (fin - inicio).total_seconds() / 3600.0
+                                            Persona.getTrabajos().append(duracionFuncion)
+                                            Funciones.setTrabajodor(True)
+                                            break
+                                        else:
+                                            i+=1
+                                    localTime.sort(key = lambda horario: horario[0])
+                                    Persona.setHorario(localTime)
+                                    Persona.setDisponible(False)
+
+                            #Se acaba la verificacion
+                            #Imprimir mensajes
+                            msg = "";
+                            for Persona in Teatro.getInstancia().getTipoSeguridad():
+                                if len(Persona.getHorario()) == 1:
+                                    msg = msg + Persona.getNombre() + " Cuidará: 1 Funcion\n"
+                                elif len(Persona.getHorario) > 1 or len(Persona.getHorario) == 0:
+                                    msg = msg + Persona.getNombre() + " Cuidará: " + str(len(Persona.getHorario())) + " Funciones\n"
+                            mensaje = tk.Label(infoSeguridad, text=msg, font=("Calibri", 12), bg="#ffb48a")
+                            mensaje.pack(expand=True, fill="both", padx= 8, pady= 8)
+                    else:
+                        if totalFunciones == 0:
+                            alerta = tk.Frame(infoSeguridad, bg="#ffb48a", bd=2, relief="groove")
+                            alerta.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.5, relheight=0.5)
+                            mensaje = tk.Label(alerta ,text="No hay funciones para agregar", font=("Calibri", 18), bg="#ffb48a")
+                            mensaje.place(relx=0.5, rely=0.5, anchor="center")
+                            trabajoAsignadoS = False
+                        else:
+                            alerta = tk.Frame(infoSeguridad, bg="#ffb48a", bd=2, relief="groove")
+                            alerta.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.5, relheight=0.5)
+                            mensaje = tk.Label(alerta, text = "No hay trabajadores de Seguridad", font=("Calibri", 18), bg="#ffb48a")
+                            mensaje.place(relx=0.5, rely=0.5, anchor="center")
+                            trabajoAsignadoS = False
+                    if len(funcionesDisponibles) != 0:
+                        if len(funcionesDisponibles) == 1:
+                            sinSeguridad = tk.Frame(infoSeguridad, bg = "gray")
+                            sinSeguridad.pack(side="bottom", fill="x", expand=True)
+                            Funcion = tk.Label(sinSeguridad, text="Existe 1 funcion sin posibilidad de seguridad")
+                            Funcion.place(relx=0.5, rely=0.5, relheight=0.8, relwidth=0.8, anchor="center")
+                        else:
+                            sinSeguridad = tk.Frame(infoSeguridad, bg = "gray")
+                            sinSeguridad.pack(side="bottom", fill="x", expand=True)
+                            Funcion = tk.Label(sinSeguridad, text="Existen " + str(len(funcionesDisponibles)) + " funciones sin posibilidad de seguridad")
+                            Funcion.place(relx=0.5, rely=0.5, relheight=0.8, relwidth=0.8, anchor="center")
+
+                    f1.after(1000, lambda: asignarAseador(trabajoAsignadoS))
+                    
+                def asignarAseador(trabajoS):
+                    trabajoAsignadoA = True
+                    cant_trabajadores_principiantes = 0
+                    base = 6
+                    totalFunciones = len(Teatro.getInstancia().getFuncionesCreadas())
+                    totalTrabajadores_A = len(Teatro.getInstancia().getTipoAseador())
+                    funcionXTrabajador = 0
+                    if totalTrabajadores_A != 0:
+                        funcionXTrabajador = totalFunciones//totalTrabajadores_A
+                    funcionesLimpiadas = Teatro.getInstancia().getFuncionesCreadas()
+                    try:
+                        funcionesLimpiadas.sort(key=lambda f : f.getHorario()[0])
+                    except Exception as e:
+                        pass
+
+                    if funcionXTrabajador != 0:
+                        for Persona in Teatro.getInstancia().getTipoAseador():
+                            if Persona.getMetaSemanal() == base:
+                                cant_trabajadores_principiantes += 1
+                        #Todos principiantes
+                        if cant_trabajadores_principiantes == totalTrabajadores_A:
+                            funcionesSinHorario = 0
+                            for Persona in Teatro.getInstancia().getTipoAseador():
+                                asignadas = 0
+                                localTime = list(Persona.getHorario())
+                                i = 0
+                                while i < len(funcionesLimpiadas):
+                                    if asignadas < funcionXTrabajador:
+                                        Funciones = funcionesLimpiadas[i]
+                                    if Funciones.getHorario():
+                                        if len(localTime) != 0:
+                                            horarioValido = True
+                                            inicioNuevo = Funciones.getHorario()[1]
+                                            finNuevo = inicioNuevo + timedelta(minutes=15)
+
+                                            for j in range(len(localTime)):
+                                                horarioActual = localTime[j]
+                                                finActual = horarioActual[1]
+
+                                                #Verificar si hay una sublista despues
+                                                if(j + 1) < len(localTime):
+                                                    horarioSiguiente = localTime[j+1]
+                                                    inicioSiguiente = horarioSiguiente[0]
+
+                                                    #Verificar que el horario nuevo no se solapa
+                                                    if not (inicioNuevo > finActual or finNuevo < inicioSiguiente):
+                                                        horarioValido = False
+                                                        break
+                                                else:
+                                                    #verificar que el inicio sea despues del horario ya existente
+                                                    if not(inicioNuevo > finActual):
+                                                        horarioValido = False
+                                                        break
+
+                            if funcionesSinHorario == 1:
+                                horarios = tk.Frame(infoAseador, bg="red")
+                                horarios.pack(side="top", fill="x", expand=True)
+                                horarioLabel = tk.Label(horarios, text="Hay una funcion sin horarios", font=("Calibri", 12))
+                                horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
+                            elif funcionesSinHorario > 1:
+                                horarios = tk.Frame(infoAseador, bg="red")
+                                horarios.pack(side="top", fill="x", expand=True)
+                                horarioLabel = tk.Label(horarios, text="Hay " + str(funcionesSinHorario) + " Funciones sin horarios", font=("Calibri", 12))
+                                horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
+                    else:
+                        if totalFunciones == 0:
+                            alerta = tk.Frame(infoAseador, bg="#ffb48a", bd=2, relief="groove")
+                            alerta.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.5, relheight=0.5)
+                            mensaje = tk.Label(alerta ,text="No hay funciones para poder Limpiar", font=("Calibri", 18), bg="#ffb48a")
+                            mensaje.place(relx=0.5, rely=0.5, anchor="center")
+                            trabajoAsignadoA = False
+                        else:
+                            alerta = tk.Frame(infoAseador, bg="#ffb48a", bd=2, relief="groove")
+                            alerta.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.5, relheight=0.5)
+                            mensaje = tk.Label(alerta, text = "No hay Aseadores", font=("Calibri", 18), bg="#ffb48a")
+                            mensaje.place(relx=0.5, rely=0.5, anchor="center")
+                            trabajoAsignadoA = False
+                    if len(funcionesLimpiadas) != 0:
+                        if len(funcionesLimpiadas) == 1:
+                            sinAseador = tk.Frame(infoAseador, bg = "gray")
+                            sinAseador.pack(side="bottom", fill="x", expand=True)
+                            Funcion = tk.Label(sinAseador, text="Existe 1 funcion sin posibilidad de limpiar la sala")
+                            Funcion.place(relx=0.5, rely=0.5, relheight=0.8, relwidth=0.8, anchor="center")
+                        else:
+                            sinAseador = tk.Frame(infoAseador, bg = "gray")
+                            sinAseador.pack(side="bottom", fill="x", expand=True)
+                            Funcion = tk.Label(sinAseador, text="Existen " + str(len(funcionesLimpiadas)) + " funciones sin posibilidad de limpiar la sala")
+                            Funcion.place(relx=0.5, rely=0.5, relheight=0.8, relwidth=0.8, anchor="center")
+                f1.after(1000, lambda: asignarSeguridad())
+                
+                
             Anuncio.after(50, mostrarSaldo)
             
             
