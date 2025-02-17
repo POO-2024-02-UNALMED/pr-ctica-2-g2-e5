@@ -1522,8 +1522,6 @@ class Main:
         #configurar el crecimiento adaptable de las columnas del frame central
         centerFrame.columnconfigure(0, weight=1) 
         centerFrame.columnconfigure(1, weight=1) 
-
-        #----------------------- PRIMERA RONDA DE PREGUNTAS AL USUARIO --------------------------------
         
         #PREGUNTA NO. 1
         criteriosTipoEmpresa = ["Tipo de Empresa"]
@@ -1565,7 +1563,7 @@ class Main:
 
             if len(actorsForRental) == 0:
                 messagebox.showerror("Error", "No se hallaron actores para el presupuesto")
-                return
+                Main.contratarActores()
             else:
 
                 columns = ("Nombre", "Id", "Edad", "Calificación", "Precio de contratación")
