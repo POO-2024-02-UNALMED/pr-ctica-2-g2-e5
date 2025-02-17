@@ -1739,6 +1739,7 @@ class Main:
                 command=cls.volver).pack(pady=10)
 
         # -------------------- PASO 6: Seleccionar área de mejora --------------------
+        '''AVALADA'''
         def step_select_area(actor):
             for widget in process_frame.winfo_children():
                 widget.destroy()
@@ -1749,7 +1750,7 @@ class Main:
                 return
             txt_areas = tk.Text(process_frame, height=6, width=80, font=("Calibri", 12))
             txt_areas.pack(pady=10)
-            txt_areas.insert("end", "Áreas recomendadas para mejorar:\n")
+            txt_areas.insert("end", "Áreas recomendadas para mejorar del actor " + actor.getNombre() + ":\n")
             for i, area in enumerate(areas_recomendadas[:3]):
                 cal = actor.getCalificacionPorAptitud(area)
                 txt_areas.insert("end", f"{i+1}. {area} (Calificación: {cal})\n")
@@ -1762,18 +1763,20 @@ class Main:
                     command=lambda: step_select_custom_area(actor)).pack(pady=5)
 
         # -------------------- PASO 7: Selección personalizada de área --------------------
+        '''AVALADA'''
         def step_select_custom_area(actor):
             for widget in process_frame.winfo_children():
                 widget.destroy()
             tk.Label(process_frame, text="Seleccione el área para programar la clase:",
                     font=("Calibri", 14), bg="white").pack(pady=10)
-            areas = actor.getAptitudes()  # Se asume que retorna todas las aptitudes
-            var_area = tk.StringVar(value=areas[0] if areas else "")
-            for area in areas:
-                tk.Radiobutton(process_frame, text=str(area), variable=var_area,
-                                value=area, font=("Calibri", 12), bg="white").pack(anchor="w", padx=20)
+            areas = actor.getAptitudes()  # Lista de objetos Aptitud
+            var_index = tk.IntVar(value=0)
+            # Crear radiobuttons usando el índice
+            for i, area in enumerate(areas):
+                tk.Radiobutton(process_frame, text=str(area), variable=var_index,
+                            value=i, font=("Calibri", 12), bg="white").pack(anchor="w", padx=20)
             tk.Button(process_frame, text="Siguiente", font=("Calibri", 14),
-                        command=lambda: step_schedule_class(actor, var_area.get())).pack(pady=10)
+                    command=lambda: step_schedule_class(actor, areas[var_index.get()])).pack(pady=10)
 
         # -------------------- PASO 8: Programar la clase (solicitar horario) --------------------
         def step_schedule_class(actor, areaSeleccionada):

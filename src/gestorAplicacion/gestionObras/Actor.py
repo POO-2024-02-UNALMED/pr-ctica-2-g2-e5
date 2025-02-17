@@ -52,14 +52,14 @@ class Actor(Artista):
 
     #halla la posición de la aptitud en la lista aptitudes y devuelve el indice correspondiente en
     # calificacionesAptitudes
-    def getCalificacionPorAptitud(self, aptitud: Aptitud) -> int:
+    def getCalificacionPorAptitud(self, aptitud: Aptitud) -> float:
         index = self.__aptitudes.index(aptitud)
         if index != -1:
             return self.__calificacionesAptitudes[index]
         else:
             return -1
 
-    def compare(a: float, b: float) -> int:
+    def compare(self, a: float, b: float) -> int:
         if a < b: 
             return -1
         elif a > b: 
