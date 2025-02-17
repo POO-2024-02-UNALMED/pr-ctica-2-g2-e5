@@ -13,10 +13,3 @@ class Director(Artista):
     
     def str(self):
         return "Nombre: " + self.nombre + "\n" + "Identificación: " + self.id + "\n" + "Género: " + self.genero
-    
-    def isDisponible(self, inicio, fin):
-        for evento in self.horario:
-            if inicio < evento[1] and fin > evento[0]:
-                return False
-                pass
-        return True 

@@ -1,14 +1,12 @@
 from __future__ import annotations
-from abc import ABC
 from gestorAplicacion.gestionFinanciera.CuentaBancaria import CuentaBancaria
 from gestorAplicacion.gestionClases.Clase import Clase
-from gestorAplicacion.herramientas.Persona import Persona
-from datetime import datetime
+from gestorAplicacion.herramientas.PersonaConHorario import PersonaConHorario
 from baseDatos.Teatro import Teatro
 from random import random
 
 
-class Artista(Persona):
+class Artista(PersonaConHorario):
 
     #constructor que se puede llamar solo con nombre e id
     def __init__(self, nombre: str, id: int, calificacion: float = 0, promedio: float = 0, clase: Clase = None):

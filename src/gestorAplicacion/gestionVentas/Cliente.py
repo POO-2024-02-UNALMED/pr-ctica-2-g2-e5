@@ -1,15 +1,13 @@
-
-
+from __future__ import annotations
 import random
 from baseDatos.Teatro import Teatro
 from gestorAplicacion.gestionObras.Actor import Actor
+from gestorAplicacion.herramientas.Persona import Persona
 
 
-class Cliente:
+class Cliente(Persona):
 
-    clientes = []  # Lista estática de clientes
-
-    def __init__(self, obra: str = None, suscripcion = None, id: int = 0, genero_favorito= None, actor_favorito= None, 
+    def __init__(self, obra: str = None, suscripcion = None, id: int = None, genero_favorito= None, actor_favorito= None, 
                  correo: str= None, tipo: str= None, cuenta_bancaria= None, tiquete= None):
         self.obra = obra
         self.__suscripcion = suscripcion
@@ -25,6 +23,7 @@ class Cliente:
         Teatro.getInstancia().getClientes().append(self)
 
 
+    #Debe ser reemplazada por buscarId en main
     def verificar(elemento):
         for i in Teatro.getInstancia().getClientes():
             if i.getId()==elemento:
@@ -39,11 +38,11 @@ class Cliente:
         
         return not (a >= b)
 
-    def asignar(id: int):
-        for cliente in Cliente.clientes:
+    def buscarPorId(id: int) -> Cliente | bool:
+        for cliente in Teatro.getInstancia().getClientes():
             if cliente.id == id:
                 return cliente
-        return None
+        return False
     
     @staticmethod
     def id_random() -> int:
@@ -61,6 +60,10 @@ class Cliente:
 
     def getId(self):
         return self.__id
+    
+    def setId(self, value: int) -> None:
+        self.__id = value
+    
     def set_suscripcion(self,susc):
         self.__suscripcion=susc
 
