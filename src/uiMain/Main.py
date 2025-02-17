@@ -1170,7 +1170,7 @@ class Main:
                     contratar = messagebox.askyesno("Contratación de actores", 
                                         f"Actor seleccionado:\n\nNombre: {actorEscogido}\nEdad: {edad}\nCalificación: {calificacion}\nPrecio de contratación: {precio}\n\n¿Desea contratarlo?")
                     if contratar:
-                        actor = Artista.buscarArtistaPorId(id)
+                        actor = Artista.buscarPorId(id)
                         empresa.pagarContratoActor(actor, float(precio))
 
                         actor.getHorario().append((fechaInicio, fechaFin))
@@ -1633,7 +1633,7 @@ class Main:
             except ValueError:
                 messagebox.showerror("Error", "El ID debe ser un número entero.")
                 return
-            artista = Artista.buscarArtistaPorId(id_num)
+            artista = Artista.buscarPorId(id_num)
             if artista is None:
                 step_artist_not_found(id_num)
             else:

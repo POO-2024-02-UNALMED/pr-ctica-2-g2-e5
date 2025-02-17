@@ -2,12 +2,13 @@ from __future__ import annotations
 from abc import ABC
 from gestorAplicacion.gestionFinanciera.CuentaBancaria import CuentaBancaria
 from gestorAplicacion.gestionClases.Clase import Clase
+from gestorAplicacion.herramientas.Persona import Persona
 from datetime import datetime
 from baseDatos.Teatro import Teatro
 from random import random
 
 
-class Artista(ABC):
+class Artista(Persona):
 
     #constructor que se puede llamar solo con nombre e id
     def __init__(self, nombre: str, id: int, calificacion: float = 0, promedio: float = 0, clase: Clase = None):
@@ -25,16 +26,9 @@ class Artista(ABC):
     #promedio de la lista de calificaciones
     def calcularCalificacion(self) -> None:
         self.__calificacion = sum(self.__calificaciones) / len(self.__calificaciones)           
-
-    #revisa en cada intervalo de horarios guardados si el nuevo horario se solapa
-    def isDisponible(self, inicio: datetime, fin: datetime) -> bool:
-        for evento in self.__horario:
-            if ((inicio < evento[1]) and (fin > evento[0])):
-                return False
-        return True
     
     @classmethod
-    def buscarArtistaPorId(cls, id: int) -> Artista | None:
+    def buscarPorId(cls, id: int) -> Artista | None:
         for artista in Teatro.getInstancia().getArtistas():
             if (artista.getId() == id):
                 return artista
