@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import Tk, Frame, ttk, messagebox
 from datetime import date, timedelta, datetime, time
 from PIL import Image, ImageTk
+from datetime import datetime
 import sys
 import os
 import time as t
@@ -1544,12 +1545,27 @@ class Main:
         pass
         
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @classmethod
     def gestionClases(cls):
         for widget in cls.content.winfo_children():
             widget.destroy()
 
         # --- FRAME DE BIENVENIDA ---
+        '''AVALADA'''
         frame_bienvenida = Frame(cls.content, bg="red")
         frame_bienvenida.place(relx=0, rely=0, relwidth=1, relheight=0.1)
         saludo = tk.Label(frame_bienvenida,
@@ -1650,7 +1666,6 @@ class Main:
                     txt_obras.insert("end", linea)
                 txt_obras.config(state="disabled")
             
-            # Puedes agregar un botón para continuar o regresar al menú principal
             tk.Label(process_frame, text="Fin de la funcionalidad",
                         font=("Calibri", 14), bg="white").pack(pady=10)
             tk.Button(process_frame, text="Salir del sistema", font=("Calibri", 14),
@@ -1805,6 +1820,7 @@ class Main:
                     command=lambda: step_schedule_class(actor, areas[var_index.get()])).pack(pady=10)
 
         # -------------------- PASO 8: Programar la clase (solicitar horario) --------------------
+        '''AVALADA(Excepto por el botón)'''
         def step_schedule_class(actor, areaSeleccionada):
             for widget in process_frame.winfo_children():
                 widget.destroy()
@@ -1840,11 +1856,13 @@ class Main:
                             tituloValores="Valor",
                             valores=[day_options, "", ""],
                             combobox=False)
-            ff.pack(pady=10, fill="x")
+            ff.pack(pady=10, fill="x") 
+            ''' Quitar el botón "Guardar"
+            O implementar la función del botón "Programar" en el comando de "Guardar" 
+            O evaluar la posibilidad de cambiar el texto del botón "Guardar"'''
             
             # Por defecto, FieldFrame crea entradas (Entry) para todos los campos.
             # Convertimos la entrada correspondiente a "Día" (el primer campo) en un Combobox.
-            from tkinter import ttk
             ff.values[1].destroy()  # ff.values[0] es el título de la columna de valores, ff.values[1] corresponde al primer campo
             ff.values[1] = ttk.Combobox(ff, values=day_options)
             ff.values[1].grid(row=1, column=2)
@@ -1862,8 +1880,8 @@ class Main:
                     ).pack(pady=10)
 
         # -------------------- PASO 9: Procesar horario y asignar sala y profesor --------------------
+        '''Pendiente a prueba(Teóricamente avalada)'''
         def process_schedule(actor, areaSeleccionada, nivelClase, day_str, start_time_str, end_time_str):
-            from datetime import datetime
             try:
                 # Convertir el día seleccionado a objeto date
                 selected_date = datetime.strptime(day_str, "%Y-%m-%d").date()
@@ -1897,26 +1915,37 @@ class Main:
                     break
             if salaAsignada is None:
                 messagebox.showerror("Error", "No hay salas disponibles en el horario deseado o no están limpias.")
+                for widget in process_frame.winfo_children():
+                    widget.destroy()
+                tk.Label(process_frame, text="Fin de la funcionalidad",
+                        font=("Calibri", 14), bg="white").pack(pady=10)
+                tk.Button(process_frame, text="Salir del sistema", font=("Calibri", 14),
+                        command=cls.volver).pack(pady=10)        
                 return
             salaAsignada.anadir_horario([inicio, fin])
             # Selección de profesor especializado (simulación de disponibilidad)
             profesorAsignado = None
-            import random
             profesores = Teatro.getInstancia().getTipoProfesor()
             random.shuffle(profesores)
             for empleado in profesores:
-                if hasattr(empleado, "tiene_especializacion") and empleado.tiene_especializacion(areaSeleccionada):
+                if isinstance(empleado, Profesor) and empleado.tiene_especializacion(areaSeleccionada):
                     if random.random() > 0.5:
                         profesorAsignado = empleado
                         break
             if profesorAsignado is None:
-                messagebox.showerror("Error", "No hay profesores disponibles con especialización en el área seleccionada.")
+                for widget in process_frame.winfo_children():
+                    widget.destroy()
+                tk.Label(process_frame, text="Fin de la funcionalidad",
+                        font=("Calibri", 14), bg="white").pack(pady=10)
+                tk.Button(process_frame, text="Salir del sistema", font=("Calibri", 14),
+                        command=cls.volver).pack(pady=10)  
                 return
             msg = f"Sala asignada: {salaAsignada.getNumeroSala()}\nProfesor asignado: {profesorAsignado.getNombre()}\n"
             messagebox.showinfo("Clase Programada", msg)
             step_payment(actor, areaSeleccionada, nivelClase, profesorAsignado)
 
         # -------------------- PASO 10: Procesar pago y evaluación --------------------
+        '''Pendiente a prueba(Teóricamente avalada)'''
         def step_payment(actor, areaSeleccionada, nivelClase, profesorAsignado):
             for widget in process_frame.winfo_children():
                 widget.destroy()
@@ -1940,11 +1969,10 @@ class Main:
                 messagebox.showinfo("Pago", "Pago procesado exitosamente.")
                 # Se asigna profesor evaluador (simulación)
                 profesor_evaluador = None
-                import random
                 profesores = Teatro.getInstancia().getTipoProfesor()
                 random.shuffle(profesores)
                 for empleado in profesores:
-                    if hasattr(empleado, "tiene_especializacion") and empleado.tiene_especializacion(areaSeleccionada):
+                    if isinstance(empleado, Profesor) and empleado.tiene_especializacion(areaSeleccionada):
                         if random.random() > 0.5:
                             profesor_evaluador = empleado
                             break
@@ -1971,6 +1999,7 @@ class Main:
                 messagebox.showerror("Error", "El actor cuenta con saldo insuficiente para pagar la clase.")
 
         # -------------------- PASO 11: Reprogramar clase en caso de falta de mejora --------------------
+        '''Pendiente a prueba(Teóricamente avalada)'''
         def step_reprogramar(actor, areaSeleccionada, profesorEvaluador, nivelClase):
             for widget in process_frame.winfo_children():
                 widget.destroy()
@@ -1990,7 +2019,6 @@ class Main:
                     command=lambda: process_reprogramar(actor, areaSeleccionada, entry_start.get(), entry_end.get(), nivelClase, profesorEvaluador)).pack(pady=10)
 
         def process_reprogramar(actor, areaSeleccionada, inicio_str, fin_str, nivelClase, profesorEvaluador):
-            from datetime import datetime
             try:
                 inicio = datetime.strptime(inicio_str, "%Y-%m-%d %H:%M")
                 fin = datetime.strptime(fin_str, "%Y-%m-%d %H:%M")
@@ -2010,11 +2038,10 @@ class Main:
                 return
             salaAsignada.anadir_horario([inicio, fin])
             profesorAsignado = None
-            import random
             profesores = Teatro.getInstancia().getTipoProfesor()
             random.shuffle(profesores)
             for empleado in profesores:
-                if hasattr(empleado, "tiene_especializacion") and empleado.tiene_especializacion(areaSeleccionada):
+                if isinstance(empleado, Profesor) and empleado.tiene_especializacion(areaSeleccionada):
                     if random.random() > 0.5:
                         profesorAsignado = empleado
                         break
@@ -2034,9 +2061,19 @@ class Main:
 
         # -------------------- Inicio del proceso: arranca por el Paso 1 --------------------
         step1()
-'''
-'''
+
+
+
+
+
         
+
+
+
+
+
+
+
 
 
 class FieldFrame(Frame):
