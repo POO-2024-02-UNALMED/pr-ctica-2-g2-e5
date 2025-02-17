@@ -2,39 +2,29 @@ import tkinter as tk
 from tkinter import Tk, Frame, ttk, messagebox
 from datetime import date, timedelta, datetime, time
 from PIL import Image, ImageTk
-from datetime import datetime
 import sys
 import os
 import time as t
 import random
 
-
-
-
-
-
-
-
 #AGREGAR SRC AL PATH
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from baseDatos.Teatro import Teatro
+from baseDatos.memory import resetMemory
 
 from gestorAplicacion.gestionVentas.Cliente import Cliente
 from gestorAplicacion.gestionFinanciera.Empleado import Empleado
-from gestorAplicacion import gestionObras
-from gestorAplicacion.gestionFinanciera.Empleado import Empleado
 from gestorAplicacion.gestionClases.Profesor import Profesor
-from gestorAplicacion.herramientas.Aptitud import Aptitud
-from gestorAplicacion.herramientas.Genero import Genero
+
 from gestorAplicacion.gestionObras.Artista import Artista
 from gestorAplicacion.gestionObras.Actor import Actor
 from gestorAplicacion.gestionObras.Obra import Obra
 from gestorAplicacion.gestionObras.Director import Director
+
+from gestorAplicacion.herramientas.Aptitud import Aptitud
+from gestorAplicacion.herramientas.Genero import Genero
 from gestorAplicacion.herramientas.Suscripcion import Suscripcion
-
-from baseDatos.memory import resetMemory
-
 
 
 
@@ -48,14 +38,16 @@ class Main:
     bg = "lightsteelblue3"
 
     @classmethod
-    def wait(cls):
+    def wait(cls) -> None:
+        """Genera un periodo de espera de 2 segundos si Main.debug es False"""
         if cls.debug:
             return 
         else:
             t.sleep(2)
 
     @classmethod
-    def getWeek(cls):
+    def getWeek(cls) -> list:
+        """Retorna una lista con los proximos 7 dias de la semana (incluyendo el actual)"""
         return [date.today() + timedelta(days= i) for i in range(7) ]
 
     @classmethod
@@ -112,9 +104,9 @@ class Main:
         for widget in frame.winfo_children():
             widget.destroy()
 
-    #Esta función se encargará de inicializar todo lo referente a la ventana raíz
     @classmethod
     def initRoot(cls):
+        """Inicializa la ventana raíz, le asigna un ícono, título y frame. Además, inicia la ventana principal"""
         cls.root = Tk() 
         ico = Image.open("src/media/icon.jpg")
         logo = ImageTk.PhotoImage(ico)
@@ -129,11 +121,13 @@ class Main:
 
     @classmethod
     def exit(cls):
+        """Serializa la instancia Teatro y cierra el programa"""
         Teatro.serializar()
         cls.root.destroy()
 
     @classmethod
     def window_main(cls):
+        """Inicia la ventana principal, incluyendo los requerimientos del enunciado"""
 
         menuBar = tk.Menu(cls.root)
         cls.root.config(menu=menuBar)
@@ -159,7 +153,7 @@ class Main:
         cls.bottomFrame = Frame(cls.leftFrame, bg="black")
         cls.bottomFrame.place(relx=0, rely=0.5, relwidth=1, relheight=0.5)
 
-        # 🔹 Crear Label para la imagen
+        # Crear Label para la imagen
         cls.label = tk.Label(cls.bottomFrame, bg="black")
         cls.label.pack(fill="both", expand=True)  # Se expande para ocupar el frame
         
@@ -195,14 +189,14 @@ class Main:
         #En este método está todo lo relacionado a la sección de programadores
         cls.init_programador_functionality()
 
-    """
-    Inicializa la sección de programadores en el RightFrame.
-    Se crean dos subframes:
-        - programadorFrameTop: contiene un botón que muestra la info del programador.
-        - programadorFrameBottom: muestra en formato 2x2 las imágenes asociadas.
-    """
     @classmethod
     def init_programador_functionality(cls):
+        """
+        Inicializa la sección de programadores en el RightFrame.\n
+        Se crean dos subframes:
+            - programadorFrameTop: contiene un botón que muestra la info del programador.
+            - programadorFrameBottom: muestra en formato 2x2 las imágenes asociadas.
+        """
         cls.programadorFrameTop = tk.Frame(cls.rightFrame, bg="skyblue")
         cls.programadorFrameTop.place(relx=0, rely=0, relwidth=1, relheight=0.3)
         
@@ -218,11 +212,12 @@ class Main:
             cls.resize(cls.programadorFrameTop, cls.btn_info)
         )
 
-    """
-    Actualiza la información y las imágenes del programador mostrado.
-    """
+
     @classmethod
     def update_programador(cls):
+        """
+        Actualiza la información y las imágenes del programador mostrado.
+        """
         # Actualizar índice y obtener datos del siguiente programador
         cls.current_programador_index = (cls.current_programador_index + 1) % len(cls.programadores)
         info, image_paths = cls.programadores[cls.current_programador_index]
@@ -349,6 +344,7 @@ class Main:
         except Exception as e:
             print("Error al cargar la imagen:", e)
             cls.label.config(text="No se pudo cargar la imagen", fg="white", bg="black")
+
     @classmethod
     def detectar_mouse(cls, event):
         """Verifica si el mouse está sobre la imagen real o en el fondo negro."""
@@ -368,6 +364,7 @@ class Main:
 
         # Si el mouse está sobre la imagen real, cambiar la imagen
         cls.cambiar_imagen()
+
     @classmethod
     def cambiar_imagen(cls, event=None):
         """Cambia la imagen al siguiente índice al pasar el mouse."""
@@ -376,15 +373,13 @@ class Main:
     
     @classmethod
     def runApp(cls):
+        """Método padre que inicializa todo el programa"""
         Teatro.deserializar()
         
         if cls.reset:
             resetMemory()
 
         cls.initRoot()
-        ico = Image.open("src/media/icon.jpg")
-        logo = ImageTk.PhotoImage(ico)
-        cls.root.wm_iconphoto(False, logo)
         cls.root.mainloop()
 
     @classmethod
@@ -1060,7 +1055,10 @@ class Main:
             widget.destroy()
     
     @classmethod
-    def contratarActores(cls):
+    def contratarActores(cls) -> None:
+        """Menú con opciones para contratar un actor, filtrando por características y presupuesto."""
+
+        #limpiar frame
         for widget in cls.content.winfo_children():
             widget.destroy()
 
@@ -1068,21 +1066,23 @@ class Main:
         leftFrame = tk.Frame(cls.content, bg="blue")
         leftFrame.place(relx=0, rely=0, relwidth=0.15, relheight=1)
 
-        # Frame derecho
+        #frame derecho
         rightFrame = tk.Frame(cls.content, bg="blue")
         rightFrame.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
 
-        #posible barra de avance
+        #frame inferior
         bottomFrame = tk.Frame(cls.content, bg="black", padx=15, pady=20)
         bottomFrame.place(relx=0.5, rely=0.80,anchor="center")
         
+        #frame central, donde irán todos los fieldframes
         centerFrame = tk.Frame(cls.content, bg="purple", padx=20, pady=20)
         centerFrame.place(relx=0.15, rely=0.1, relwidth=.7, relheight=.8)
 
+        #frame superior, que lleva el mensaje de bienvenida a la funcionalidad
         captionFrame = Frame(cls.content,background="black")
         captionFrame.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
 
-        #captionframe contiene el mensaje de bienvenida la funcionalidad
+        #mensaje de bienvenida
         caption = tk.Label(captionFrame, 
                             text="Bienvenido al panel de contratación de actores.",
                             font= ("Calibri", 10))
@@ -1094,22 +1094,9 @@ class Main:
             lambda e: cls.resize(captionFrame, caption, 10, 60, False)
         )
 
+        #configurar el crecimiento adaptable de las columnas del frame central
         centerFrame.columnconfigure(0, weight=1) 
         centerFrame.columnconfigure(1, weight=1) 
-
-        #assignFrame cumple tres funciones: si un frame existe, lo remueve de la pantalla
-        # luego remueve los widgets que tuviera asociado (opciona)
-        # por ultimo lo coloca de nuevo con place en las nuevas posiciones relativas
-        def assignFrame(frame, relx, rely, relheight, relwidth, destroy = True):
-            frame.place_forget()
-            
-            if destroy:
-                for widget in frame.winfo_children():
-                    if isinstance(widget, tk.Frame) and not isinstance(widget, FieldFrame):
-                        continue
-                    widget.destroy()
-            
-            frame.place(relx = relx, rely= rely, relheight= relheight, relwidth= relwidth)
 
         #----------------------- PRIMERA RONDA DE PREGUNTAS AL USUARIO --------------------------------
         
@@ -1117,7 +1104,8 @@ class Main:
         criteriosTipoEmpresa = ["Tipo de Empresa"]
         valoresTipoEmpresa = [["Empresa registrada", "Empresa nueva"]]
 
-        actorsForRental = None
+        #variables globales a ser modificadas
+        actorsForRental = None 
         historialEmpresa = None
         empresa = None
         fechaInicio = None
@@ -1126,7 +1114,10 @@ class Main:
         
         CALIFICACION_ALTA = 4
 
-        def mostrarActores(fieldframe: FieldFrame, topFrame: Frame):
+        def mostrarActores(fieldframe: FieldFrame, topFrame: Frame) -> None:
+            """Se toma el presupuesto del fieldframe de entrada y muestra los actores que se pueden contratar.\n
+            Una vez se elija el actor, se realiza el pago a Tesorería y se aisgna al horario del actor la fecha establecida."""
+
             global actorsForRental
             global duration
             global empresa
@@ -1193,7 +1184,9 @@ class Main:
                 
                 tree.bind('<<TreeviewSelect>>', actorEscogido)
 
-        def presupuesto(topFrame: Frame):
+        def presupuesto(topFrame: Frame) -> None:
+            """Toma el mínimo y máximo posible de precio de contratación para los actores filtrados, y pide al usuario el presupuesto."""
+
             global actorsForRental
             global duration
 
@@ -1214,7 +1207,9 @@ class Main:
             presupuesto.place(relheight= 1, relwidth= 1)
 
 
-        def preseleccion(topFrame: Frame, avanzado = False):
+        def preseleccion(topFrame: Frame, avanzado = False) -> None:
+            """Ocurre después del filtrado, si quedan actores, especificar cuántos hay y reordenarlos, priorizando aquellos que hayan trabajado previamente con la empresa."""
+
             global actorsForRental
             global historialEmpresa
 
@@ -1235,7 +1230,9 @@ class Main:
                 presupuesto(topFrame)
 
 
-        def filtradoAvanzado(fieldframe: FieldFrame, topFrame: Frame):
+        def filtradoAvanzado(fieldframe: FieldFrame, topFrame: Frame) -> None:
+            """Realiza el filtrado de búsqueda avanzada, tomando las respuestas del fieldframe"""
+
             global actorsForRental
 
             fieldframe.gatherEntries()
@@ -1285,7 +1282,9 @@ class Main:
                 preseleccion(topFrame, avanzado= True)
 
 
-        def busquedaAvanzada(topFrame: Frame):
+        def busquedaAvanzada(topFrame: Frame) -> None:
+            """Realiza las preguntas de búsqueda avanzada, para un posterior filtrado en la función filtradoAvanzado."""
+
             global actorsForRental
 
             edad = FieldFrame(
@@ -1301,7 +1300,9 @@ class Main:
 
             edad.place(relheight= 1, relwidth= 1)
 
-        def setSchedule(fieldframe: FieldFrame, fecha: str, topFrame: str):
+        def setSchedule(fieldframe: FieldFrame, fecha: str, topFrame: str) -> None:
+            """Toma las entradas de un fieldframe que incluyan hora de inicio y fin de contratación, yr evisa si el horario cumple con los lineamientos."""
+
             global actorsForRental
             global duration
             global fechaInicio
@@ -1358,7 +1359,9 @@ class Main:
                 preseleccion(topFrame)
 
 
-        def askSchedule(fecha: str, topFrame: Frame):
+        def askSchedule(fecha: str, topFrame: Frame) -> None:
+            """Pide al usuario las horas de inicio y fin del contrato."""
+
             global actorsForRental
 
             actorsForRental = actorsForRental
@@ -1378,7 +1381,9 @@ class Main:
                 print("al terminar askSchedule", [actor.getNombre() for actor in actorsForRental])
 
 
-        def filtrado(fieldframe: FieldFrame):
+        def filtrado(fieldframe: FieldFrame) -> None:
+            """Toma las entrada sdel usuario en el fieldframe y realiza la primera ronda de filtrado."""
+
             global actorsForRental
 
             responses = [entry.get() for i, entry in enumerate(fieldframe.values) if i > 0]
@@ -1407,7 +1412,9 @@ class Main:
 
 
 
-        def initPrimeraRonda(topframe: Frame):
+        def initPrimeraRonda(topframe: Frame) -> None:
+            """Genera el fieldframe que da inicio a la funcionalidad, para el filtrado con la primera ronda de preguntas."""
+
             global actorsForRental
 
             actorsForRental = Teatro.getInstancia().getActores().copy()
@@ -1438,11 +1445,9 @@ class Main:
 
             primeraRonda.place(relwidth= 1, relheight= 1)
 
-
-
-
-
         def parseInt(fieldframe : FieldFrame, value: str) -> int | None:
+            """Revisa si una entrada especfica de un fieldframe puede convertirse a entero"""
+
             fieldframe.gatherEntries()
             ans = fieldframe.getValue(value)
 
@@ -1454,12 +1459,15 @@ class Main:
                 return None
             
         def idExists(id: int) -> Cliente | bool:
+            """Revisa si un número de identificación existe en la base de datos, y en caso de que exista, si es de tipo Empresa."""
             for cliente in Teatro.getInstancia().getClientes():
                 if cliente.getId() == id and cliente.getTipo() == "Empresa":
                     return cliente
             return False
         
-        def createId(fieldframe: FieldFrame):
+        def createId(fieldframe: FieldFrame) -> None:
+            """Crea un número de identificación en caso de que no exista"""
+
             global empresa
             global historialEmpresa
 
@@ -1481,7 +1489,9 @@ class Main:
             else:
                 messagebox.showerror("Error", "La identificación ya existe, intente con un número diferente")
 
-        def locateId(fieldframe: FieldFrame):
+        def locateId(fieldframe: FieldFrame) -> None:
+            """Busca si un determinado número de identificaición existe"""
+
             global empresa
             global historialEmpresa
 
@@ -1503,6 +1513,8 @@ class Main:
                 messagebox.showerror("Error", "El número de identificación no existe en la base de datos de empresa.\nRevise si el cliente es de tipo Empresa o si se digitó correctamente.")
 
         def definirTipoEmpresa(fieldframe: FieldFrame, topFrame: Frame) -> None:
+            """Antes de empezar con el filtrado, se elige si el cliente que va a llevar a cabo la contratación existe en la base de datos o es nuevo."""
+
             fieldframe.gatherEntries()
 
             choice = fieldframe.getValue("Tipo de Empresa")
