@@ -1,6 +1,6 @@
 import random
 from gestorAplicacion.gestionFinanciera.Empleado import Empleado
-from gestorAplicacion.herramientas import Aptitud
+from gestorAplicacion.herramientas.Aptitud import Aptitud
 
 class Profesor(Empleado):
     def __init__(self, nombre: str, id: int):
@@ -9,10 +9,10 @@ class Profesor(Empleado):
         self.__especializaciones = []
         valores = list(Aptitud)  
         #Se asignan dos aptitudes aleatorias sin repetir
-        while len(self.especializaciones) < 2:
+        while len(self.__especializaciones) < 2:
             seleccionada = random.choice(valores)
-            if seleccionada not in self.especializaciones:
-                self.especializaciones.append(seleccionada)
+            if seleccionada not in self.__especializaciones:
+                self.__especializaciones.append(seleccionada)
 
     # Métodos getter y setter para especializaciones
 
@@ -25,11 +25,11 @@ class Profesor(Empleado):
     # Métodos funcionales
 
     def agregar_especializacion(self, aptitud: Aptitud):   #Añade una especialización si no está repetida
-        if aptitud not in self.especializaciones:
-            self.especializaciones.append(aptitud)
+        if aptitud not in self.__especializaciones:
+            self.__especializaciones.append(aptitud)
 
     def tiene_especializacion(self, aptitud: Aptitud):   #Verifica si el profesor tiene una especialización específica.
-        return aptitud in self.especializaciones
+        return aptitud in self.__especializaciones
 
     def agregar_puntos(self, puntos: int):   #Agrega puntos positivos al profesor
         self.puntos_positivos += puntos
