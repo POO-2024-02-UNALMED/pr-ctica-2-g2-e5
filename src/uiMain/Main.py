@@ -1537,6 +1537,13 @@ class Main:
         
         CALIFICACION_ALTA = 4
 
+        def nullInEntries(fieldframe: FieldFrame) -> bool:
+            entries = [entry.get() for i, entry in enumerate(fieldframe.values) if i > 0]
+            for entry in entries:
+                if entry == "" or entry is None:
+                    return True
+            return False
+
         def mostrarActores(fieldframe: FieldFrame, topFrame: Frame) -> None:
             """Se toma el presupuesto del fieldframe de entrada y muestra los actores que se pueden contratar.\n
             Una vez se elija el actor, se realiza el pago a Tesorería y se aisgna al horario del actor la fecha establecida."""
@@ -1548,6 +1555,10 @@ class Main:
             global fechaFin
 
             fieldframe.gatherEntries()
+
+            if nullInEntries(fieldframe):
+                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+                return
 
             presupuesto = fieldframe.getValue("Presupuesto")
             try:
@@ -1660,6 +1671,10 @@ class Main:
 
             fieldframe.gatherEntries()
 
+            if nullInEntries(fieldframe):
+                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+                return
+
             contadores = [[actor, 0] for actor in actorsForRental]
 
             edad = fieldframe.getValue("Intervalo de edad")
@@ -1735,6 +1750,10 @@ class Main:
                 print("al entrar a setSchedule", [actor.getNombre() for actor in actorsForRental])
 
             fieldframe.gatherEntries()
+
+            if nullInEntries(fieldframe):
+                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+                return
             
             horaInicio = fieldframe.values[1].get()
             horaFin = fieldframe.values[2].get()
@@ -1805,9 +1824,15 @@ class Main:
 
 
         def filtrado(fieldframe: FieldFrame) -> None:
-            """Toma las entrada sdel usuario en el fieldframe y realiza la primera ronda de filtrado."""
+            """Toma las entradas del usuario en el fieldframe y realiza la primera ronda de filtrado."""
 
             global actorsForRental
+
+            fieldframe.gatherEntries()
+
+            if nullInEntries(fieldframe):
+                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+                return
 
             responses = [entry.get() for i, entry in enumerate(fieldframe.values) if i > 0]
             
@@ -1872,6 +1897,11 @@ class Main:
             """Revisa si una entrada especfica de un fieldframe puede convertirse a entero"""
 
             fieldframe.gatherEntries()
+
+            if nullInEntries(fieldframe):
+                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+                return
+
             ans = fieldframe.getValue(value)
 
             try:
@@ -1895,6 +1925,10 @@ class Main:
             global historialEmpresa
 
             fieldframe.gatherEntries()
+
+            if nullInEntries(fieldframe):
+                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+                return
 
             id = parseInt(fieldframe, "Generar nuevo ID")
 
@@ -1920,6 +1954,10 @@ class Main:
 
             fieldframe.gatherEntries()
 
+            if nullInEntries(fieldframe):
+                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+                return
+
             id = parseInt(fieldframe, "Inserte ID existente")
 
             if id is None:
@@ -1939,6 +1977,10 @@ class Main:
             """Antes de empezar con el filtrado, se elige si el cliente que va a llevar a cabo la contratación existe en la base de datos o es nuevo."""
 
             fieldframe.gatherEntries()
+            
+            if nullInEntries(fieldframe):
+                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+                return
 
             choice = fieldframe.getValue("Tipo de Empresa")
             if choice in ["Empresa registrada", "Empresa nueva"]:
