@@ -17,7 +17,8 @@ from baseDatos.Teatro import Teatro
 
 from gestorAplicacion.gestionVentas.Cliente import Cliente
 from gestorAplicacion import gestionObras
-
+from gestorAplicacion.gestionFinanciera.Empleado import Empleado
+from gestorAplicacion.gestionClases.Profesor import Profesor
 from gestorAplicacion.herramientas.Aptitud import Aptitud
 from gestorAplicacion.herramientas.Genero import Genero
 from gestorAplicacion.gestionObras.Artista import Artista
@@ -293,9 +294,11 @@ class Main:
         cls.root.focus_force()
 
     @classmethod
-    def ventanaDialogo(cls):
-        messagebox.showinfo("Aplicacion", "Bienvenido a la aplicacion")
-    
+    def ventanaDialogo(cls, mensaje, accion = None):
+        messagebox.showinfo("info", mensaje)
+        if accion:
+            accion()
+
     def autores():
         messagebox.showinfo("Acerca de", "Autores: \n- Francisco Jose Ceren Porto\n- Danna Valeria Perez Niño\n- Oscar David Arango Garcia\n- Juan Pablo Miras Cañas\n- Miguel Velez Bernal")
 
@@ -547,7 +550,7 @@ class Main:
             texto.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.5, anchor="center")
 
             NOMBRES = ["Juan", "Pedro", "Maria", "Ana", "Luis", "Carlos", "Jose", "Andres", "Sofia", "Laura", "Miguel", "Danna", "Oscar", "Frank", "Pablo"]
-            APELLIDOS = ["Gomez", "Perez", "Rodriguez", "Gonzalez", "Martinez", "Hernandez", "Lopez", "Torres", "Ramirez", "Diaz", "Sanchez", "Cruz", "Jimenez", "Rojas", "Vargas", "VELEZ"]
+            APELLIDOS = ["Gomez", "Perez", "Rodriguez", "Gonzalez", "Martinez", "Hernandez", "Lopez", "Torres", "Ramirez", "Diaz", "Sanchez", "Cruz", "Jimenez", "Rojas", "Vargas", "Velez"]
             
             Teatro.getInstancia().getTesoreria().transferenciaFondos
             
@@ -580,6 +583,11 @@ class Main:
                 p2.pack(side= "left", fill="both", expand= True, padx=5, pady=5)
                 p3 = tk.Frame(f1, bg="#ffb48a")
                 p3.pack(side= "left", fill="both", expand= True, padx=5, pady=5)
+                Continuar = tk.Frame(f1, bg="#ffb48a")
+                Continuar.pack(side="bottom", fill="x", expand=True, padx=5, pady=5)
+
+                botonContinuar = tk.Button(Continuar, text="Continuar", bg= "#571F1C", fg="white")
+                botonContinuar.pack(fill="x", padx=10, pady=10)
 
                 #Organizar tabla de empleados
                 #Estilo tablas
@@ -591,11 +599,11 @@ class Main:
                 seguridad.pack()
                 cls.resize(p1, seguridad,10, 20,False)
                 #Tabla Seguridad
-                datos = [
-                    ("Juan", 25),
-                    ("Ana", 30),
-                    ("Luis", 22)
-                ]
+                # datos = [
+                #     ("Juan", 25),
+                #     ("Ana", 30),
+                #     ("Luis", 22)
+                # ]
                 tablaS = ttk.Treeview(p1, columns=("Nombre", "IDs"), show="headings", style= "Treeview")
                 tablaS.heading("Nombre", text="Nombre")
                 tablaS.heading("IDs", text="IDs")
@@ -623,7 +631,7 @@ class Main:
                 #Agregar los empleados
                 #caso prueba
                 # for emp in datos:
-                #     tablaA.insert("", "end", values = emp)
+                    # tablaA.insert("", "end", values = emp)
                 for emp in Teatro.getInstancia().getTipoAseador():
                     tablaA.insert("", "end", values=(emp.getNombre(), emp.getId()))
                 tablaA.pack(expand=True, fill="both", padx=10, pady=5)
@@ -642,7 +650,7 @@ class Main:
                 #Agregar los empleados
                 #caso prueba
                 # for emp in datos:
-                #     tablaP.insert("", "end", values = emp)
+                    # tablaP.insert("", "end", values = emp)
                 for emp in Teatro.getInstancia().getTipoProfesor():
                     tablaP.insert("", "end", values=(emp.getNombre(), emp.getId()))
                 tablaP.pack(expand=True, fill="both", padx=10, pady=5)
@@ -674,22 +682,36 @@ class Main:
 
 
                 #Modificar para los empleados de la lista
-                def despedirEmpleado(tabla):
+                def despedirEmpleado(tabla, listaOcupacion):
                     selected_item = tabla.selection()  # Obtiene la fila seleccionada
                     if selected_item:
-                        tabla.delete(selected_item)  # Elimina la fila de la tabla
+                        valores = tabla.item(selected_item, "values")
+                        id = valores[1]
+                        for emp in listaOcupacion:
+                            if emp.getId() == id:
+                                listaOcupacion.remove(emp)
+                                break
+                        for emp in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                            if emp.getId() == id:
+                                Teatro.getInstancia().getEmpleadosPorRendimiento().remove(emp)
+                                liquidacion = (emp.calcularSueldo()*1.2) + emp.getDeuda()
+                                Teatro.getInstancia().getTesoreria().getCuenta().transferencia(emp.getCuenta(), liquidacion)
+                                mensaje = "Se despidio a " + emp.getNombre() + " y se le pago su respectiva liquidacion"
+                                cls.ventanaDialogo(mensaje)
+                                break
+                        tabla.delete(selected_item)
 
                 # Modificar cada botón de "Despedir"
-                despedirS.config(command=lambda: despedirEmpleado(tablaS))
-                despedirA.config(command=lambda: despedirEmpleado(tablaA))
-                despedirP.config(command=lambda: despedirEmpleado(tablaP))
+                despedirS.config(command=lambda: despedirEmpleado(tablaS, Teatro.getInstancia().getTipoSeguridad()))
+                despedirA.config(command=lambda: despedirEmpleado(tablaA, Teatro.getInstancia().getTipoAseador()))
+                despedirP.config(command=lambda: despedirEmpleado(tablaP, Teatro.getInstancia().getTipoProfesor()))
 
                 def contratarSeguridad():
                     cls.clear_frame(f1)
                     seguridad = tk.Label(f1, text="Candidatos a Seguridad", font=("Calibri", 18), bg="#ffb48a")
                     seguridad.pack(pady=5)
-                    cls.resize(f1, seguridad,18, 40,False)
-                    #Tabla
+                    # cls.resize(f1, seguridad,18, 40,False)
+                    #Tabla Seguridad
                     candidatos = []
                     idS = []
 
@@ -709,10 +731,9 @@ class Main:
                     tabla.column("Nombre", width=100, anchor="center")
                     tabla.column("IDs", width=50, anchor="center")
                     #Agregar los empleados
-                    
+                    #caso prueba
                     for j in range(0, len(candidatos)):
                         tabla.insert("", "end", values=(candidatos[j], idS[j]))
-                    
                     tabla.pack(expand=True, fill="both", padx=30, pady=10)
 
                     p1 = tk.Frame(f1, bg="#ffb48a")
@@ -720,17 +741,14 @@ class Main:
                     contratar = tk.Button(p1, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 14), fg="White")
                     contratar.pack(side="left", expand=True, fill="x", pady= 10, padx=25, anchor="center")
 
-                    def contrato():
-                        pass
-
-                    contratar.config(command=lambda: contrato())
+                    contratar.config(command=lambda: contrato(tabla, "Seguridad"))
 
                 def contratarAseador():
                     cls.clear_frame(f1)
                     Aseador = tk.Label(f1, text="Candidatos a Aseador", font=("Calibri", 18), bg="#ffb48a")
                     Aseador.pack(pady=5)
-                    cls.resize(f1, Aseador,10, 45,False)
-                    #Tabla
+                    # cls.resize(f1, Aseador,10, 45,False)
+                    #Tabla Seguridad
                     candidatos = []
                     idS = []
 
@@ -750,10 +768,9 @@ class Main:
                     tabla.column("Nombre", width=100, anchor="center")
                     tabla.column("IDs", width=50, anchor="center")
                     #Agregar los empleados
-                    
+                    #caso prueba
                     for j in range(0, len(candidatos)):
                         tabla.insert("", "end", values=(candidatos[j], idS[j]))
-                    
                     tabla.pack(expand=True, fill="both", padx=30, pady=10)
 
                     p1 = tk.Frame(f1, bg="#ffb48a")
@@ -761,17 +778,14 @@ class Main:
                     contratar = tk.Button(p1, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 14), fg="White")
                     contratar.pack(side="left", expand=True, fill="x", pady= 10, padx=25, anchor="center")
 
-                    def contrato():
-                        pass
-                    
-                    contratar.config(command=lambda: contrato())
+                    contratar.config(command=lambda: contrato(tabla, "Aseador"))
 
                 def contratarProfesor():
                     cls.clear_frame(f1)
                     Profesor = tk.Label(f1, text="candidatos a Profesor", font=("Calibri", 18), bg="#ffb48a")
                     Profesor.pack(pady=5)
-                    cls.resize(f1, Profesor,10, 45,False)
-                    #Tabla
+                    # cls.resize(f1, Profesor,10, 45,False)
+                    #Tabla Profesor
                     candidatos = []
                     idS = []
 
@@ -791,10 +805,10 @@ class Main:
                     tabla.column("Nombre", width=100, anchor="center")
                     tabla.column("IDs", width=50, anchor="center")
                     #Agregar los empleados
-                    
+                    #caso prueba
                     for j in range(0, len(candidatos)):
                         tabla.insert("", "end", values=(candidatos[j], idS[j]))
-                    
+
                     tabla.pack(expand=True, fill="both", padx=30, pady=10)
 
                     p1 = tk.Frame(f1, bg="#ffb48a")
@@ -802,17 +816,45 @@ class Main:
                     contratar = tk.Button(p1, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 14), fg="White")
                     contratar.pack(side="left", expand=True, fill="x", pady= 10, padx=25, anchor="center")
 
-                    def contrato():
-                        pass
-
-                    contratar.config(command=lambda: contrato())
+                    contratar.config(command=lambda: contrato(tabla, "Profesor"))
                 
                 contratarS.config(command=lambda: contratarSeguridad())
                 contratarA.config(command=lambda: contratarAseador())
                 contratarP.config(command=lambda: contratarProfesor())
 
+            def contrato(tabla, ocupacion):
+                selected = tabla.selection()
+                if selected:
+                    valores = tabla.item(selected, "values")
+                    if ocupacion != "Seguridad":
+                        if ocupacion != "Aseador":
+                            newprofesor = Profesor(valores[0], valores[1])
+                            profesores = Teatro.getInstancia().getTipoProfesor()
+                            profesores.append(newprofesor)
+                            Teatro.getInstancia().setTipoProfesor(profesores)
+                            general = Teatro.getInstancia().getEmpleadosPorRendimiento()
+                            general.append(newprofesor)
+                            Teatro.getInstancia().setEmpleadosPorRendimiento(general)
+                        else:
+                            newAseador = Empleado(valores[0], valores[1], "Aseador")
+                            Aseadores = Teatro.getInstancia().getTipoAseador()
+                            Aseadores.append(newAseador)
+                            Teatro.getInstancia().setTipoAseador(Aseadores)
+                            general = Teatro.getInstancia().getEmpleadosPorRendimiento()
+                            general.append(newAseador)
+                            Teatro.getInstancia().setEmpleadosPorRendimiento(general)
+                    else:
+                        newSeguridad = Empleado(valores[0], valores[1], "Seguridad")
+                        seguridad = Teatro.getInstancia().getTipoSeguridad()
+                        seguridad.append(newSeguridad)
+                        Teatro.getInstancia().setTipoSeguridad(seguridad)
+                        general = Teatro.getInstancia().getEmpleadosPorRendimiento()
+                        general.append(newSeguridad)
+                        Teatro.getInstancia().setEmpleadosPorRendimiento(general)
+                    
+                    cls.ventanaDialogo("se contrato a:" + valores[0], continuar)
+
             Anuncio.after(50, mostrarSaldo)
-            
             
             
         # Encabezado
