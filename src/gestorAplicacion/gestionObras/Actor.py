@@ -27,7 +27,7 @@ class Actor(Artista):
         self.__aptitudes = [aptitud for aptitud in Aptitud]
 
         # inicializar calificaciones en 0
-        self.__calificacionesAptitudes = [0] * len(self.__aptitudes)
+        self.__calificacionesAptitudes = [0.0] * len(self.__aptitudes)
 
         # lista de listas vacías para almacenar calificaciones por cada aptitud
         self.__historialCalificaciones = [[] for _ in range(len(self.__aptitudes))]

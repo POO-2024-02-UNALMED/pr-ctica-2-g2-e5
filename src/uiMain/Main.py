@@ -1649,29 +1649,6 @@ class Main:
             tk.Button(process_frame, text="Salir del sistema", font=("Calibri", 14),
                     command=cls.volver).pack(pady=10)
 
-        # -------------------- MÉTODO REQUERIDO: Obras críticas --------------------            
-        def step_show_obras_criticas():
-            # Limpia el frame donde se mostrará la información
-            for widget in process_frame.winfo_children():
-                widget.destroy()
-            
-            # Se llama al método de clase que retorna la lista de obras críticas.
-            obras_criticas = Obra.mostrarObrasCriticas()  
-            if not obras_criticas:
-                tk.Label(process_frame, text="No hay obras en estado crítico en el teatro.",
-                        font=("Calibri", 14), bg="white", fg="yellow").pack(pady=10)
-            else:
-                tk.Label(process_frame, text="Obras en estado crítico del teatro:",
-                        font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
-                txt_obras = tk.Text(process_frame, height=10, width=80, font=("Calibri", 12))
-                txt_obras.pack(pady=10)
-                # Itera sobre la lista de obras y agrega una línea para cada obra
-                for obra in obras_criticas:
-                    # Se asume que cada obra tiene métodos getNombre() y promedioCalificacion()
-                    linea = f"- '{obra.getNombre()}' (Promedio: {obra.promedioCalificacion()})\n"
-                    txt_obras.insert("end", linea)
-                txt_obras.config(state="disabled")
-
         # -------------------- PASO 4: Crear nuevo artista --------------------
         '''AVALADA'''
         def step_create_artist(id_num):
@@ -1795,7 +1772,7 @@ class Main:
             txt_areas.insert("end", "Áreas recomendadas para mejorar del actor " + actor.getNombre() + ":\n")
             for i, area in enumerate(areas_recomendadas[:3]):
                 cal = actor.getCalificacionPorAptitud(area)
-                txt_areas.insert("end", f"{i+1}. {area} (Calificación: {cal})\n")
+                txt_areas.insert("end", f"{i+1}. {area.name.capitalize()} (Calificación: {cal})\n")
             txt_areas.config(state="disabled")
             tk.Label(process_frame, text="¿Desea programar una clase basada en las áreas recomendadas?",
                     font=("Calibri", 14), bg="white").pack(pady=10)
@@ -1824,7 +1801,7 @@ class Main:
         def step_schedule_class(actor, areaSeleccionada):
             for widget in process_frame.winfo_children():
                 widget.destroy()
-            # Determinar el nivel de clase basado en la calificación actual
+            # Determinar el nivel de clase según la calificación actual
             calificacionActual = actor.getCalificacionPorAptitud(areaSeleccionada)
             if calificacionActual < 3.0:
                 nivelClase = "Introducción"
@@ -1832,30 +1809,68 @@ class Main:
                 nivelClase = "Profundización"
             else:
                 nivelClase = "Perfeccionamiento"
+            
+            # Mostrar solo el nombre de la aptitud (sin el prefijo "Aptitud.")
+            # Si el objeto es un enum, se usará su atributo 'name'
+            area_display = areaSeleccionada.name.capitalize() if hasattr(areaSeleccionada, "name") else str(areaSeleccionada).split('.')[-1].capitalize()
+
+            
             tk.Label(process_frame,
-                    text=f"Área seleccionada: {areaSeleccionada}\nNivel de clase: {nivelClase}",
+                    text=f"Área seleccionada: {area_display}\nNivel de clase: {nivelClase}",
                     font=("Calibri", 14), bg="white").pack(pady=10)
-            tk.Label(process_frame, text="Programe la clase (Formato: YYYY-MM-DD HH:MM)",
-                    font=("Calibri", 14), bg="white").pack(pady=5)
-            tk.Label(process_frame, text="Inicio:", font=("Calibri", 14), bg="white").pack(pady=5)
-            entry_start = tk.Entry(process_frame, font=("Calibri", 14))
-            entry_start.pack(pady=5)
-            tk.Label(process_frame, text="Fin:", font=("Calibri", 14), bg="white").pack(pady=5)
-            entry_end = tk.Entry(process_frame, font=("Calibri", 14))
-            entry_end.pack(pady=5)
+            
+            tk.Label(process_frame, text="Programe la clase:", font=("Calibri", 14), bg="white").pack(pady=5)
+            
+            # Obtener la lista de días de la semana con getWeek()
+            week_days = Main.getWeek()  # Retorna una lista de objetos date
+            day_options = [day.strftime("%Y-%m-%d") for day in week_days]
+            
+            # Crear un único FieldFrame para ingresar Día, Hora de inicio y Hora de fin.
+            # Se pasan tres criterios y tres valores (el primero es una lista de opciones para el día).
+            ff = FieldFrame(process_frame,
+                            tituloCriterios="Programación de Clase",
+                            criterios=["Día", "Inicio", "Fin"],
+                            tituloValores="Valor",
+                            valores=[day_options, "", ""],
+                            combobox=False)
+            ff.pack(pady=10, fill="x")
+            
+            # Por defecto, FieldFrame crea entradas (Entry) para todos los campos.
+            # Convertimos la entrada correspondiente a "Día" (el primer campo) en un Combobox.
+            from tkinter import ttk
+            ff.values[1].destroy()  # ff.values[0] es el título de la columna de valores, ff.values[1] corresponde al primer campo
+            ff.values[1] = ttk.Combobox(ff, values=day_options)
+            ff.values[1].grid(row=1, column=2)
+            
+            # Botón para programar la clase; al presionar se recopilan los datos del FieldFrame.
             tk.Button(process_frame, text="Programar", font=("Calibri", 14),
-                        command=lambda: process_schedule(actor, areaSeleccionada, nivelClase,
-                                                        entry_start.get(), entry_end.get())).pack(pady=10)
+                    command=lambda: (
+                        ff.gatherEntries(),
+                        process_schedule(actor, areaSeleccionada, nivelClase,
+                                        ff.valores[0],  # Día seleccionado (string "YYYY-MM-DD")
+                                        ff.valores[1],  # Hora de inicio (string "HH:MM")
+                                        ff.valores[2]   # Hora de fin (string "HH:MM")
+                                        )
+                    )
+                    ).pack(pady=10)
 
         # -------------------- PASO 9: Procesar horario y asignar sala y profesor --------------------
-        def process_schedule(actor, areaSeleccionada, nivelClase, inicio_str, fin_str):
+        def process_schedule(actor, areaSeleccionada, nivelClase, day_str, start_time_str, end_time_str):
             from datetime import datetime
             try:
-                inicio = datetime.strptime(inicio_str, "%Y-%m-%d %H:%M")
-                fin = datetime.strptime(fin_str, "%Y-%m-%d %H:%M")
+                # Convertir el día seleccionado a objeto date
+                selected_date = datetime.strptime(day_str, "%Y-%m-%d").date()
+                # Convertir las horas a objeto time (formato HH:MM)
+                start_time = datetime.strptime(start_time_str, "%H:%M").time()
+                end_time = datetime.strptime(end_time_str, "%H:%M").time()
             except ValueError:
-                messagebox.showerror("Error", "Formato de fecha/hora incorrecto.")
+                messagebox.showerror("Error", "Formato incorrecto en día o en hora. Use YYYY-MM-DD para el día y HH:MM para la hora.")
                 return
+
+            # Combinar la fecha con las horas para obtener datetime completos
+            inicio = datetime.combine(selected_date, start_time)
+            fin = datetime.combine(selected_date, end_time)
+
             if fin <= inicio:
                 messagebox.showerror("Error", "El fin debe ser después del inicio.")
                 return
@@ -1863,11 +1878,11 @@ class Main:
             if duration < 2 or duration > 4:
                 messagebox.showerror("Error", "La duración debe ser entre 2 y 4 horas.")
                 return
-            # Validación de horario: se asume que las clases deben programarse entre las 10 y las 22
+            # Validar que las clases se programen entre las 10:00 y las 22:00
             if not (10 <= inicio.hour < 22 and 10 < fin.hour <= 22):
                 messagebox.showerror("Error", "Las clases deben programarse entre las 10:00 y las 22:00.")
                 return
-            # Buscar sala disponible (usando anadir_horario, que en este caso es el método con guion bajo)
+            # Buscar una sala disponible
             salaAsignada = None
             for sala in Teatro.getInstancia().getSalas():
                 if sala.getAseado() and sala.isDisponible(inicio, fin):
@@ -1883,7 +1898,6 @@ class Main:
             profesores = Teatro.getInstancia().getTipoProfesor()
             random.shuffle(profesores)
             for empleado in profesores:
-                # Se asume que podemos identificar a un profesor mediante isinstance o similar
                 if hasattr(empleado, "tiene_especializacion") and empleado.tiene_especializacion(areaSeleccionada):
                     if random.random() > 0.5:
                         profesorAsignado = empleado
