@@ -268,7 +268,7 @@ class Main:
 
         cls.menu_bar = tk.Menu(cls.new_window)
         menu_archivo = tk.Menu(cls.menu_bar, tearoff=False)
-        menu_archivo.add_command(label="Aplicacion", command=cls.ventanaDialogo)
+        menu_archivo.add_command(label="Aplicacion", command=cls.aplicacion)
         menu_archivo.add_command(label="Salir", command=cls.volver)
         cls.menu_bar.add_cascade(label="Archivo", menu=menu_archivo)
         menu_procesos = tk.Menu(cls.menu_bar, tearoff=0)
@@ -304,6 +304,8 @@ class Main:
         messagebox.showinfo("info", mensaje)
         if accion:
             accion()
+    def aplicacion():
+        messagebox.showinfo("Aplicacion", "Bienvenido al Teatro Escuela")
 
     def autores():
         messagebox.showinfo("Acerca de", "Autores: \n- Francisco Jose Ceren Porto\n- Danna Valeria Perez Niño\n- Oscar David Arango Garcia\n- Juan Pablo Miras Cañas\n- Miguel Velez Bernal")
@@ -747,17 +749,20 @@ class Main:
             def continuar():
                 cls.wait()
                 cls.clear_frame(f1)
-                p1 = tk.Frame(f1, bg="#ffb48a")
-                p1.pack(side= "left", fill="both", expand= True, padx=5, pady=5)
-                p2 = tk.Frame(f1, bg="#ffb48a")
-                p2.pack(side= "left", fill="both", expand= True, padx=5, pady=5)
-                p3 = tk.Frame(f1, bg="#ffb48a")
-                p3.pack(side= "left", fill="both", expand= True, padx=5, pady=5)
-                Continuar = tk.Frame(f1, bg="#ffb48a")
-                Continuar.pack(side="bottom", fill="x", expand=True, padx=5, pady=5)
+                frameSuperior = tk.Frame(f1, bg="#ffb48a")
+                frameSuperior.place(relx=0, rely=0, relwidth=1, relheight=0.9, anchor="nw")
+                frameInferior = tk.Frame(f1, bg="#ffb48a")
+                frameInferior.place(relx=0, rely=0.9, relheight= 0.1, relwidth=1, anchor="nw")
+                p1 = tk.Frame(frameSuperior, bg="#ffb48a")
+                p1.pack(side= "left", fill="both", expand= True, padx=5, pady=1)
+                p2 = tk.Frame(frameSuperior, bg="#ffb48a")
+                p2.pack(side= "left", fill="both", expand= True, padx=5, pady=1)
+                p3 = tk.Frame(frameSuperior, bg="#ffb48a")
+                p3.pack(side= "left", fill="both", expand= True, padx=5, pady=1)
 
-                botonContinuar = tk.Button(Continuar, text="Continuar", bg= "#571F1C", fg="white")
-                botonContinuar.pack(fill="x", padx=10, pady=10)
+                botonContinuar = tk.Button(frameInferior, text="Continuar", font=("Calibri", 14),bg= "#571F1C", fg="white")
+                botonContinuar.pack(fill="both", padx=10, pady=5, anchor="center")
+                botonContinuar.config(command=lambda: continuar2)
 
                 #Organizar tabla de empleados
                 #Estilo tablas
@@ -829,26 +834,26 @@ class Main:
                 #Seguridad
                 p12 = tk.Frame(p1, bg="#ffb48a")
                 p12.pack(side="bottom", fill="both", pady = 5, padx=5)
-                contratarS = tk.Button(p12, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 14), fg="White")
-                contratarS.pack(side="left", expand=True, fill="x", pady= 10, padx=10, anchor="center")
-                despedirS = tk.Button(p12, bg="#571F1C", text="Despedir", font=("calibri", 14), fg = "white")
-                despedirS.pack(side="left", expand= True, fill= "x", pady=10, padx=10, anchor="center")
+                contratarS = tk.Button(p12, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 12), fg="White")
+                contratarS.pack(side="left", expand=True, fill="x", pady= 5, padx=10, anchor="center")
+                despedirS = tk.Button(p12, bg="#571F1C", text="Despedir", font=("calibri", 12), fg = "white")
+                despedirS.pack(side="left", expand= True, fill= "x", pady=5, padx=10, anchor="center")
 
                 #Aseador
                 p22 = tk.Frame(p2, bg="#ffb48a")
                 p22.pack(side="bottom", fill="both", pady = 5, padx=5)
-                contratarA = tk.Button(p22, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 14), fg="White")
-                contratarA.pack(side="left", expand=True, fill="x", pady= 10, padx=10, anchor="center")
-                despedirA = tk.Button(p22, bg="#571F1C", text="Despedir", font=("calibri", 14), fg = "white")
-                despedirA.pack(side="left", expand= True, fill= "x", pady=10, padx=10, anchor="center")
+                contratarA = tk.Button(p22, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 12), fg="White")
+                contratarA.pack(side="left", expand=True, fill="x", pady= 5, padx=10, anchor="center")
+                despedirA = tk.Button(p22, bg="#571F1C", text="Despedir", font=("calibri", 12), fg = "white")
+                despedirA.pack(side="left", expand= True, fill= "x", pady=5, padx=10, anchor="center")
 
                 #Profesor
                 p32 = tk.Frame(p3, bg="#ffb48a")
                 p32.pack(side="bottom", fill="both", pady = 5, padx=5)
-                contratarP = tk.Button(p32, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 14), fg="White")
-                contratarP.pack(side="left", expand=True, fill="x", pady= 10, padx=10, anchor="center")
-                despedirP = tk.Button(p32, bg="#571F1C", text="Despedir", font=("calibri", 14), fg = "white")
-                despedirP.pack(side="left", expand= True, fill= "x", pady=10, padx=10, anchor="center")
+                contratarP = tk.Button(p32, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 12), fg="White")
+                contratarP.pack(side="left", expand=True, fill="x", pady= 5, padx=10, anchor="center")
+                despedirP = tk.Button(p32, bg="#571F1C", text="Despedir", font=("calibri", 12), fg = "white")
+                despedirP.pack(side="left", expand= True, fill= "x", pady=5, padx=10, anchor="center")
 
 
                 #Modificar para los empleados de la lista
@@ -1024,6 +1029,8 @@ class Main:
                     
                     cls.ventanaDialogo("se contrato a:" + valores[0], continuar)
 
+            def continuar2():
+                pass
             Anuncio.after(50, mostrarSaldo)
             
             
