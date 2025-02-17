@@ -1,6 +1,8 @@
 import datetime
 import time
 
+from baseDatos.Teatro import Teatro
+
 class Obra:
     estadoCriticoS = []
     obras = []
@@ -27,133 +29,134 @@ class Obra:
         self.__repartoDisponible = repartoDisponible
         self.__asistencia = asistencia
         self.__precio = precio
-        self.calcularCalificacion(self.calificaciones)
-        self.calcAudienciaEsperada(self.calificacion)
+        self.calcularCalificacion(self.getCalificaciones())
+        self.calcAudienciaEsperada(self.getCalificacion())
         self.checkEstadoCritico()
+        Teatro.getInstancia().getObras().append(self)
         Obra.obras.append(self)
         
     def getAudenciaEsperada(self):
-        return self.audienciaEsperada
+        return self.__audienciaEsperada
     
-    def setAudenciaEsperada(self, value):
+    def setAudienciaEsperada(self, value):
         self.audienciaEsperada = value  
     
     def getNombre(self):    
-        return self.nombre
+        return self.__nombre
     
     def setNombre(self, value):
         self.nombre = value
     
     def getCalificacion(self):
-        return self.calificacion
+        return self.__calificacion
     
     def setCalificacion(self, value):
         self.calificacion = value
         
     def getReparto(self):
-        return self.reparto
+        return self.__reparto
     
     def setReparto(self, value):
         self.reparto = value
     
     def getPapeles(self):
-        return self.papeles
+        return self.__papeles
     
     def setPapeles(self, value):
         self.papeles = value
     
     def getDirector(self):
-        return self.director
+        return self.__director
     
     def setDirector(self, value):
         self.director = value
     
     def getCostoProduccion(self):
-        return self.costoProduccion
+        return self.__costoProduccion
     
     def setCostoProduccion(self, value):
         self.costoProduccion = value
         
     def getFuncionesSemana(self):
-        return self.funcionesSemana
+        return self.__funcionesSemana
     
     def setFuncionesSemana(self, value):
         self.funcionesSemana = value
         
     def getGenero(self):
-        return self.genero
+        return self.__genero
     
     def setGenero(self, value):
         self.genero = value
         
     def getTiquetesTotales(self):
-        return self.tiquetesTotales
+        return self.__tiquetesTotales
     
     def setTiquetesTotales(self, value):
         self.tiquetesTotales = value
         
     def getEstadoCriticoA(self):
-        return self.estadoCriticoA
+        return self.__estadoCriticoA
     
     def setEstadoCriticoA(self, value):
         self.estadoCriticoA = value
         
     def getCalificaciones(self):
-        return self.calificaciones
+        return self.__calificaciones
     
     def setCalificaciones(self, value):
         self.calificaciones = value
         
     def getFranjaHoraria(self):
-        return self.franjaHoraria
+        return self.__franjaHoraria
     
     def setFranjaHoraria(self, value):
         self.franjaHoraria = value
         
     def getDuracion(self):
-        return self.duracion
+        return self.__duracion
     
     def setDuracion(self, value):
         self.duracion = value
         
     def getFuncionEstelar(self):
-        return self.funcionEstelar
+        return self.__funcionEstelar
     
     def setFuncionEstelar(self, value):
         self.funcionEstelar = value
         
     def getFunciones(self):
-        return self.funciones
+        return self.__funciones
     
     def setFunciones(self, value):
         self.funciones = value
         
     def getFuncionesRecomendadas(self):
-        return self.funcionesRecomendadas
+        return self.__funcionesRecomendadas
     
     def setFuncionesRecomendadas(self, value):  
         self.funcionesRecomendadas = value
         
     def getPromedioArt(self):
-        return self.promedioArt
+        return self.__promedioArt
     
     def setPromedioArt(self, value):
         self.promedioArt = value
         
     def getRepartoDisponible(self):
-        return self.repartoDisponible
+        return self.__repartoDisponible
     
     def setRepartoDisponible(self, value):
         self.repartoDisponible = value
         
     def getAsistencia(self):
-        return self.asistencia
+        return self.__asistencia
     
     def setAsistencia(self, value):
         self.asistencia = value
         
     def getPrecio(self):
-        return self.precio
+        return self.__precio
     
     def setPrecio(self, value):
         self.precio = value
@@ -171,10 +174,10 @@ class Obra:
     def calcAudienciaEsperada(self, calificacion):
         u = calificacion * 12
         self.setAudienciaEsperada(u)
-    
+         
     def calcularCalificacion(self, calificaciones):
         u = 0
-        t = 0
+        t = 1
         for i in calificaciones:
             u = u + i
             t = t+1
@@ -301,7 +304,7 @@ class Obra:
     
     @classmethod
     def mostrarObrasCriticas(cls):
-        from baseDatos import Teatro
+        from baseDatos.Teatro import Teatro
         obrasCriticas = []
         obrasCriticas.extend(
             obra
@@ -338,8 +341,8 @@ class Obra:
         self.funcionesSemana.append(funcion)
 
     @staticmethod
-    def generarTabla(cls):
-        from baseDatos import Teatro
+    def generarTabla():
+
         nuevo=""
         for obra in Teatro.getInstancia().getObras():
             if obra.getNombre() != "NOTFORITE":
@@ -348,7 +351,21 @@ class Obra:
                                     obra.precioObra(obra.getNombre()))+"\n")
                 nuevo = nuevo +string
         return nuevo
-    
+    @staticmethod
+    def generarTabla1():
+        nuevo = string = "{:>30} {:>20} {:>20} {:>20}".format(
+                    "Nombre", "Genero","Duracion","Precio"
+                )+ "\n"
+
+        for obra in Teatro.getInstancia().getObras():
+            if obra.getNombre() != "NOTFORITE":
+                string = "{:>30} {:>20} {:>20} {:>20}".format(
+                    obra.getNombre(), "comedia","10:00","1_000"
+                ) + "\n"
+                nuevo += string
+
+        return nuevo
+
     def getDuracionFormato(self):
         horas = self.getDuracion().total_seconds() // 3600
         minutos = (self.getDuracion.total_seconds() % 3600) // 60

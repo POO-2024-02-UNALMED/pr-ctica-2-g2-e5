@@ -10,12 +10,17 @@ import random
 
 
 
+
+
+
+
 #AGREGAR SRC AL PATH
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from baseDatos.Teatro import Teatro
 
 from gestorAplicacion.gestionVentas.Cliente import Cliente
+from gestorAplicacion.gestionFinanciera.Empleado import Empleado
 from gestorAplicacion import gestionObras
 from gestorAplicacion.gestionFinanciera.Empleado import Empleado
 from gestorAplicacion.gestionClases.Profesor import Profesor
@@ -25,6 +30,7 @@ from gestorAplicacion.gestionObras.Artista import Artista
 from gestorAplicacion.gestionObras.Actor import Actor
 from gestorAplicacion.gestionObras.Obra import Obra
 from gestorAplicacion.gestionObras.Director import Director
+from gestorAplicacion.herramientas.Suscripcion import Suscripcion
 
 from baseDatos.memory import resetMemory
 
@@ -380,11 +386,12 @@ class Main:
 
     @classmethod
     def gestionVentas(cls):
+        for i in Teatro.getInstancia().getClientes():
+            print(i.getId())
 
 
         def Usuario_Nuevo():
-            for widget in cls.content.winfo_children():
-                widget.destroy()
+
 
                 
             #SE CREARA UN NUEVO ID
@@ -392,12 +399,12 @@ class Main:
 
             global cliente
             cliente = Cliente(id = code)
-            messagebox.showinfo("Éxito", f"Su nuevo ID es {cliente.id}")
+            messagebox.showinfo("Éxito", f"Su nuevo ID es {cliente.getId()}")
             Inicio_preguntas()
             
         
-        def validar(a):
-                texto =a.get()
+        def validar(texto):
+                
                 value = False
                 try:
                     numero = int(texto)  # Intenta convertir a entero
@@ -419,17 +426,22 @@ class Main:
             cliente=Cliente(id=12)
             
             
-            frame_izq = tk.Frame(cls.content, bg="blue")
+            frame_izq = tk.Frame(cls.content, bg="slategray")
             frame_izq.place(relx=0, rely=0, relwidth=0.15, relheight=1)  # Se ubica en la izquierda
 
             # Frame derecho
-            frame_der = tk.Frame(cls.content, bg="blue")
+            frame_der = tk.Frame(cls.content, bg="slategray")
             frame_der.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
 
-            frame_2 = tk.Frame(cls.content, bg="black", padx=15, pady=20)
-            frame_2.place(relx=0.5, rely=0.80,anchor="center")
             
-            frame = tk.Frame(cls.content, bg="white", padx=20, pady=20)
+
+            frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
+            frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+
+            frame_2 = tk.Frame(frame_central, bg="slategray2", padx=15, pady=20)
+            frame_2.place(relx=0.5, rely=0.85,anchor="center")
+            
+            frame = tk.Frame(frame_central, bg="slategray2", padx=20, pady=20)
             frame.place(relx=0.5, rely=0.5, anchor="center")
 
             top_frame = Frame(cls.content,background="black")
@@ -438,13 +450,12 @@ class Main:
             top_label = tk.Label(top_frame,text="Venta de tiquetes",font=("Calibri", 25), bg="black",fg="white")
             top_label.place(relx=0.5, rely=0.1, anchor="n")
 
-            pregunta1= FieldFrame(root=frame,tituloCriterios="Ingresa tu ID",combobox=True)
-            #pregunta1.pack()
+
 
             
 
         # Etiqueta
-            label = tk.Label(frame, text="Ingresa tu ID:", font=("Arial", 14), bg="white")
+            """label = tk.Label(frame, text="Ingresa tu ID:", font=("Arial", 14), bg="slategray3")
             label.pack(pady=10)
 
         # Cuadro de texto
@@ -455,39 +466,198 @@ class Main:
             boton.pack(pady=10)
 
             boton = tk.Button(frame_2, text="Crear un nuevo usuario", font=("Arial", 12),command= Usuario_Nuevo)
-            boton.pack(pady=10)
+            boton.pack(pady=10)"""
+
+            id = FieldFrame(
+                frame_central,
+                tituloCriterios= "Inicia Sesion",
+                tituloValores= "INGRESA TU ID",
+                criterios=["ID"],
+                valores= [""],
+                command= lambda : validar_id(id)
+                
+            )
+            id.place(relheight= 1, relwidth= 1)
+        def validar_id(fieldframe : FieldFrame):
+            fieldframe.gatherEntries()
+            suscripcion = fieldframe.getValue("ID")
+            validar(suscripcion)
+
+
 
             
         def Inicio_preguntas():
+            for widget in cls.content.winfo_children():
+                widget.destroy()
+            global frame_central
             
-            frame_izq = tk.Frame(cls.content, bg="blue")
+            frame_izq = tk.Frame(cls.content, bg="slategray")
             frame_izq.place(relx=0, rely=0, relwidth=0.15, relheight=1)  # Se ubica en la izquierda
 
             # Frame derecho
-            frame_der = tk.Frame(cls.content, bg="blue")
+            frame_der = tk.Frame(cls.content, bg="slategray")
             frame_der.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
 
             top_frame = Frame(cls.content,background="black")
             top_frame.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
 
-            frame_central = tk.Frame(cls.content, bg="white")
+            frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
             frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
 
-            frame_central = tk.Frame(cls.content, bg="white")
-            frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+
 
             top_label = tk.Label(top_frame,text="Venta de tiquetes",font=("Calibri", 25), bg="black",fg="white")
             top_label.place(relx=0.5, rely=0.1, anchor="n")
 
-            label = tk.Label(cls.content,text="Desea mejorar su suscripcion?", font=("Calibri", 25), fg="black",bg="white")
+            label = tk.Label(cls.content,text="Desea mejorar su suscripcion?", font=("Calibri", 25), fg="black",bg="slategray2",name="suscripcion")
             label.place(relx=0.5, rely=0.3, anchor="center")
 
-            Button_Si = tk.Button(cls.content, text="Si", font=("Calibri", 15),command=Usuario_Nuevo)
-            Button_No = tk.Button(cls.content, text="No", font=("Calibri", 15),command=Usuario_Antiguo)
+            Button_Si = tk.Button(cls.content, text="Si", font=("Calibri", 15),command=adquirir_suscripcion,name="no")
+            Button_No = tk.Button(cls.content, text="No", font=("Calibri", 15),command=continuar,name="si")
+            
             Button_Si.place(relx=0.48, rely=0.5, anchor="center")
             Button_No.place(relx=0.53, rely=0.5, anchor="center")
 
             Main.wait()
+        
+        def adquirir_suscripcion():
+            
+            global frame_central
+            
+            try:
+                widget = cls.content.nametowidget("si") 
+                widget.destroy()
+                widget = cls.content.nametowidget("no") 
+                widget.destroy()
+                widget = cls.content.nametowidget("suscripcion") 
+                widget.destroy()
+            except KeyError:
+                None
+            susc = FieldFrame(
+                frame_central,
+                tituloCriterios= "tipos de suscripcion",
+                tituloValores= "Respuesta",
+                criterios=["Eleccion"],
+                valores= [["BASICA","PREMIUM","VIP","GOLD"]],
+                combobox= True,
+                command=lambda :asignar_suscripcion(susc)
+                
+            )
+            susc.place(relheight= 1, relwidth= 1)
+            main_label = tk.Label(frame_central,bg = "slategray1",text="BÁSICA $0.00 -------\n\nPREMIUM \n$11,900.00\n 10% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\n\nVIP \n$18,900.00\n 25% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\n\nELITE \n$39,900.00 \nFUNCIONES GRATIS\nILIMITADAS Y\nASIENTO GOLD GRATIS")
+            main_label.place(relx=0.53, rely=0.5, anchor="center")
+            
+        def asignar_suscripcion(fieldframe: FieldFrame):
+            global cliente
+            
+            fieldframe.gatherEntries()
+            suscripcion = fieldframe.getValue("Eleccion")
+            if suscripcion == "BASICA":
+                cliente.set_suscripcion(Suscripcion.BASICA.value)
+            elif suscripcion == "VIP":
+                cliente.set_suscripcion(Suscripcion.VIP.value)
+            elif suscripcion == "PREMIUM":
+                cliente.set_suscripcion(Suscripcion.PREMIUM.value)
+            elif suscripcion == "ELITE":
+                cliente.set_suscripcion(Suscripcion.ELITE.value)
+            else:
+                raise ValueError("Suscripción no válida")
+            
+            print(cliente.get_suscripcion())
+            continuar()
+        
+   
+
+
+
+
+
+
+
+        def continuar():
+            try:
+                widget = cls.content.nametowidget("central") 
+                widget.destroy()
+
+            except KeyError:
+                print("error frame")
+            try:
+                widget = cls.content.nametowidget("central") 
+                widget.destroy()
+                widget = cls.content.nametowidget("si") 
+                widget.destroy()
+                widget = cls.content.nametowidget("no") 
+                widget.destroy()
+                widget = cls.content.nametowidget("suscripcion") 
+                widget.destroy()
+            except KeyError:
+                print("error label")
+            frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
+            frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+            lista=[]
+
+            obra1 = Obra(nombre="pepe")
+            obra2 = Obra(nombre="dante")
+            obra3 = Obra(nombre="labella")
+            for obra in Teatro.getInstancia().getObras():
+                if obra.getNombre() != "NOTFORITE":
+                    lista.append(obra.getNombre())
+
+
+            obr = FieldFrame(
+                frame_central,
+                tituloCriterios= "Obras",
+                tituloValores= "Respuesta",
+                criterios=["Eleccion"],
+                valores= [lista],
+                combobox= True,
+                command=lambda :asignar_obra(obr)
+                
+            )
+            obr.place(relheight= 1, relwidth= 1)
+            texto = Obra.generarTabla1()
+
+            tree = ttk.Treeview(frame_central, columns=("Nombre", "Género", "Duración", "Precio"), show="headings",height=5)
+
+            # Configurar encabezados
+            tree.heading("Nombre", text="Nombre")
+            tree.heading("Género", text="Género")
+            tree.heading("Duración", text="Duración")
+            tree.heading("Precio", text="Precio")
+
+            # Ajustar tamaños de columnas
+            tree.column("Nombre", width=180)
+            tree.column("Género", width=100)
+            tree.column("Duración", width=80)
+            tree.column("Precio", width=100, anchor="e")  # Alinear precios a la derecha
+
+            # Scrollbar vertical
+            scrollbar = ttk.Scrollbar(frame_central, orient="vertical", command=tree.yview)
+            tree.configure(yscrollcommand=scrollbar.set)
+
+            # Ubicar Treeview y Scrollbar en la ventana
+            tree.place(relx=0.2,rely=0.3,relwidth=0.7, relheight=0.3)
+            scrollbar.place(relx=0.90,rely=0.3, relwidth=0.03, relheight=0.3)
+
+            # Agregar datos al Treeview
+            for obra in Teatro.getInstancia().getObras():
+                tree.insert("", "end", values=(obra.getNombre(),"comedia", "10:00", "1.000"))
+
+
+
+        def asignar_obra(fieldframe :FieldFrame):
+            fieldframe.gatherEntries()
+            suscripcion = fieldframe.getValue("Eleccion")
+
+            global cliente
+
+            cliente.obra=suscripcion
+
+
+
+            
+
+
 
             
             
@@ -498,20 +668,20 @@ class Main:
         for widget in cls.content.winfo_children():
             widget.destroy()
         
-        frame_izq = tk.Frame(cls.content, bg="blue")
+        frame_izq = tk.Frame(cls.content, bg="slategray")
         frame_izq.place(relx=0, rely=0, relwidth=0.15, relheight=1)  # Se ubica en la izquierda
 
         # Frame derecho
-        frame_der = tk.Frame(cls.content, bg="blue")
+        frame_der = tk.Frame(cls.content, bg="slategray")
         frame_der.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
 
         top_frame = Frame(cls.content,background="black")
         top_frame.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
 
-        frame_central = tk.Frame(cls.content, bg="white")
+        frame_central = tk.Frame(cls.content, bg="slategray1")
         frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
 
-        frame_central = tk.Frame(cls.content, bg="white")
+        frame_central = tk.Frame(cls.content, bg="slategray1")
         frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
 
         top_label = tk.Label(top_frame,text="Venta de tiquetes",font=("Calibri", 25), bg="black",fg="white")
@@ -522,7 +692,7 @@ class Main:
             lambda e: cls.resize(top_frame,top_label, 60, 100)
         )"""
 
-        label = tk.Label(cls.content,text="Eres un cliente nuevo?", font=("Calibri", 25), fg="black",bg="white")
+        label = tk.Label(cls.content,text="Eres un cliente nuevo?", font=("Calibri", 25), fg="black",bg="slategray1")
         label.place(relx=0.5, rely=0.3, anchor="center")
 
         Button_Si = tk.Button(cls.content, text="Si", font=("Calibri", 15),command=Usuario_Nuevo)
@@ -1376,7 +1546,7 @@ class Main:
         frame_bienvenida = Frame(cls.content, bg="red")
         frame_bienvenida.place(relx=0, rely=0, relwidth=1, relheight=0.1)
         saludo = tk.Label(frame_bienvenida,
-                            text="Bienvenido a la gestión de clases",
+                            text="Gestion de clases",
                             font=("Calibri", 16),
                             bg="black", fg="white")
         saludo.place(relx=0, rely=0, relwidth=1, relheight=1)
@@ -1421,6 +1591,7 @@ class Main:
             btn_buscar.pack(pady=10)
 
         # -------------------- PASO 2: Procesar el ID ingresado --------------------
+        '''AVALADA'''
         def process_artist(id_str):
             try:
                 id_num = int(id_str)
@@ -1434,6 +1605,7 @@ class Main:
                 step_artist_found(artista)
 
         # -------------------- PASO 3: Artista no encontrado --------------------
+        '''AVALADA'''
         def step_artist_not_found(id_num):
             for widget in process_frame.winfo_children():
                 widget.destroy()
@@ -1444,25 +1616,82 @@ class Main:
             tk.Button(process_frame, text="Sí", font=("Calibri", 14),
                         command=lambda: step_create_artist(id_num)).pack(pady=5)
             tk.Button(process_frame, text="No", font=("Calibri", 14),
-                        command=lambda: Obra.mostrarObrasCriticas()).pack(pady=5)
+                        command=lambda: step_show_obras_criticas_and_fin()).pack(pady=5)
+
+        # -------------------- MÉTODO REQUERIDO: Obras críticas y terminar -------------------- 
+        '''AVALADA'''
+        def step_show_obras_criticas_and_fin():
+            # Limpia el frame donde se mostrará la información
+            for widget in process_frame.winfo_children():
+                widget.destroy()
+            
+            # Se llama al método de clase que retorna la lista de obras críticas.
+            # Asegúrate de que Obra.mostrarObrasCriticas() esté decorado con @classmethod y retorne una lista.
+            obras_criticas = Obra.mostrarObrasCriticas()  
+            if not obras_criticas:
+                tk.Label(process_frame, text="No hay obras en estado crítico en el teatro.",
+                        font=("Calibri", 20), bg="white", fg="yellow").pack(pady=10)
+            else:
+                tk.Label(process_frame, text="Obras en estado crítico del teatro:",
+                        font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
+                txt_obras = tk.Text(process_frame, height=10, width=80, font=("Calibri", 12))
+                txt_obras.pack(pady=10)
+                # Itera sobre la lista de obras y agrega una línea para cada obra
+                for obra in obras_criticas:
+                    # Se asume que cada obra tiene métodos getNombre() y promedioCalificacion()
+                    linea = f"- '{obra.getNombre()}' (Promedio: {obra.promedioCalificacion()})\n"
+                    txt_obras.insert("end", linea)
+                txt_obras.config(state="disabled")
+            
+            # Puedes agregar un botón para continuar o regresar al menú principal
+            tk.Label(process_frame, text="Fin de la funcionalidad",
+                        font=("Calibri", 14), bg="white").pack(pady=10)
+            tk.Button(process_frame, text="Salir del sistema", font=("Calibri", 14),
+                    command=cls.volver).pack(pady=10)
+
+        # -------------------- MÉTODO REQUERIDO: Obras críticas --------------------            
+        def step_show_obras_criticas():
+            # Limpia el frame donde se mostrará la información
+            for widget in process_frame.winfo_children():
+                widget.destroy()
+            
+            # Se llama al método de clase que retorna la lista de obras críticas.
+            obras_criticas = Obra.mostrarObrasCriticas()  
+            if not obras_criticas:
+                tk.Label(process_frame, text="No hay obras en estado crítico en el teatro.",
+                        font=("Calibri", 14), bg="white", fg="yellow").pack(pady=10)
+            else:
+                tk.Label(process_frame, text="Obras en estado crítico del teatro:",
+                        font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
+                txt_obras = tk.Text(process_frame, height=10, width=80, font=("Calibri", 12))
+                txt_obras.pack(pady=10)
+                # Itera sobre la lista de obras y agrega una línea para cada obra
+                for obra in obras_criticas:
+                    # Se asume que cada obra tiene métodos getNombre() y promedioCalificacion()
+                    linea = f"- '{obra.getNombre()}' (Promedio: {obra.promedioCalificacion()})\n"
+                    txt_obras.insert("end", linea)
+                txt_obras.config(state="disabled")
 
         # -------------------- PASO 4: Crear nuevo artista --------------------
+        '''AVALADA'''
         def step_create_artist(id_num):
             for widget in process_frame.winfo_children():
                 widget.destroy()
-            tk.Label(process_frame, text=f"Creación de nuevo Artista con ID {id_num}",
-                    font=("Calibri", 14), bg="white").pack(pady=10)
-            tk.Label(process_frame, text="Ingrese el nombre del nuevo artista:",
-                    font=("Calibri", 14), bg="white").pack(pady=5)
-            entry_nombre = tk.Entry(process_frame, font=("Calibri", 14))
-            entry_nombre.pack(pady=5)
-            tk.Label(process_frame, text="Ingrese el tipo de artista (director/actor):",
-                    font=("Calibri", 14), bg="white").pack(pady=5)
-            entry_tipo = tk.Entry(process_frame, font=("Calibri", 14))
-            entry_tipo.pack(pady=5)
-            tk.Label(process_frame, text="(Para actor se pedirá la edad)", font=("Calibri", 12), bg="white").pack(pady=5)
-            tk.Button(process_frame, text="Guardar", font=("Calibri", 14),
-                    command=lambda: process_new_artist(id_num, entry_nombre.get(), entry_tipo.get())).pack(pady=10)
+            # Configuramos los criterios y valores iniciales para ingresar el nombre y el tipo de artista
+            criterios = ["Nombre", "Tipo de artista"]
+            valores = ["", ""]  # valores vacíos inicialmente
+            # Se crea el FieldFrame; al presionar "Guardar" se llamará a la función lambda
+            # que invoca process_new_artist con los datos ingresados.
+            ff = FieldFrame(process_frame,
+                            tituloCriterios="Datos del nuevo artista",
+                            criterios=criterios,
+                            tituloValores="Ingrese valor",
+                            valores=valores,
+                            combobox=False,
+                            command=lambda: (ff.gatherEntries(), process_new_artist(id_num, ff.valores[0], ff.valores[1])))
+            ff.pack(pady=10, fill="both", expand=True)
+            tk.Label(process_frame, text="(Si se ingresa 'actor' se pedirá la edad posteriormente)",
+                    font=("Calibri", 12), bg="white").pack(pady=5)
 
         def process_new_artist(id_num, nombre, tipo):
             tipo = tipo.lower().strip()
@@ -1474,7 +1703,13 @@ class Main:
                 # Ejemplo: Director(nombre, id_num)
                 director = Director(nombre, id_num)
                 messagebox.showinfo("Éxito", f"Nuevo director agregado: {nombre} con ID {id_num}.\nLos directores no reciben clases.")
-                cls.volver()  # Regresa al menú principal
+                for widget in process_frame.winfo_children():
+                    widget.destroy()
+                tk.Label(process_frame, text="Fin de la funcionalidad",
+                            font=("Calibri", 14), bg="white").pack(pady=10)
+                tk.Button(process_frame, text="Salir del sistema", font=("Calibri", 14),
+                        command=cls.volver).pack(pady=10)
+
             else:
                 for widget in process_frame.winfo_children():
                     widget.destroy()
@@ -1494,16 +1729,16 @@ class Main:
             if edad < 4 or edad > 80:
                 messagebox.showerror("Error", "La edad debe estar entre 4 y 80 años.")
                 return
-            # Se crea el actor (se asume que Actor(nombre, id_num, edad) lo agrega a la lista de actores)
             actor = Actor(nombre, id_num, edad)
             messagebox.showinfo("Éxito", f"Nuevo actor agregado: {nombre} con ID {id_num} y edad {edad}.")
             step_artist_found(actor)
 
         # -------------------- PASO 5: Artista encontrado --------------------
+        '''Avalada'''
         def step_artist_found(artista):
             for widget in process_frame.winfo_children():
                 widget.destroy()
-            if not hasattr(artista, "edad"):
+            if isinstance(artista, Director):
                 tk.Label(process_frame, text="El artista es un Director. Los directores no reciben clases.",
                         font=("Calibri", 14), bg="white", fg="yellow").pack(pady=10)
                 tk.Button(process_frame, text="Finalizar", font=("Calibri", 14),
@@ -1511,7 +1746,7 @@ class Main:
             else:
                 # Si el actor no tiene calificaciones, se inicializan
                 if artista.sigueIgual():
-                    resultado = Teatro.getInstancia().casting(artista, Teatro.getInstancia().getTipoProfesor())
+                    resultado = Empleado.casting(artista, Teatro.getInstancia().getTipoProfesor())
                     if not resultado:
                         messagebox.showerror("Error", "No hay profesores disponibles para inicializar las calificaciones del actor.")
                     else:
@@ -1528,7 +1763,7 @@ class Main:
                 # Mostrar obras críticas
                 tk.Label(process_frame, text="Obras en estado crítico del teatro:",
                         font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
-                obras = Teatro.getInstancia().mostrarObrasCriticas()  # Se asume que este método existe
+                obras = Obra.mostrarObrasCriticas()  # Se asume que este método existe
                 if not obras:
                     tk.Label(process_frame, text="No hay obras en estado crítico.",
                             font=("Calibri", 14), bg="white", fg="yellow").pack(pady=5)
@@ -1541,8 +1776,12 @@ class Main:
                     txt_obras.config(state="disabled")
                 tk.Button(process_frame, text="Programar clase", font=("Calibri", 14),
                             command=lambda: step_select_area(artista)).pack(pady=10)
+                
+                tk.Button(process_frame, text="Salir del sistema", font=("Calibri", 14),
+                command=cls.volver).pack(pady=10)
 
         # -------------------- PASO 6: Seleccionar área de mejora --------------------
+        '''AVALADA'''
         def step_select_area(actor):
             for widget in process_frame.winfo_children():
                 widget.destroy()
@@ -1553,7 +1792,7 @@ class Main:
                 return
             txt_areas = tk.Text(process_frame, height=6, width=80, font=("Calibri", 12))
             txt_areas.pack(pady=10)
-            txt_areas.insert("end", "Áreas recomendadas para mejorar:\n")
+            txt_areas.insert("end", "Áreas recomendadas para mejorar del actor " + actor.getNombre() + ":\n")
             for i, area in enumerate(areas_recomendadas[:3]):
                 cal = actor.getCalificacionPorAptitud(area)
                 txt_areas.insert("end", f"{i+1}. {area} (Calificación: {cal})\n")
@@ -1566,18 +1805,20 @@ class Main:
                     command=lambda: step_select_custom_area(actor)).pack(pady=5)
 
         # -------------------- PASO 7: Selección personalizada de área --------------------
+        '''AVALADA'''
         def step_select_custom_area(actor):
             for widget in process_frame.winfo_children():
                 widget.destroy()
             tk.Label(process_frame, text="Seleccione el área para programar la clase:",
                     font=("Calibri", 14), bg="white").pack(pady=10)
-            areas = actor.getAptitudes()  # Se asume que retorna todas las aptitudes
-            var_area = tk.StringVar(value=areas[0] if areas else "")
-            for area in areas:
-                tk.Radiobutton(process_frame, text=str(area), variable=var_area,
-                                value=area, font=("Calibri", 12), bg="white").pack(anchor="w", padx=20)
+            areas = actor.getAptitudes()  # Lista de objetos Aptitud
+            var_index = tk.IntVar(value=0)
+            # Crear radiobuttons usando el índice
+            for i, area in enumerate(areas):
+                tk.Radiobutton(process_frame, text=str(area), variable=var_index,
+                            value=i, font=("Calibri", 12), bg="white").pack(anchor="w", padx=20)
             tk.Button(process_frame, text="Siguiente", font=("Calibri", 14),
-                        command=lambda: step_schedule_class(actor, var_area.get())).pack(pady=10)
+                    command=lambda: step_schedule_class(actor, areas[var_index.get()])).pack(pady=10)
 
         # -------------------- PASO 8: Programar la clase (solicitar horario) --------------------
         def step_schedule_class(actor, areaSeleccionada):

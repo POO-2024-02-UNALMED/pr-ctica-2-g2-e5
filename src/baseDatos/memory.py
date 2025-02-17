@@ -10,7 +10,7 @@ def resetMemory():
 
     Cliente(id = 426, tipo= "Empresa")
 
-    actor1 = Actor("Pedro Pascal", 10292122)
+    actor1 = Actor("Pedro Pascal", 10292122, 49)
     genres = [Genero.COMEDIA, Genero.CIRCO]
     actor1.setGeneros(genres)
     actor1.setCalificacion(4.1)
@@ -19,14 +19,14 @@ def resetMemory():
     actor1.setCalificacionPorAptitud(Aptitud.IMPROVISACION, 4.2)
 
     genres.append(Genero.DRAMA)
-    actor2 = Actor("Eddie Murphy", 9032723)
+    actor2 = Actor("Eddie Murphy", 9032723, 63)
     actor2.setGeneros(genres)
     actor2.setCalificacion(3.8)
     actor2.setSexo("Masculino")
     actor2.setEdad(62)
 
     genres.append(Genero.EXPERIMENTAL)
-    actor3 = Actor("Emma Stone", 90234243)
+    actor3 = Actor("Emma Stone", 90234243, 36)
     actor3.setGeneros(genres)
     actor3.setCalificacion(4.6)
     actor3.setSexo("Femenino")
@@ -34,7 +34,7 @@ def resetMemory():
     actor3.setCalificacionPorAptitud(Aptitud.IMPROVISACION, 4.4)
 
     genres.append(Genero.FANTASIA)
-    actor4 = Actor("Antonio Banderas", 90234263)
+    actor4 = Actor("Antonio Banderas", 90234263, 64)
     actor4.setGeneros(genres)
     actor4.setCalificacion(4.7)
     actor4.setSexo("Masculino")
@@ -42,33 +42,33 @@ def resetMemory():
     actor4.setCalificacionPorAptitud(Aptitud.IMPROVISACION, 3.9)
 
     genres.append(Genero.MUSICAL)
-    actor5 = Actor("Samuel L. Jackson", 91234203)
+    actor5 = Actor("Samuel L. Jackson", 91234203, 76)
     actor5.setGeneros(genres)
     actor5.setCalificacion(5.0)
     actor5.setSexo("Masculino")
     actor5.setEdad(76)
 
     genres.append(Genero.ROMANCE)
-    actor6 = Actor("Orson Welles", 90230543)
+    actor6 = Actor("Orson Welles", 90230543, 70)
     actor6.setGeneros(genres)
     actor6.setCalificacion(4.2)
     actor6.setSexo("Masculino")
     actor6.setEdad(85)
 
     genres.append(Genero.TERROR)
-    actor7 = Actor("John Travolta", 60234243)
+    actor7 = Actor("John Travolta", 60234243, 70)
     actor7.setGeneros(genres)
     actor7.setCalificacion(4.5)
     actor7.setSexo("Masculino")
     actor7.setEdad(70)
 
-    actor8 = Actor("Carmen Maura", 90456243)
+    actor8 = Actor("Carmen Maura", 90456243, 79)
     actor8.setGeneros(genres)
     actor8.setCalificacion(4.3)
     actor8.setSexo("Femenino")
     actor8.setEdad(79)
 
-    actor9 = Actor("Florina Lemaitre", 9076243)
+    actor9 = Actor("Florina Lemaitre", 9076243, 73)
     actor9.setGeneros(genres)
     actor9.setCalificacion(3.9)
     actor9.setSexo("Femenino")

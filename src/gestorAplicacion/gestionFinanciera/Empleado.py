@@ -38,7 +38,8 @@ class Empleado:
             return False
     
     #Casting
-    def casting(self, artista, profesores):
+    @staticmethod
+    def casting(artista, profesores):
         from gestorAplicacion.gestionObras.Actor import Actor
         if not isinstance(artista, Actor):
             return False

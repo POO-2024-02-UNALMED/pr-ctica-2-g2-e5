@@ -12,7 +12,7 @@ class Actor(Artista):
     TASA = 1_000_000
     __BAJA_CALIFICACION = 3
 
-    def __init__(self, nombre: str, id: int):
+    def __init__(self, nombre: str, id: int, edad: int):
         super().__init__(nombre, id)
 
         self.__generos = []
@@ -21,7 +21,7 @@ class Actor(Artista):
         self.__reevaluacion = False
         self.__precioContrato = None
         self.__sexo = None
-        self.__edad = None
+        self.__edad = edad
 
         # segun las aptitudes que estén en el enum
         self.__aptitudes = [aptitud for aptitud in Aptitud]
@@ -52,14 +52,14 @@ class Actor(Artista):
 
     #halla la posición de la aptitud en la lista aptitudes y devuelve el indice correspondiente en
     # calificacionesAptitudes
-    def getCalificacionPorAptitud(self, aptitud: Aptitud) -> int:
+    def getCalificacionPorAptitud(self, aptitud: Aptitud) -> float:
         index = self.__aptitudes.index(aptitud)
         if index != -1:
             return self.__calificacionesAptitudes[index]
         else:
             return -1
 
-    def compare(a: float, b: float) -> int:
+    def compare(self, a: float, b: float) -> int:
         if a < b: 
             return -1
         elif a > b: 
