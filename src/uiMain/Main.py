@@ -390,14 +390,7 @@ class Main:
 
     @classmethod
     def gestionVentas(cls):
-        obra1 = Obra(nombre="pepe")
-        obra2 = Obra(nombre="dante")
-        obra3 = Obra(nombre="labella")
-        sala=Sala()
-                    
-        funcion1 = Funcion(obra=obra1,horario="12:00",sillas=sala.create_sillas(32))
-        funcion2 = Funcion(obra=obra1,horario="14:00",sillas=sala.create_sillas(8))
-        funcion3 = Funcion(obra=obra1,horario="13:00",sillas=sala.create_sillas(16))
+
         for i in Teatro.getInstancia().getClientes():
             print(i.getId())
 
@@ -749,7 +742,10 @@ class Main:
                     print(len(sillas))
 
             def boton_presionado(numero):
-                print(f"Botón {numero} presionado")
+                pregun = messagebox.askyesno("Eleccion",f"seleccionaste las silla  {numero}")
+                if pregun :
+                    print("bueno")
+
 
             for i in range(len(sillas)):
                 fila = i // 8  # Calcula en qué fila va

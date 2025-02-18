@@ -1,4 +1,8 @@
 from baseDatos.Teatro import Teatro
+from gestorAplicacion.gestionObras.Obra import Obra
+from gestorAplicacion.gestionVentas.Funcion import Funcion
+from gestorAplicacion.gestionVentas.Sala import Sala
+
 from gestorAplicacion.gestionVentas.Cliente import Cliente
 from gestorAplicacion.gestionObras.Actor import Actor
 from gestorAplicacion.herramientas.Genero import Genero
@@ -79,5 +83,14 @@ def resetMemory():
                      cuenta_bancaria= CuentaBancaria(246, 0))
     warner.getHistorial().append(actor3)
     warner.getCuentaBancaria().ingresar(3_700_000)
+
+    obra1 = Obra(nombre="pepe")
+    obra2 = Obra(nombre="dante")
+    obra3 = Obra(nombre="labella")
+    sala=Sala()
+                    
+    funcion1 = Funcion(obra=obra1,horario="12:00",sillas=sala.create_sillas(32))
+    funcion2 = Funcion(obra=obra1,horario="14:00",sillas=sala.create_sillas(8))
+    funcion3 = Funcion(obra=obra1,horario="13:00",sillas=sala.create_sillas(16))
 
     print("Base de datos reinicializada")
