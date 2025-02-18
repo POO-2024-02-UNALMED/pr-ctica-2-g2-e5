@@ -1,3 +1,4 @@
+from datetime import datetime
 from baseDatos.Teatro import Teatro
 from gestorAplicacion.gestionObras.Obra import Obra
 from gestorAplicacion.gestionVentas.Funcion import Funcion
@@ -89,8 +90,9 @@ def resetMemory():
     obra3 = Obra(nombre="labella")
     sala=Sala()
                     
-    funcion1 = Funcion(obra=obra1,horario="12:00",sillas=sala.create_sillas(32))
-    funcion2 = Funcion(obra=obra1,horario="14:00",sillas=sala.create_sillas(8))
-    funcion3 = Funcion(obra=obra1,horario="13:00",sillas=sala.create_sillas(16))
+    funcion1 = Funcion(obra=obra1,horario=datetime(2025, 2, 17, 14, 30),sillas=sala.create_sillas(32))
+    funcion2 = Funcion(obra=obra1,horario=datetime(2025, 2, 18, 14, 30),sillas=sala.create_sillas(8))
+    funcion3 = Funcion(obra=obra1,horario=datetime(2025, 2, 19, 14, 30),sillas=sala.create_sillas(16))
+
 
     print("Base de datos reinicializada")

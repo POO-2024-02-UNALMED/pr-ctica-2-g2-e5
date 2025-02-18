@@ -732,26 +732,55 @@ class Main:
             frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
 
             frame_botones = tk.Frame((frame_central), bg="slategray2")
-            frame_botones.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.60)
+            frame_botones.place(relx=0.15, rely=0.1, relwidth=0.80, relheight=0.60)
 
             for funcion in Teatro.getInstancia().getFuncionesCreadas():
                 
-                if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getHorario() == fecha:
+                
+                if not funcion.getObra().getNombre() =="NOTFORITE" and str(funcion.getHorario()) == fecha:
+                    print(1)
                     global sillas
+                    global funcion_elegida
+                    funcion_elegida = funcion
                     sillas = funcion.getSillas()
                     print(len(sillas))
 
             def boton_presionado(numero):
                 pregun = messagebox.askyesno("Eleccion",f"seleccionaste las silla  {numero}")
                 if pregun :
-                    print("bueno")
+                    indi = 0
+                    for i in funcion_elegida.getSillas():
+                    
+                        if i.getCodigo()==numero:
+                            funcion_elegida.getSillas()[indi].setCodigo("----")
+
+                        
+                        indi += 1
+                    imprimir_factura(numero)
+                            
+                    
 
 
             for i in range(len(sillas)):
                 fila = i // 8  # Calcula en qué fila va
                 columna = i % 8  # Calcula en qué columna va
-                btn = tk.Button(frame_botones, text=f"Btn {i+1}", command=lambda i=i: boton_presionado(i+1))
-                btn.grid(row=fila, column=columna, padx=5, pady=5)
+                if sillas[i].getCodigo()=="----":
+                    btn = tk.Button(frame_botones, text=f"{sillas[i].getCodigo()}", command=lambda i=i: boton_presionado(sillas[i].getCodigo()),state=tk.DISABLED)
+                    btn.grid(row=fila, column=columna, padx=5, pady=5)
+                else:    
+                    btn = tk.Button(frame_botones, text=f"{sillas[i].getTipo().value[0:2]} {sillas[i].getCodigo()}", command=lambda i=i: boton_presionado(sillas[i].getCodigo()))
+                    btn.grid(row=fila, column=columna, padx=5, pady=5)
+
+            def imprimir_factura(numero):
+                widget = cls.content.nametowidget("central") 
+                widget.destroy()
+                global frame_central
+
+                frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
+                frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+
+
+            
             
 
 
