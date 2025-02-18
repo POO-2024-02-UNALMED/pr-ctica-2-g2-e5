@@ -1172,17 +1172,17 @@ class Main:
                 # 2 informacion de los de seguridad
                 infoSeguridad = tk.Frame(f1, bg="#ffb48a")
                 infoSeguridad.place(relx = 0, rely=0.1, relwidth=1, relheight=0.45, anchor="nw")
-                info2 = tk.Frame(infoSeguridad, bg="#571F1C")
+                info2 = tk.Frame(infoSeguridad, bg="#5d2417")
                 info2.place(relx=0, rely=0, relwidth=1, relheight=0.15)
-                infoS = tk.Label(info2, text="Asignacion para Seguridad", font=("Calibri", 12), bg="#571F1C", fg="white")
+                infoS = tk.Label(info2, text="Asignacion para Seguridad", font=("Calibri", 12), bg="#5d2417", fg="white")
                 infoS.place(relx=0.5, rely=0.5, anchor="center")
 
                 # 3 informacion de los Aseadores
-                infoAseador = tk.Frame(f1, bg="White")
+                infoAseador = tk.Frame(f1, bg="#ffb48a")
                 infoAseador.place(relx=0, rely=0.55, relwidth=1, relheight=0.45, anchor="nw")
-                info3 = tk.Frame(infoAseador, bg="#571F1C")
+                info3 = tk.Frame(infoAseador, bg="#5d2417")
                 info3.place(relx=0, rely=0, relwidth=1, relheight=0.15)
-                infoA = tk.Label(info3, text="Asignacion para Aseador", font=("Calibri", 12), bg="#571F1C", fg="white")
+                infoA = tk.Label(info3, text="Asignacion para Aseador", font=("Calibri", 12), bg="#5d2417", fg="white")
                 infoA.place(relx=0.5, rely=0.5, anchor="center")
 
                 #ordenar listas
@@ -1210,7 +1210,7 @@ class Main:
                     funcionXTrabajador = 0
                     if totalTrabajadores_S != 0:
                         funcionXTrabajador = totalFunciones//totalTrabajadores_S
-                    funcionesDisponibles = Teatro.getInstancia().getFuncionesCreadas()
+                    funcionesDisponibles = list(Teatro.getInstancia().getFuncionesCreadas())
                     try:
                         funcionesDisponibles.sort(key=lambda f : f.getHorario()[0])
                     except Exception as e:
@@ -1288,7 +1288,7 @@ class Main:
                             #Evaluacion de Salas sin trabajador
                             if funcionesDisponibles != 0:
                                 for Persona in Teatro.getInstancia().getTipoSeguridad():
-                                    localTime = Persona.getHorario()
+                                    localTime = list(Persona.getHorario())
                                     i = 0
                                     while i < len(funcionesDisponibles):
                                         Funciones = funcionesDisponibles[i]
@@ -1342,10 +1342,10 @@ class Main:
                         #No todos son principiantes
                         else:
                             try:
-                                funcionPorDuracion = Teatro.getInstancia().getFuncionesCreadas()
+                                funcionPorDuracion = list(Teatro.getInstancia().getFuncionesCreadas())
                                 funcionPorDuracion.sort(
                                     key = lambda f: (
-                                        -f.getHorario()[0].timestamp(),
+                                        f.getHorario()[0],
                                         -(f.getHorario()[1] - f.getHorario[0]).total_seconds()
                                     )
                                 )
@@ -1418,7 +1418,7 @@ class Main:
                             #Evaluacion de salas sin trabajador
                             if funcionesDisponibles != 0:
                                 for Persona in Teatro.getInstancia().getTipoSeguridad():
-                                    localTime = Persona.getHorario()
+                                    localTime = list(Persona.getHorario())
                                     i = 0
                                     while i < len(funcionesDisponibles):
                                         Funciones = funcionesDisponibles[i]
@@ -1926,7 +1926,278 @@ class Main:
                 f1.after(1000, lambda: asignarSeguridad())
                 
             def continuar3():
+                def actualizarSaldo():
+                    nuevo_saldo = "El saldo de tesoreria es: " + str(Teatro.getInstancia().getTesoreria().getCuenta().getSaldo())
+                    saldo.config(text=nuevo_saldo)
+                
                 cls.clear_frame(f1)
+                Fsaldo = tk.Frame(f1, bg="gray")
+                Fsaldo.place(relx=0, rely=0, relwidth=1, relheight=0.1, anchor="nw") 
+                Msaldo = "El saldo de tesoreria es: " + str(Teatro.getInstancia().getTesoreria().getCuenta().getSaldo())
+                saldo = tk.Label(Fsaldo, text=Msaldo, font=("Calibri", 14), bg= "gray")
+                saldo.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
+                contenido = tk.Frame(f1, bg= "#ffb48a")
+                contenido.place(relx=0, rely=0.1, relwidth=1, relheight=0.9, anchor="nw")
+                leftframe = tk.Frame(contenido, bg="#ffb48a")
+                leftframe.place(relx=0, rely=0, relwidth=0.5, relheight=1)
+                righframe = tk.Frame(contenido, bg = "#ffb48a")
+                righframe.place(relx=0.5, rely=0, relwidth=0.5, relheight=1)
+
+                #leftFrame = Ranking
+                Ranking = list(Teatro.getInstancia().getEmpleadosPorRendimiento())
+                Ranking = [E for E in Ranking if E.getMetaSemanal() >=0]
+                Ranking.sort(key=lambda E: E.getMetaSemanal(), reverse=True)
+                
+                RankingE = tk.Frame(leftframe, bg="#ffb48a")
+                RankingE.pack(side="top", fill="x", expand=True, padx=10)
+                Empleados = tk.Label(RankingE, text="Ranking Empleados", font=("Calibri", 14), bg="#ffb48a")
+                Empleados.pack(anchor="center", fill="both")
+
+                #Estilo tabla
+                style = ttk.Style()
+                style.configure("Treeview", background = "#ffb48a", relief = "solid", rowheight = 25)
+                style.configure("Treeview.Heading", background = "#ffb48a", foreground = "black", font = ("Calibri", 14, "bold"))
+
+                tablaE = ttk.Treeview(leftframe, columns=("Nombre", "IDs"), show="headings", style= "Treeview")
+                tablaE.heading("Nombre", text="Nombre")
+                tablaE.heading("IDs", text="IDs")
+                tablaE.column("Nombre", width=100, anchor="center")
+                tablaE.column("IDs", width=50, anchor="center")
+
+                for emp in Ranking:
+                    tablaE.insert("", "end", values=(emp.getNombre(), emp.getId()))
+                tablaE.pack(expand=True, fill="both", padx=15, pady=10)
+
+                #Frame derecho
+                question = tk.Frame(righframe, bg="#ffb48a")
+                question.place(relx=0, rely=0, relwidth=1, relheight=0.1)
+                ask = tk.Label(question, text="¿Deseas realizar los pagos?", font=("Calibri", 14), bg="#ffb48a")
+                ask.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
+                botones = tk.Frame(righframe, bg = "#ffb48a")
+                botones.place(relx=0, rely=0.1, relwidth=1, relheight=0.1)
+                button_yes = tk.Button(botones, bg="#571F1C", text = "Si", fg="White", font=("Calibri", 12))
+                button_yes.pack(side="left", fill="both", padx=15, pady=5, anchor="center", expand=True)
+                button_no = tk.Button(botones, bg="#571F1C", text = "No", fg="White", font=("Calibri", 12))
+                button_no.pack(side="left", fill="both", padx=15, pady=5, anchor="center", expand=True)
+
+                def yes():
+                    cls.clear_frame(righframe)
+                    fondos= Teatro.getInstancia().getTesoreria().getCuenta().getSaldo()
+                    totalSaldos = 0
+                    for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                        totalSaldos = totalSaldos + Persona.calcularSueldo()
+                    #Realizar pago
+                    if totalSaldos > fondos:
+                        Cuentas_Pagadas = []
+                        cantPagada = 0
+                        linea = 0.2
+                        tk.Label(righframe, text="Upps ... No se puede realizar los pagos adecuadamente", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=0, relwidth=1, relheight=0.1)
+                        tk.Label(righframe, text="Realizando pagos de manera equitativa", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=0.1, relwidth=1, relheight=0.1)
+                        for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                            transaccion = Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), (Persona.getDeuda() + Persona.calcularSueldo()) *0.5)
+                        if transaccion:
+                            cantPagada = cantPagada + ((Persona.calcularSueldo() + Persona.getDeuda())*0.5)
+                            Persona.setDeuda((Persona.getDeuda() + (Persona.calcularSueldo() + Persona.getDeuda())* 0.5))
+                            Cuentas_Pagadas.append(Persona)
+                        else:
+                            tk.Label(righframe, text="No se le puede pagar a: " + Persona.getNombre() + ", se le establecio una nueva deuda", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                            Persona.setDeuda(Persona.getDeuda() + Persona.calcularSueldo())
+                            linea += 0.1
+                        tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                        linea += 0.1
+                        msg = "Se pago un total de: " + str(cantPagada)
+                        tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                        linea += 0.1
+                        tk.Label(righframe, text="Se realizo el pago a " + str(len(Cuentas_Pagadas)), font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                        linea += 0.1
+                        actualizarSaldo()
+                        Cuentas_Pagadas = []
+                    else:
+                        #Verificacion Fondos Bonificacion
+                        totalSaldos = 0
+                        cantPagada = 0
+                        linea = 0
+                        if Teatro.getInstancia().getTesoreria().verificacionMeta() != True:
+                            for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                                if Persona.verificacionMeta():
+                                    Persona.setMetaSemanal(Persona.getMetaSemanal() + 10)
+                                    totalSaldos = totalSaldos + ((Persona.calcularSueldo() * 1.15) + Persona.getDeuda())
+                                else:
+                                    Persona.setMetaSemanal(Persona.getMetaSemanal()-5)
+                                    totalSaldos = totalSaldos + (Persona.calcularSueldo() + Persona.getDeuda())
+                            #Realizacion Pagos
+                            if totalSaldos > fondos:
+                                totalSaldos = 0
+                                tk.Label(righframe, text="Ups... No se pueden aplicar las bonificaciones personales", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                linea += 0.1
+                                tk.Label(righframe, text="Realizando Pagos", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                linea += 0.1
+                                for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                                    cantPagada = cantPagada + (Persona.calcularSueldo() + Persona.getDeuda())
+                                    totalSaldos = totalSaldos + Persona.calcularSueldo()
+                                #Pago solo sueldo Base
+                                if cantPagada > fondos:
+                                    tk.Label(righframe, text="No se pudo realizar los pagos junto a la deuda", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    linea += 0.1
+                                    tk.Label(righframe, text="Realizando Pago del Sueldo Base", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    linea += 0.1
+                                    for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                                        Teatro.getInstancia().getTesoreria().pagarSueldoBase(Persona.getCuenta(), Persona.calcularSueldo())
+                                    tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    linea += 0.1
+                                    msg = "Se pago un total de: " + str(totalSaldos)
+                                    tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    linea += 0.1
+                                    tk.Label(righframe, text="Se realizo el pago a: " + len(Teatro.getInstancia().getEmpleadosPorRendimiento()) + " cuentas en total", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    actualizarSaldo()
+                                    for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                                        if Persona.verificacionMeta:
+                                            Persona.setDeuda(Persona.getDeuda() + Persona.calcularSueldo()*0.15)
+                                else:
+                                    #Pago sueldo + deuda
+                                    for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                                        Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), Persona.getDeuda() + Persona.calcularSueldo())
+                                    tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    linea += 0.1
+                                    msg = "Se pago un total de: " + str(cantPagada)
+                                    tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    linea += 0.1
+                                    tk.Label(righframe, text="Se realizo el pago a: " + len(Teatro.getInstancia().getEmpleadosPorRendimiento()) + " cuentas en total", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    actualizarSaldo()
+                            else:
+                                #Pago boni + deuda
+                                for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                                    if Persona.verificacionMeta:
+                                        Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), (Persona.calcularSueldo()*1.15) + Persona.getDeuda())
+                                    else:
+                                        Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), Persona.calcularSueldo() + Persona.getDeuda())
+                                tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                linea += 0.1
+                                msg = "Se pago un total de: " + str(totalSaldos)
+                                tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                linea += 0.1
+                                tk.Label(righframe, text="Se realizo el pago a: " + str(len(Teatro.getInstancia().getEmpleadosPorRendimiento())) + " cuentas en total", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                actualizarSaldo()
+                        else:
+                            for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                                if Persona.verificacionMeta():
+                                    Persona.setMetaSemanal(Persona.getMetaSemanal() + 10)
+                                    totalSaldos = totalSaldos + ((Persona.calcularSueldo() * 1.45) + Persona.getDeuda())
+                                else:
+                                    Persona.setMetaSemanal(Persona.getMetaSemanal()-5)
+                                    totalSaldos = totalSaldos + ((Persona.calcularSueldo() * 1.3) + Persona.getDeuda())
+                            #Sin fondos para todas las bonificacion
+                            if totalSaldos > fondos:
+                                totalSaldos = 0
+                                for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                                    if Persona.verificacionMeta():
+                                        Persona.setMetaSemanal(Persona.getMetaSemanal() + 10)
+                                        totalSaldos = totalSaldos + ((Persona.calcularSueldo() * 1.15) + Persona.getDeuda())
+                                    else:
+                                        Persona.setMetaSemanal(Persona.getMetaSemanal()-5)
+                                        totalSaldos = totalSaldos + (Persona.calcularSueldo() + Persona.getDeuda())
+                                #Realizar Pagos
+                                if totalSaldos > fondos:
+                                    #Verificacion
+                                    totalSaldos = 0
+                                    tk.Label(righframe, text="Ups... No se pueden aplicar las bonificaciones personales", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    linea += 0.1
+                                    tk.Label(righframe, text="Realizando Pagos", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    linea += 0.1
+                                    for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                                        cantPagada = cantPagada + (Persona.calcularSueldo() + Persona.getDeuda())
+                                        totalSaldos = totalSaldos + Persona.calcularSueldo()
+                                    #Pago solo sueldo Base
+                                    if cantPagada > fondos:
+                                        tk.Label(righframe, text="No se pudo realizar los pagos junto a la deuda", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                        linea += 0.1
+                                        tk.Label(righframe, text="Realizando Pago del Sueldo Base", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                        linea += 0.1
+                                        for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                                            Teatro.getInstancia().getTesoreria().pagarSueldoBase(Persona.getCuenta(), Persona.calcularSueldo())
+                                        tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                        linea += 0.1
+                                        msg = "Se pago un total de: " + str(totalSaldos)
+                                        tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                        linea += 0.1
+                                        tk.Label(righframe, text="Se realizo el pago a: " + len(Teatro.getInstancia().getEmpleadosPorRendimiento()) + " cuentas en total", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                        actualizarSaldo()
+                                        for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                                            if Persona.verificacionMeta:
+                                                Persona.setDeuda(Persona.getDeuda() + Persona.calcularSueldo()*0.15)
+                                    else:
+                                        #Pago sueldo + deuda
+                                        for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                                            Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), Persona.getDeuda() + Persona.calcularSueldo())
+                                        tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                        linea += 0.1
+                                        msg = "Se pago un total de: " + str(cantPagada)
+                                        tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                        linea += 0.1
+                                        tk.Label(righframe, text="Se realizo el pago a: " + len(Teatro.getInstancia().getEmpleadosPorRendimiento()) + " cuentas en total", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                        actualizarSaldo()
+                                else:
+                                    #Pago boni + deuda
+                                    for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                                        if Persona.verificacionMeta:
+                                            Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), (Persona.calcularSueldo()*1.15) + Persona.getDeuda())
+                                        else:
+                                            Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), Persona.calcularSueldo() + Persona.getDeuda())
+                                    tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    linea += 0.1
+                                    msg = "Se pago un total de: " + str(totalSaldos)
+                                    tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    linea += 0.1
+                                    tk.Label(righframe, text="Se realizo el pago a: " + len(Teatro.getInstancia().getEmpleadosPorRendimiento()) + " cuentas en total", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    actualizarSaldo()
+                            else:
+                                for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                                    if Persona.verificacionMeta:
+                                        Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), (Persona.calcularSueldo()*1.45) + Persona.getDeuda())
+                                    else:
+                                        Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), (Persona.calcularSueldo() * 1.3) + Persona.getDeuda())
+                    
+                    #Reseteo de Trabajo
+                    for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                        Persona.setTrabajos([]);
+                        Persona.setTrabajoCorrecto([]);
+                        Persona.setTrabajoRealizado(0);
+                        Persona.setPuntosPositivos(0);
+
+                    righframe.after(2000, lambda: Despidos())
+
+
+                def Despidos():
+                    cls.clear_frame(righframe)
+                    Empleados = list(Teatro.getInstancia().getEmpleadosPorRendimiento())
+                    NuevaLista = list(Empleados)
+                    Despedidos = []
+
+                    msg = ""
+                    for Persona in Empleados:
+                        if Persona.getMetaSemanal() < 0:
+                            NuevaLista.remove(Persona)
+                            Despedidos.append(Persona)
+                            liquidacion = (Persona.calcularSueldo() * 1.2) + Persona.getDeuda()
+                            Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), liquidacion)
+                            msg = msg + Persona.getNombre() + "\n"
+                        continue
+                    Teatro.getInstancia().setEmpleadosPorRendimiento(NuevaLista)
+
+                    if Despedidos:
+                        titulo = tk.Label(righframe, text="Personas despedidas:")
+                        titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1, anchor="center")
+                        despedidos = tk.Label(righframe, text=msg, font=("Calibri", 14), bg="#ffb48a")
+                        despedidos.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
+                    
+                    button_salir = tk.Button(righframe, text="Salir", bg="#571F1C", fg="White", font=("Calibri", 12))
+                    button_salir.place(relx=0.7, rely=0.9, relwidth=0.3, relheight=0.1, anchor="center")
+                    button_salir.config(command=lambda: cls.gestionEmpleados())
+
+                button_yes.config(command=lambda: yes()) 
+                button_no.config(command=lambda: Despidos()) 
+
+            
                 
                 
             Anuncio.after(50, mostrarSaldo)
