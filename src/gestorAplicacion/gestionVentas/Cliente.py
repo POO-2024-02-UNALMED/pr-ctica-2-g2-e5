@@ -30,12 +30,31 @@ class Cliente(Persona):
                 return True
         return False
     
-    def verificar_suscripcion(self, s: str) -> bool:
-        b = {"G": 3, "P": 2, "C": 1, "B": 0}.get(s, 0)
+    def verificarSuscripcion(self, s):
+        a = 0
+        b = 0
         
-        suscripcion_niveles = {"Basica": 0, "Premium": 1, "Vip": 2, "Elite": 3}
-        a = suscripcion_niveles.get(self.cliente.suscripcion.name if self.cliente and self.cliente.suscripcion else "Basica", 0)
+        # Asignación de valores a 'b' según la suscripción ingresada
+        if s == "G":
+            b = 3
+        elif s == "P":
+            b = 2
+        elif s == "C":
+            b = 1
+        elif s == "B":
+            b = 0
         
+        # Asignación de valores a 'a' según la suscripción del cliente
+        if self.get_suscripcion() == "Basica":
+            a = 0
+        elif self.get_suscripcion() == "Premium":
+            a = 1
+        elif self.get_suscripcion() == "Vip":
+            a = 2
+        elif self.get_suscripcion() == "Elite":
+            a = 3
+        
+        # Comparación entre 'a' y 'b'
         return not (a >= b)
 
     def buscarPorId(id: int) -> Cliente | bool:

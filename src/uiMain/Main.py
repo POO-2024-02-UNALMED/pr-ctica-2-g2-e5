@@ -745,18 +745,22 @@ class Main:
                     sillas = funcion.getSillas()
                     print(len(sillas))
 
-            def boton_presionado(numero):
+            def boton_presionado(numero,l):
                 pregun = messagebox.askyesno("Eleccion",f"seleccionaste las silla  {numero}")
                 if pregun :
                     indi = 0
-                    for i in funcion_elegida.getSillas():
-                    
-                        if i.getCodigo()==numero:
-                            funcion_elegida.getSillas()[indi].setCodigo("----")
+                    if cliente.verificarSuscripcion(l):
+                        messagebox.showerror("Error", "no puede")
+                    else:
 
+                        for i in funcion_elegida.getSillas():
                         
-                        indi += 1
-                    imprimir_factura(numero)
+                            if i.getCodigo()==numero:
+                                funcion_elegida.getSillas()[indi].setCodigo("----")
+
+                            
+                            indi += 1
+                        imprimir_factura(numero)
                             
                     
 
@@ -765,10 +769,10 @@ class Main:
                 fila = i // 8  # Calcula en qué fila va
                 columna = i % 8  # Calcula en qué columna va
                 if sillas[i].getCodigo()=="----":
-                    btn = tk.Button(frame_botones, text=f"{sillas[i].getCodigo()}", command=lambda i=i: boton_presionado(sillas[i].getCodigo()),state=tk.DISABLED)
+                    btn = tk.Button(frame_botones, text=f"{sillas[i].getCodigo()}",state=tk.DISABLED)
                     btn.grid(row=fila, column=columna, padx=5, pady=5)
                 else:    
-                    btn = tk.Button(frame_botones, text=f"{sillas[i].getTipo().value[0:2]} {sillas[i].getCodigo()}", command=lambda i=i: boton_presionado(sillas[i].getCodigo()))
+                    btn = tk.Button(frame_botones, text=f"{sillas[i].getTipo().value[0:2]} {sillas[i].getCodigo()}", command=lambda i=i: boton_presionado(sillas[i].getCodigo(),sillas[i].getTipo().value[0]))
                     btn.grid(row=fila, column=columna, padx=5, pady=5)
 
             def imprimir_factura(numero):
