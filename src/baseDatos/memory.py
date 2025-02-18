@@ -90,9 +90,9 @@ def resetMemory():
     obra3 = Obra(nombre="labella")
     sala=Sala()
                     
-    funcion1 = Funcion(obra=obra1,horario=datetime(2025, 2, 17, 14, 30),sillas=sala.create_sillas(32))
-    funcion2 = Funcion(obra=obra1,horario=datetime(2025, 2, 18, 14, 30),sillas=sala.create_sillas(8))
-    funcion3 = Funcion(obra=obra1,horario=datetime(2025, 2, 19, 14, 30),sillas=sala.create_sillas(16))
+    funcion1 = Funcion(obra=obra1,horario=(datetime(2025, 2, 17, 14, 30),datetime(2025, 3, 17, 14, 30)),sillas=sala.create_sillas(32))
+    funcion2 = Funcion(obra=obra1,horario=(datetime(2025, 2, 18, 14, 30),datetime(2025, 3, 18, 14, 30)),sillas=sala.create_sillas(8))
+    funcion3 = Funcion(obra=obra1,horario=(datetime(2025, 2, 19, 14, 30),datetime(2025, 3, 19, 14, 30)),sillas=sala.create_sillas(16))
 
 
     print("Base de datos reinicializada")

@@ -544,7 +544,7 @@ class Main:
                 tituloCriterios= "tipos de suscripcion",
                 tituloValores= "Respuesta",
                 criterios=["Eleccion"],
-                valores= [["BASICA","PREMIUM","VIP","GOLD"]],
+                valores= [["BASICA","PREMIUM","VIP","ELITE"]],
                 combobox= True,
                 command=lambda :asignar_suscripcion(susc)
                 
@@ -684,7 +684,7 @@ class Main:
                 command=lambda :buscar_sillas(func)
                 
                 )
-                func.place(relheight= 1, relwidth= 1)
+                #func.place(relheight= 1, relwidth= 1)
 
 
                 tree = ttk.Treeview(frame_central, columns=("Nombre", "Horario"), show="headings",height=5)
@@ -710,10 +710,12 @@ class Main:
                     selected_item = tree.selection()  # Obtiene el ID del elemento seleccionado
                     if selected_item:
                         global item_values
+                        
                         item_values = tree.item(selected_item, "values")  # Obtiene los valores de la fila
                         pregun = False
                         pregun = messagebox.askyesno("Eleccion",f"seleccionaste el horario {item_values[1]}")
                         if pregun :
+                            
                             buscar_sillas(item_values[1])
                         
                 
@@ -723,6 +725,9 @@ class Main:
         
                    
         def buscar_sillas (fecha):
+            print(fecha)
+            fecha = fecha.strip("{")
+            fecha = fecha.split("}")[0]
             
             
             widget = cls.content.nametowidget("central") 
@@ -736,10 +741,11 @@ class Main:
             frame_botones.place(relx=0.15, rely=0.1, relwidth=0.80, relheight=0.60)
 
             for funcion in Teatro.getInstancia().getFuncionesCreadas():
-                
-                
-                if not funcion.getObra().getNombre() =="NOTFORITE" and str(funcion.getHorario()) == fecha:
-                    print(1)
+                print(funcion.getHorario()[0])
+                print(fecha)
+                if not funcion.getObra().getNombre() =="NOTFORITE" and str(funcion.getHorario()[0]) == fecha:
+                    
+                    print("Ss")
                     global sillas
                     global funcion_elegida
                     funcion_elegida = funcion
@@ -1590,10 +1596,10 @@ class Main:
                                                     sublista.append(inicioNuevo)
                                                     sublista.append(finNuevo)
                                                     localTime.append(sublista)
-                                                    if Funciones.getSala is not None:
+                                                    if Funciones.getSala() is not None:
                                                         Persona.getTrabajos().append(Funciones.getSala().getMetrosCuadrados())
                                                         Funciones.getSala().setAseado(True)
-                                                    funcionesLimpiadas.pop[i]
+                                                    funcionesLimpiadas.pop(i)
                                                 else:
                                                     i +=1
                                             else:
@@ -1607,13 +1613,13 @@ class Main:
                                                 sublista.append(finEmpleado)
                                                 #Se agrega a localTime
                                                 localTime.append(sublista)
-                                                funcionesLimpiadas.pop[i]
+                                                funcionesLimpiadas.pop(i)
                                                 if Funciones.getSala() is not None:
                                                     Persona.getTrabajos().append(Funciones.getSala().getMetrosCuadrados())
                                                     Funciones.getSala().setAseado(True)
                                         else:
                                             funcionesSinHorario += 1
-                                            funcionesLimpiadas.pop[i]
+                                            funcionesLimpiadas.pop(i)
                                     else:
                                         break
                                 
@@ -1662,7 +1668,7 @@ class Main:
                                             sublista.append(inicioNuevo)
                                             sublista.append(finNuevo)
                                             localTime.append(sublista)
-                                            funcionesLimpiadas.pop[i]
+                                            funcionesLimpiadas.pop(i)
                                             if Funciones.getSala() is not None:
                                                 Persona.getTrabajos().append(Funciones.getSala().getMetrosCuadrados())
                                                 Funciones.getSala().setAseado(True)
@@ -1730,7 +1736,7 @@ class Main:
                                                     if Funciones.getSala is not None:
                                                         Persona.getTrabajos().append(Funciones.getSala().getMetrosCuadrados())
                                                         Funciones.getSala().setAseado(True)
-                                                    funcionesLimpiadas.pop[i]
+                                                    funcionesLimpiadas.pop(i)
                                                 else:
                                                     i +=1
                                             else:
@@ -1744,13 +1750,13 @@ class Main:
                                                 sublista.append(finEmpleado)
                                                 #Se agrega a localTime
                                                 localTime.append(sublista)
-                                                funcionesLimpiadas.pop[i]
+                                                funcionesLimpiadas.pop(i)
                                                 if Funciones.getSala() is not None:
                                                     Persona.getTrabajos().append(Funciones.getSala().getMetrosCuadrados())
                                                     Funciones.getSala().setAseado(True)
                                         else:
                                             funcionesSinHorario += 1
-                                            funcionesLimpiadas.pop[i]
+                                            funcionesLimpiadas.pop(i)
                                     else:
                                         break
                                 
@@ -1799,7 +1805,7 @@ class Main:
                                             sublista.append(inicioNuevo)
                                             sublista.append(finNuevo)
                                             localTime.append(sublista)
-                                            funcionesLimpiadas.pop[i]
+                                            funcionesLimpiadas.pop(i)
                                             if Funciones.getSala() is not None:
                                                 Persona.getTrabajos().append(Funciones.getSala().getMetrosCuadrados())
                                                 Funciones.getSala().setAseado(True)
@@ -1809,7 +1815,7 @@ class Main:
                                     localTime.sort(key = lambda horario: horario[0])
                                     Persona.setHorario(localTime)
                     
-                            msg = "";
+                            msg = ""
                             for Persona in Teatro.getInstancia().getTipoAseador():
                                 if len(Persona.getHorario) == 1:
                                     msg = msg + Persona.getNombre() + " Limpiará: 1 vez\n"
