@@ -260,6 +260,7 @@ class Main:
             label = tk.Label(cls.programadorFrameBottom, image=img, bg="white")
             label.grid(row=idx // 2, column=idx % 2, sticky="nsew", padx=5, pady=5)
 
+
     @classmethod
     def abrir_nueva_ventana(cls):
         cls.root.destroy()
@@ -2275,15 +2276,31 @@ class Main:
         #frame derecho
         rightFrame = tk.Frame(cls.content, bg="blue")
         rightFrame.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
-
-        #frame inferior
-        bottomFrame = tk.Frame(cls.content, bg="black", padx=15, pady=20)
-        bottomFrame.place(relx=0.5, rely=0.80,anchor="center")
         
+        #frame inferior
+        bottomFrame = tk.Frame(cls.content, bg="white", padx=15, pady=20)
+        bottomFrame.place(relx=0.15, rely=0.9, relheight=0.2, relwidth=0.70)
+        
+        '''def redimensionar_imagen(event):
+            ancho = event.width
+            alto = event.height
+            # Redimensiona la imagen original al tamaño actual del frame
+            imagen_redimensionada = pil_image.resize((ancho, alto), Image.ANTIALIAS)
+            nueva_imagen = ImageTk.PhotoImage(imagen_redimensionada)
+            labelImagen.config(image=nueva_imagen)
+            labelImagen.image = nueva_imagen
+
+        pil_image = Image.open("src/media/Programadores/Perro2.png")
+        img = ImageTk.PhotoImage(pil_image)
+        labelImagen = tk.Label(bottomFrame, image=img)
+        labelImagen.place(relheight=1, relwidth=1)
+        
+        bottomFrame.bind("<Configure>", redimensionar_imagen)'''
+
         #frame central, donde irán todos los fieldframes
         centerFrame = tk.Frame(cls.content, bg="purple", padx=20, pady=20)
         centerFrame.place(relx=0.15, rely=0.1, relwidth=.7, relheight=.8)
-
+        
         #frame superior, que lleva el mensaje de bienvenida a la funcionalidad
         captionFrame = Frame(cls.content,background="black")
         captionFrame.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
@@ -2303,7 +2320,7 @@ class Main:
         #configurar el crecimiento adaptable de las columnas del frame central
         centerFrame.columnconfigure(0, weight=1) 
         centerFrame.columnconfigure(1, weight=1) 
-        
+
         #PREGUNTA NO. 1
         criteriosTipoEmpresa = ["Tipo de Empresa"]
         valoresTipoEmpresa = [["Empresa registrada", "Empresa nueva"]]
@@ -2959,10 +2976,7 @@ class Main:
                 messagebox.showinfo("Éxito", f"Nuevo director agregado: {nombre} con ID {id_num}.\nLos directores no reciben clases.")
                 for widget in process_frame.winfo_children():
                     widget.destroy()
-                tk.Label(process_frame, text="Fin de la funcionalidad",
-                            font=("Calibri", 14), bg="white").pack(pady=10)
-                tk.Button(process_frame, text="Salir del sistema", font=("Calibri", 14),
-                        command=cls.volver).pack(pady=10)
+                Main.gestionClases()
 
             else:
                 for widget in process_frame.winfo_children():
@@ -3110,29 +3124,22 @@ class Main:
                             criterios=["Día", "Inicio", "Fin"],
                             tituloValores="Valor",
                             valores=[day_options, "", ""],
-                            combobox=False)
-            ff.pack(pady=10, fill="x") 
-            ''' Quitar el botón "Guardar"
-            O implementar la función del botón "Programar" en el comando de "Guardar" 
-            O evaluar la posibilidad de cambiar el texto del botón "Guardar"'''
-            
-            # Por defecto, FieldFrame crea entradas (Entry) para todos los campos.
-            # Convertimos la entrada correspondiente a "Día" (el primer campo) en un Combobox.
-            ff.values[1].destroy()  # ff.values[0] es el título de la columna de valores, ff.values[1] corresponde al primer campo
-            ff.values[1] = ttk.Combobox(ff, values=day_options)
-            ff.values[1].grid(row=1, column=2)
-            
-            # Botón para programar la clase; al presionar se recopilan los datos del FieldFrame.
-            tk.Button(process_frame, text="Programar", font=("Calibri", 14),
-                    command=lambda: (
+                            combobox=False,
+                            command=lambda: (
                         ff.gatherEntries(),
                         process_schedule(actor, areaSeleccionada, nivelClase,
                                         ff.valores[0],  # Día seleccionado (string "YYYY-MM-DD")
                                         ff.valores[1],  # Hora de inicio (string "HH:MM")
                                         ff.valores[2]   # Hora de fin (string "HH:MM")
                                         )
-                    )
-                    ).pack(pady=10)
+                    ))
+            ff.pack(pady=10, fill="x")
+            
+            # Por defecto, FieldFrame crea entradas (Entry) para todos los campos.
+            # Convertimos la entrada correspondiente a "Día" (el primer campo) en un Combobox.
+            ff.values[1].destroy()  # ff.values[0] es el título de la columna de valores, ff.values[1] corresponde al primer campo
+            ff.values[1] = ttk.Combobox(ff, values=day_options)
+            ff.values[1].grid(row=1, column=2)
 
         # -------------------- PASO 9: Procesar horario y asignar sala y profesor --------------------
         '''Pendiente a prueba(Teóricamente avalada)'''
