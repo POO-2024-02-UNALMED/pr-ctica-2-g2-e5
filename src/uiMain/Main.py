@@ -36,7 +36,7 @@ from gestorAplicacion.gestionVentas.Sala import Sala
 
 class Main:
 
-    debug = False
+    debug = True
     root = None
     fieldTest = False
     reset = True
@@ -2924,10 +2924,7 @@ class Main:
                     txt_obras.insert("end", linea)
                 txt_obras.config(state="disabled")
             
-            tk.Label(process_frame, text="Fin de la funcionalidad",
-                        font=("Calibri", 14), bg="white").pack(pady=10)
-            tk.Button(process_frame, text="Salir del sistema", font=("Calibri", 14),
-                    command=cls.volver).pack(pady=10)
+            Main.gestionClases()
 
         # -------------------- PASO 4: Crear nuevo artista --------------------
         '''AVALADA'''
