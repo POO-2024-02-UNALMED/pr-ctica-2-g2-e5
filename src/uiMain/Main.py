@@ -1378,7 +1378,7 @@ class Main:
                                 elif len(Persona.getHorario) > 1 or len(Persona.getHorario) == 0:
                                     msg = msg + Persona.getNombre() + " Cuidará: " + str(len(Persona.getHorario())) + " Funciones\n"
                             mensaje = tk.Label(infoSeguridad, text=msg, font=("Calibri", 12), bg="#ffb48a")
-                            mensaje.pack(expand=True, fill="both", padx= 8, pady= 8)
+                            mensaje.place(relx = 0.5, rely=0.5, relwidth= 0.8,relheight=0.7, anchor="center")
                         #No todos son principiantes
                         else:
                             try:
@@ -1397,7 +1397,7 @@ class Main:
                             funcionesSinHorario = 0
                             for Persona in Teatro.getInstancia().getTipoSeguridad():
                                 asignadas = 0
-                                localTime = list(Persona.getHorariO())
+                                localTime = list(Persona.getHorario())
                                 i = 0
                                 while i < len(funcionesDisponibles): 
                                 # for i in range(0, len(funcionesDisponibles)):
@@ -1509,7 +1509,7 @@ class Main:
                                 elif len(Persona.getHorario) > 1 or len(Persona.getHorario) == 0:
                                     msg = msg + Persona.getNombre() + " Cuidará: " + str(len(Persona.getHorario())) + " Funciones\n"
                             mensaje = tk.Label(infoSeguridad, text=msg, font=("Calibri", 12), bg="#ffb48a")
-                            mensaje.pack(expand=True, fill="both", padx= 8, pady= 8)
+                            mensaje.place(relx = 0.5, rely=0.5, relwidth= 0.8,relheight=0.7, anchor="center")
                     else:
                         if totalFunciones == 0:
                             alerta = tk.Frame(infoSeguridad, bg="#ffb48a", bd=2, relief="groove")
@@ -1639,7 +1639,7 @@ class Main:
 
                             if len(funcionesLimpiadas) != 0:
                                 for Persona in Teatro.getInstancia().getTipoAseador():
-                                    localTime = list(Persona.getHorario)
+                                    localTime = list(Persona.getHorario())
                                     i = 0
                                     while i < len(funcionesLimpiadas):
                                         Funciones = funcionesLimpiadas[i]
@@ -1680,12 +1680,12 @@ class Main:
 
                             msg = "";
                             for Persona in Teatro.getInstancia().getTipoAseador():
-                                if len(Persona.getHorario) == 1:
+                                if len(Persona.getHorario()) == 1:
                                     msg = msg + Persona.getNombre() + " Limpiará: 1 vez\n"
                                 else:
                                     msg = msg + Persona.getNombre() + " Limpiará: " + str(len(Persona.getHorario())) + " veces\n"
                             mensaje = tk.Label(infoAseador, text=msg, font=("Calibri", 12), bg="#ffb48a")
-                            mensaje.pack(expand=True, fill="both", padx= 8, pady= 8)
+                            mensaje.place(relx = 0.5, rely=0.5, relwidth= 0.8,relheight=0.7, anchor="center")
                         else:
                             funcionesPorMetros = list(Teatro.getInstancia().getFuncionesCreadas())
                             funcionesPorMetros.sort(
@@ -1822,7 +1822,7 @@ class Main:
                                 else:
                                     msg = msg + Persona.getNombre() + " Limpiará: " + str(len(Persona.getHorario())) + " veces\n"
                             mensaje = tk.Label(infoAseador, text=msg, font=("Calibri", 12), bg="#ffb48a")
-                            mensaje.pack(expand=True, fill="both", padx= 8, pady= 8)
+                            mensaje.place(relx = 0.5, rely=0.5, relwidth= 0.8,relheight=0.7, anchor="center")
                     else:
                         if totalFunciones == 0:
                             alerta = tk.Frame(infoAseador, bg="#ffb48a", bd=2, relief="groove")
@@ -1859,11 +1859,11 @@ class Main:
                         info = tk.Label(p1, text="trabajos Asignados....\nDesplegando trabajadores", bg= "#ffb48a", font=("Calibri", 16))
                         info.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
 
-                        p2 = tk.Frame(f1, bg="gray")
+                        p2 = tk.Frame(f1, bg="#ffb48a")
                         p2.place(relx = 0, rely=0.5, relwidth=1, relheight=0.25)
                         info2 = tk.Label(p2, text="Verificando los trabajos...", font=("Calibri", 16), bg="#ffb48a")
                         info2.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
-                        p3 = tk.Frame(f1, bg="white")
+                        p3 = tk.Frame(f1, bg="#ffb48a")
                         p3.place(relx = 0, rely=0.75, relwidth=1, relheight=0.25)
 
                         def verificar():
@@ -1871,7 +1871,7 @@ class Main:
                             principiantes = 0
                             for Persona in Teatro.getInstancia().getTipoSeguridad():
                                 if Persona.getMetaSemanal() == 6:
-                                    cant_trabajadores_principiantes += 1
+                                    principiantes += 1
                             if principiantes == len(Teatro.getInstancia().getTipoSeguridad()):
                                 for Persona in Teatro.getInstancia().getTipoSeguridad():
                                     for Hora in Persona.getTrabajos():
@@ -1913,7 +1913,7 @@ class Main:
                             principiantes = 0
                             for Persona in Teatro.getInstancia().getTipoAseador():
                                 if Persona.getMetaSemanal() == 6:
-                                    cant_trabajadores_principiantes += 1
+                                    principiantes += 1
                             if principiantes == len(Teatro.getInstancia().getTipoAseador()):
                                 for Persona in Teatro.getInstancia().getTipoAseador():
                                     for Metros in Persona.getTrabajos():
@@ -1995,7 +1995,7 @@ class Main:
 
                 #Estilo tabla
                 style = ttk.Style()
-                style.configure("Treeview", background = "#ffb48a", relief = "solid", rowheight = 25)
+                style.configure("Treeview", background = "white", relief = "solid", rowheight = 25)
                 style.configure("Treeview.Heading", background = "#ffb48a", foreground = "black", font = ("Calibri", 14, "bold"))
 
                 tablaE = ttk.Treeview(leftframe, columns=("Nombre", "IDs"), show="headings", style= "Treeview")
@@ -2034,7 +2034,7 @@ class Main:
                         tk.Label(righframe, text="Upps ... No se puede realizar los pagos adecuadamente", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=0, relwidth=1, relheight=0.1)
                         tk.Label(righframe, text="Realizando pagos de manera equitativa", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=0.1, relwidth=1, relheight=0.1)
                         for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
-                            transaccion = Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), (Persona.getDeuda() + Persona.calcularSueldo()) *0.5)
+                            transaccion = Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), (Persona.getDeuda() + Persona.calcularSueldo()) * 0.5)
                         if transaccion:
                             cantPagada = cantPagada + ((Persona.calcularSueldo() + Persona.getDeuda())*0.5)
                             Persona.setDeuda((Persona.getDeuda() + (Persona.calcularSueldo() + Persona.getDeuda())* 0.5))
@@ -2102,7 +2102,7 @@ class Main:
                                     msg = "Se pago un total de: " + str(cantPagada)
                                     tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                     linea += 0.1
-                                    tk.Label(righframe, text="Se realizo el pago a: " + len(Teatro.getInstancia().getEmpleadosPorRendimiento()) + " cuentas en total", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    tk.Label(righframe, text="Se realizo el pago a: " + str(len(Teatro.getInstancia().getEmpleadosPorRendimiento())) + " cuentas en total", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                     actualizarSaldo()
                             else:
                                 #Pago boni + deuda
@@ -2160,7 +2160,7 @@ class Main:
                                         msg = "Se pago un total de: " + str(totalSaldos)
                                         tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                         linea += 0.1
-                                        tk.Label(righframe, text="Se realizo el pago a: " + len(Teatro.getInstancia().getEmpleadosPorRendimiento()) + " cuentas en total", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                        tk.Label(righframe, text="Se realizo el pago a: " + str(len(Teatro.getInstancia().getEmpleadosPorRendimiento())) + " cuentas en total", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                         actualizarSaldo()
                                         for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
                                             if Persona.verificacionMeta:
@@ -2174,7 +2174,7 @@ class Main:
                                         msg = "Se pago un total de: " + str(cantPagada)
                                         tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                         linea += 0.1
-                                        tk.Label(righframe, text="Se realizo el pago a: " + len(Teatro.getInstancia().getEmpleadosPorRendimiento()) + " cuentas en total", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                        tk.Label(righframe, text="Se realizo el pago a: " + str(len(Teatro.getInstancia().getEmpleadosPorRendimiento())) + " cuentas en total", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                         actualizarSaldo()
                                 else:
                                     #Pago boni + deuda
@@ -2188,7 +2188,7 @@ class Main:
                                     msg = "Se pago un total de: " + str(totalSaldos)
                                     tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                     linea += 0.1
-                                    tk.Label(righframe, text="Se realizo el pago a: " + len(Teatro.getInstancia().getEmpleadosPorRendimiento()) + " cuentas en total", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    tk.Label(righframe, text="Se realizo el pago a: " + str(len(Teatro.getInstancia().getEmpleadosPorRendimiento())) + " cuentas en total", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                     actualizarSaldo()
                             else:
                                 for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
@@ -2226,7 +2226,7 @@ class Main:
 
                     if Despedidos:
                         titulo = tk.Label(righframe, text="Personas despedidas:")
-                        titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1, anchor="center")
+                        titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1, bg="#ffb48a")
                         despedidos = tk.Label(righframe, text=msg, font=("Calibri", 14), bg="#ffb48a")
                         despedidos.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
                     
@@ -2244,7 +2244,7 @@ class Main:
             
             
         # Encabezado
-        Titulo = tk.Frame(cls.new_window, bg="white")
+        Titulo = tk.Frame(cls.content, bg="white")
         Titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1)
         TituloLabel = tk.Label(Titulo, text="Bienvenido a la gestion de empleados", font=("Calibri"))
         TituloLabel.pack(fill="both", expand=True)
@@ -2264,8 +2264,9 @@ class Main:
 
     @classmethod
     def gestionObras(cls):
-        for widget in cls.content.winfo_children():
-            widget.destroy()
+        # for widget in cls.content.winfo_children():
+        #     widget.destroy()
+        cls.clear_frame(cls.content)
     
     @classmethod
     def contratarActores(cls) -> None:
