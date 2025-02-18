@@ -7,6 +7,10 @@ import os
 import time as t
 import random
 
+
+
+
+
 #AGREGAR SRC AL PATH
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -25,6 +29,8 @@ from gestorAplicacion.gestionObras.Director import Director
 from gestorAplicacion.herramientas.Aptitud import Aptitud
 from gestorAplicacion.herramientas.Genero import Genero
 from gestorAplicacion.herramientas.Suscripcion import Suscripcion
+from gestorAplicacion.gestionVentas.Funcion import Funcion
+from gestorAplicacion.gestionVentas.Sala import Sala
 
 
 
@@ -384,6 +390,14 @@ class Main:
 
     @classmethod
     def gestionVentas(cls):
+        obra1 = Obra(nombre="pepe")
+        obra2 = Obra(nombre="dante")
+        obra3 = Obra(nombre="labella")
+        sala=Sala()
+                    
+        funcion1 = Funcion(obra=obra1,horario="12:00",sillas=sala.create_sillas(32))
+        funcion2 = Funcion(obra=obra1,horario="14:00",sillas=sala.create_sillas(8))
+        funcion3 = Funcion(obra=obra1,horario="13:00",sillas=sala.create_sillas(16))
         for i in Teatro.getInstancia().getClientes():
             print(i.getId())
 
@@ -594,9 +608,7 @@ class Main:
             frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
             lista=[]
 
-            obra1 = Obra(nombre="pepe")
-            obra2 = Obra(nombre="dante")
-            obra3 = Obra(nombre="labella")
+            
             for obra in Teatro.getInstancia().getObras():
                 if obra.getNombre() != "NOTFORITE":
                     lista.append(obra.getNombre())
@@ -640,6 +652,7 @@ class Main:
             # Agregar datos al Treeview
             for obra in Teatro.getInstancia().getObras():
                 tree.insert("", "end", values=(obra.getNombre(),"comedia", "10:00", "1.000"))
+            
 
 
 
@@ -650,7 +663,134 @@ class Main:
             global cliente
 
             cliente.obra=suscripcion
+            print(suscripcion)
+            if suscripcion=="":
+                messagebox.showerror("Error", "seleccione una opcion")
+            else:
+                widget = cls.content.nametowidget("central") 
+                widget.destroy()
+                global frame_central
 
+                frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
+                frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+
+                lista=[]
+                for funcion in Teatro.getInstancia().getFuncionesCreadas():
+                    if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getObra().getNombre() == suscripcion:
+                        
+                        lista.append(funcion.getObra().getNombre())
+                
+                func = FieldFrame(
+                frame_central,
+                tituloCriterios= "Obras",
+                tituloValores= "Respuesta",
+                criterios=["Eleccion"],
+                valores= [lista],
+                combobox= True,
+                command=lambda :buscar_sillas(func)
+                
+                )
+                func.place(relheight= 1, relwidth= 1)
+
+
+                tree = ttk.Treeview(frame_central, columns=("Nombre", "Horario"), show="headings",height=5)
+
+                 
+                tree.heading("Nombre", text="Nombre")
+                tree.heading("Horario", text="Horario")
+
+                tree.column("Nombre", width=180)
+                tree.column("Horario", width=100)
+
+                scrollbar = ttk.Scrollbar(frame_central, orient="vertical", command=tree.yview)
+                tree.configure(yscrollcommand=scrollbar.set)
+                
+                tree.place(relx=0.2,rely=0.3,relwidth=0.7, relheight=0.3)
+                scrollbar.place(relx=0.90,rely=0.3, relwidth=0.03, relheight=0.3)
+                for funcion in Teatro.getInstancia().getFuncionesCreadas():
+                    if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getObra().getNombre() == suscripcion:
+                        tree.insert("", "end", values=(funcion.getObra().getNombre(),funcion.getHorario()))
+                        lista.append(funcion.getObra().getNombre())
+                
+                def on_tree_select(event):
+                    selected_item = tree.selection()  # Obtiene el ID del elemento seleccionado
+                    if selected_item:
+                        global item_values
+                        item_values = tree.item(selected_item, "values")  # Obtiene los valores de la fila
+                        pregun = False
+                        pregun = messagebox.askyesno("Eleccion",f"seleccionaste el horario {item_values[1]}")
+                        if pregun :
+                            buscar_sillas(item_values[1])
+                        
+                
+
+                tree.bind("<<TreeviewSelect>>", on_tree_select)
+                        
+        
+                   
+        def buscar_sillas (fecha):
+            
+            
+            widget = cls.content.nametowidget("central") 
+            widget.destroy()
+            global frame_central
+
+            frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
+            frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+
+            frame_botones = tk.Frame((frame_central), bg="slategray2")
+            frame_botones.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.60)
+
+            for funcion in Teatro.getInstancia().getFuncionesCreadas():
+                
+                if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getHorario() == fecha:
+                    global sillas
+                    sillas = funcion.getSillas()
+                    print(len(sillas))
+
+            def boton_presionado(numero):
+                print(f"Botón {numero} presionado")
+
+            for i in range(len(sillas)):
+                fila = i // 8  # Calcula en qué fila va
+                columna = i % 8  # Calcula en qué columna va
+                btn = tk.Button(frame_botones, text=f"Btn {i+1}", command=lambda i=i: boton_presionado(i+1))
+                btn.grid(row=fila, column=columna, padx=5, pady=5)
+            
+
+
+
+
+                
+
+            """
+            frame_izq = tk.Frame(cls.content, bg="slategray")
+            frame_izq.place(relx=0, rely=0, relwidth=0.15, relheight=1)  # Se ubica en la izquierda
+
+            # Frame derecho
+            frame_der = tk.Frame(cls.content, bg="slategray")
+            frame_der.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
+
+            top_frame = Frame(cls.content,background="black")
+            top_frame.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
+
+            frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
+            frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+
+
+
+            top_label = tk.Label(top_frame,text="Venta de tiquetes",font=("Calibri", 25), bg="black",fg="white")
+            top_label.place(relx=0.5, rely=0.1, anchor="n")
+
+            label = tk.Label(cls.content,text="Desea mejorar su suscripcion?", font=("Calibri", 25), fg="black",bg="slategray2",name="suscripcion")
+            label.place(relx=0.5, rely=0.3, anchor="center")
+
+            Button_Si = tk.Button(cls.content, text="Si", font=("Calibri", 15),command=adquirir_suscripcion,name="no")
+            Button_No = tk.Button(cls.content, text="No", font=("Calibri", 15),command=continuar,name="si")
+            
+            Button_Si.place(relx=0.48, rely=0.5, anchor="center")
+            Button_No.place(relx=0.53, rely=0.5, anchor="center")
+"""
 
 
             
@@ -2983,6 +3123,7 @@ class FieldFrame(Frame):
 
 
 if __name__ == "__main__":
+               
 
     if Main.fieldTest:
         #datos de prueba para fieldframe

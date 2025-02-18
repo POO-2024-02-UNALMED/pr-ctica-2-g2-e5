@@ -3,6 +3,8 @@
 import datetime
 
 
+
+
 class Sala:
     salas = []  # Lista estática de salas
 
@@ -31,7 +33,9 @@ class Sala:
         """Añade un nuevo horario a la lista de horarios."""
         self.horario.append(horario)
     
-    def create_sillas(capacidad: int) -> list:
+    def create_sillas(self,capacidad: int) -> list:
+        from gestorAplicacion.gestionVentas.Silla import Silla
+        from gestorAplicacion.herramientas.Asiento import Asiento
         """Crea una lista de sillas distribuidas según la capacidad dada."""
         u = capacidad // 16  # División entera
         f, s, o, p = 0, 10, 100, 1000

@@ -1,5 +1,7 @@
 import datetime
 
+from baseDatos.Teatro import Teatro
+
 class Funcion:
     funcionesCreadas = []  # Lista estática de funciones creadas
     funcionesALaVenta = []  # Lista estática de funciones a la venta
@@ -17,6 +19,7 @@ class Funcion:
         self.__asistentes = asistentes
         self.__precio = precio
         Funcion.funcionesCreadas.append(self)
+        Teatro.getInstancia().getFuncionesCreadas().append(self)
         
     def getObra(self):
         return self.__obra
@@ -130,7 +133,7 @@ class Funcion:
                         v = i + self.getObra().getDuracionFormatoS()
                         if self.getObra().isRepartoDisponible(i, v) and sala.isDisponible(i,v):
                             horario.extend((i, v))
-                            self.getSala() = sala
+                            self.setSala(sala) 
                             self.getSala().anadirHorario(horario)
                             return horario
                         inicioFranjaITE = inicioFranjaITE.total_minutes() + 30

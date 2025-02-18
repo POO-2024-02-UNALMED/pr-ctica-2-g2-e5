@@ -1,10 +1,10 @@
 from enum import Enum
 
 class Asiento(Enum):
-        BASICO = object()
-        COMFORT = object()
-        PREMIUM = object()
-        GOLD = object()
+        BASICO = "BASICO"
+        COMFORT = "COMFORT"
+        PREMIUM = "PREMIUM"
+        GOLD = "GOLD"
 
         def tipos():
             top = str.format("%30s %30s ","Tipo Asiento","Suscripcion necesaria\n\n")
