@@ -1,7 +1,7 @@
 from gestorAplicacion.gestionFinanciera.CuentaBancaria import CuentaBancaria
 
 class Tesoreria:
-    pass
+
     def __init__(self, total, metaSemanal):
         self.__dineroEnCaja = 0
         self.__metaSemanal = metaSemanal
