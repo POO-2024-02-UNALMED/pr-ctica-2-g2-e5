@@ -3021,14 +3021,12 @@ class Main:
         # -------------------- PASO 5: Artista encontrado --------------------
         '''Avalada'''
         def step_artist_found(artista):
-            for widget in process_frame.winfo_children():
-                widget.destroy()
             if isinstance(artista, Director):
-                tk.Label(process_frame, text="El artista es un Director. Los directores no reciben clases.",
-                        font=("Calibri", 14), bg="white", fg="yellow").pack(pady=10)
-                tk.Button(process_frame, text="Finalizar", font=("Calibri", 14),
-                        command=cls.volver).pack(pady=10)
+                messagebox.showinfo("Información","Los directores no reciben clase.")
+                Main.gestionClases()
             else:
+                for widget in process_frame.winfo_children():
+                    widget.destroy()
                 # Si el actor no tiene calificaciones, se inicializan
                 if artista.sigueIgual():
                     resultado = Empleado.casting(artista, Teatro.getInstancia().getTipoProfesor())
@@ -3062,8 +3060,8 @@ class Main:
                 tk.Button(process_frame, text="Programar clase", font=("Calibri", 14),
                             command=lambda: step_select_area(artista)).pack(pady=10)
                 
-                tk.Button(process_frame, text="Salir del sistema", font=("Calibri", 14),
-                command=cls.volver).pack(pady=10)
+                tk.Button(process_frame, text="Volver al inicio", font=("Calibri", 14),
+                command=Main.gestionClases).pack(pady=10)
 
         # -------------------- PASO 6: Seleccionar área de mejora --------------------
         '''AVALADA'''
@@ -3071,22 +3069,21 @@ class Main:
             for widget in process_frame.winfo_children():
                 widget.destroy()
             areas_recomendadas = actor.obtenerAreasDeMejora()
-            if not areas_recomendadas:
-                messagebox.showinfo("Información", "No hay áreas recomendadas para mejorar.")
-                cls.volver()
-                return
             txt_areas = tk.Text(process_frame, height=6, width=80, font=("Calibri", 12))
             txt_areas.pack(pady=10)
-            txt_areas.insert("end", "Áreas recomendadas para mejorar del actor " + actor.getNombre() + ":\n")
-            for i, area in enumerate(areas_recomendadas[:3]):
-                cal = actor.getCalificacionPorAptitud(area)
-                txt_areas.insert("end", f"{i+1}. {area.name.capitalize()} (Calificación: {cal})\n")
-            txt_areas.config(state="disabled")
-            tk.Label(process_frame, text="¿Desea programar una clase basada en las áreas recomendadas?",
+            if not areas_recomendadas:
+                step_select_custom_area(actor)
+            else:
+                txt_areas.insert("end", "Áreas recomendadas para mejorar del actor " + actor.getNombre() + ":\n")
+                for i, area in enumerate(areas_recomendadas[:3]):
+                    cal = actor.getCalificacionPorAptitud(area)
+                    txt_areas.insert("end", f"{i+1}. {area.name.capitalize()} (Calificación: {cal})\n")
+                txt_areas.config(state="disabled")
+                tk.Label(process_frame, text="¿Desea programar una clase basada en las áreas recomendadas?",
                     font=("Calibri", 14), bg="white").pack(pady=10)
-            tk.Button(process_frame, text="Sí", font=("Calibri", 14),
+                tk.Button(process_frame, text="Sí", font=("Calibri", 14),
                     command=lambda: step_schedule_class(actor, areas_recomendadas[0])).pack(pady=5)
-            tk.Button(process_frame, text="No", font=("Calibri", 14),
+                tk.Button(process_frame, text="No", font=("Calibri", 14),
                     command=lambda: step_select_custom_area(actor)).pack(pady=5)
 
         # -------------------- PASO 7: Selección personalizada de área --------------------
@@ -3189,17 +3186,14 @@ class Main:
             # Buscar una sala disponible
             salaAsignada = None
             for sala in Teatro.getInstancia().getSalas():
-                if sala.getAseado() and sala.isDisponible(inicio, fin):
+                if sala.get_aseado() and sala.is_disponible(inicio, fin):
                     salaAsignada = sala
                     break
             if salaAsignada is None:
                 messagebox.showerror("Error", "No hay salas disponibles en el horario deseado o no están limpias.")
                 for widget in process_frame.winfo_children():
                     widget.destroy()
-                tk.Label(process_frame, text="Fin de la funcionalidad",
-                        font=("Calibri", 14), bg="white").pack(pady=10)
-                tk.Button(process_frame, text="Salir del sistema", font=("Calibri", 14),
-                        command=cls.volver).pack(pady=10)        
+                Main.gestionClases()
                 return
             salaAsignada.anadir_horario([inicio, fin])
             # Selección de profesor especializado (simulación de disponibilidad)
@@ -3214,12 +3208,10 @@ class Main:
             if profesorAsignado is None:
                 for widget in process_frame.winfo_children():
                     widget.destroy()
-                tk.Label(process_frame, text="Fin de la funcionalidad",
-                        font=("Calibri", 14), bg="white").pack(pady=10)
-                tk.Button(process_frame, text="Salir del sistema", font=("Calibri", 14),
-                        command=cls.volver).pack(pady=10)  
+                messagebox.showerror("Error", "No hay profesores disponibles con especialización en el área seleccionada o están ocupados.")
+                Main.gestionClases()
                 return
-            msg = f"Sala asignada: {salaAsignada.getNumeroSala()}\nProfesor asignado: {profesorAsignado.getNombre()}\n"
+            msg = f"Sala asignada: {salaAsignada.get_numero_sala()}\nProfesor asignado: {profesorAsignado.getNombre()}\n"
             messagebox.showinfo("Clase Programada", msg)
             step_payment(actor, areaSeleccionada, nivelClase, profesorAsignado)
 

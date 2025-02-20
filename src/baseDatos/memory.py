@@ -1,5 +1,6 @@
 from datetime import datetime
 from baseDatos.Teatro import Teatro
+from gestorAplicacion.gestionClases.Profesor import Profesor
 from gestorAplicacion.gestionObras.Obra import Obra
 from gestorAplicacion.gestionVentas.Funcion import Funcion
 from gestorAplicacion.gestionVentas.Sala import Sala
@@ -89,7 +90,30 @@ def resetMemory():
     obra2 = Obra(nombre="dante")
     obra3 = Obra(nombre="labella")
     sala=Sala()
-                    
+
+    Profesor1 = Profesor("Oscar Arango", 1)
+    Profesor2 = Profesor("Danna Valeria", 2)
+    Profesor3 = Profesor("Juan Pablo", 3)
+    Profesor4 = Profesor("Francisco", 4)
+    Profesor5 = Profesor("Miguel Velez", 5)
+    Teatro.getInstancia().getTipoProfesor().append(Profesor1)
+    Teatro.getInstancia().getTipoProfesor().append(Profesor2)
+    Teatro.getInstancia().getTipoProfesor().append(Profesor3)
+    Teatro.getInstancia().getTipoProfesor().append(Profesor4)
+    Teatro.getInstancia().getTipoProfesor().append(Profesor5)
+    ActorPrueba = Actor("Prueba", 1, 6)
+    ActorPrueba.setCalificacionPorAptitud(Aptitud.CANTO, 5.0)
+    ActorPrueba.setCalificacionPorAptitud(Aptitud.EMOCIONALIDAD, 5.0)
+    ActorPrueba.setCalificacionPorAptitud(Aptitud.BAILE, 5.0)
+    ActorPrueba.setCalificacionPorAptitud(Aptitud.IMPROVISACION, 5.0)
+    ActorPrueba.setCalificacionPorAptitud(Aptitud.DISCURSO, 5.0)
+    sala1=Sala(1)
+    sala2=Sala(2)
+    sala3=Sala(3)
+    sala4=Sala(4)
+    sala5=Sala(5)
+    sala6=Sala(6)
+
     funcion1 = Funcion(obra=obra1,horario=(datetime(2025, 2, 17, 14, 30),datetime(2025, 3, 17, 14, 30)),sillas=sala.create_sillas(32), sala= Sala())
     funcion2 = Funcion(obra=obra1,horario=(datetime(2025, 2, 18, 14, 30),datetime(2025, 3, 18, 14, 30)),sillas=sala.create_sillas(8), sala= Sala(2))
     funcion3 = Funcion(obra=obra1,horario=(datetime(2025, 2, 19, 14, 30),datetime(2025, 3, 19, 14, 30)),sillas=sala.create_sillas(16), sala = Sala(3))

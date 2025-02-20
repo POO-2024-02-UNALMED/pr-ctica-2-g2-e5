@@ -12,28 +12,30 @@ class Sala:
 
     def __init__(self, numero_sala: int = 1, metros_cuadrados: float = 50.0, aseado: bool = True,
             ocupado: bool = False, capacidad: int = 100):
-        self.sillas = []
-        self.numero_sala = numero_sala
-        self.metros_cuadrados = metros_cuadrados
-        self.aseado = aseado
-        self.ocupado = ocupado
-        self.horario = []
-        self.capacidad = capacidad
-        Teatro.getInstancia().getSalas().append(self)
-        
-
-    def __init__(self, numero_sala: int = 1, metros_cuadrados: float = 50.0, aseado: bool = True,
-                 ocupado: bool = False, capacidad: int = 100):
+        self.__sillas = []
         self.__numero_sala = numero_sala
         self.__metros_cuadrados = metros_cuadrados
         self.__aseado = aseado
         self.__ocupado = ocupado
+        self.__horario = []
         self.__capacidad = capacidad
-        self.sillas = []
-        self.horario = []
-        Sala.salas.append(self)  # Agregar instancia a la lista de salas
+        Teatro.getInstancia().getSalas().append(self)
+        
+
 
     # Getters
+    def get_sillas(self):
+        return self.__sillas
+
+    def set_sillas(self, sillas):
+        self.__sillas = sillas
+
+    def get_horario(self):
+        return self.__horario
+
+    def set_horario(self, horario):
+        self.__horario = horario
+
     def get_numero_sala(self):
         return self.__numero_sala
 
@@ -66,7 +68,7 @@ class Sala:
         self.__capacidad = value
 
     def is_disponible(self, inicio, fin) -> bool:
-        for evento in self.horario:
+        for evento in self.get_horario():
             if inicio < evento[1] and fin > evento[0]:  
                 return False  # Horario ocupado
         return True
@@ -77,7 +79,7 @@ class Sala:
 
     def anadir_horario(self, horario):
         """Añade un nuevo horario a la lista de horarios."""
-        self.horario.append(horario)
+        self.get_horario().append(horario)
     
     def create_sillas(self,capacidad: int) -> list:
         from gestorAplicacion.gestionVentas.Silla import Silla

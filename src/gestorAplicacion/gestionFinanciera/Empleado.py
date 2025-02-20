@@ -45,9 +45,9 @@ class Empleado:
             return False
         if not profesores:
             return False    
-        aptitud = Aptitud.values
-        for i in range(0, 5):
-            artista.setCalificacionPorAptitud(aptitud[i],round(random()*50 / 10.0, 1))
+        aptitudes = list(Aptitud)
+        for apt in aptitudes:
+            artista.setCalificacionPorAptitud(apt, round(random()*50 / 10.0, 1))
         return True
     
     #Getters and Setters
