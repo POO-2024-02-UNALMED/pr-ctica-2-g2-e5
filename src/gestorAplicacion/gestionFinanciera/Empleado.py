@@ -67,10 +67,10 @@ class Empleado:
     
     #Ocupacion
     def getOcupacion(self):
-        return self.__Ocupacion
+        return self.__ocupacion
     
     def setOcupacion(self, Ocupacion):
-        self.__Ocupacion = Ocupacion
+        self.__ocupacion = Ocupacion
     #Trabajos
     def getTrabajoRealizado(self):
         return self.__trabajoRealizado

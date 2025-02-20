@@ -1886,6 +1886,7 @@ class Main:
                                 for Persona in Teatro.getInstancia().getTipoSeguridad():
                                     for Hora in Persona.getTrabajos():
                                         randomValue = random.random()
+                                        randomValue = round(random.uniform(0, 1), 2)
                                         if Persona.getMetaSemanal() > 20:
                                             if Hora >= 4:
                                                 if randomValue > 0.65:
@@ -1917,7 +1918,7 @@ class Main:
                             if principiantes == len(Teatro.getInstancia().getTipoAseador()):
                                 for Persona in Teatro.getInstancia().getTipoAseador():
                                     for Metros in Persona.getTrabajos():
-                                        randomValue = random.random()
+                                        randomValue = round(random.uniform(0, 1), 2)
                                         if randomValue > 0.5:
                                             Persona.getTrabajoCorrecto().append(True)
                                             Persona.setTrabajoRealizado(Persona.getTrabajoRealizado() + Metros)
@@ -1927,7 +1928,7 @@ class Main:
                             else:
                                 for Persona in Teatro.getInstancia().getTipoAseador():
                                     for Metros in Persona.getTrabajos():
-                                        randomValue = random.random()
+                                        randomValue = round(random.uniform(0, 1), 2)
                                         if Persona.getMetaSemanal() > 20:
                                             if Metros > 650:
                                                 if randomValue > 0.65:
@@ -2199,10 +2200,11 @@ class Main:
                     
                     #Reseteo de Trabajo
                     for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
-                        Persona.setTrabajos([]);
-                        Persona.setTrabajoCorrecto([]);
-                        Persona.setTrabajoRealizado(0);
-                        Persona.setPuntosPositivos(0);
+                        Persona.setTrabajos([])
+                        Persona.setHorario([])
+                        Persona.setTrabajoCorrecto([])
+                        Persona.setTrabajoRealizado(0)
+                        Persona.setPuntosPositivos(0)
 
                     righframe.after(2000, lambda: Despidos())
 
@@ -2221,12 +2223,19 @@ class Main:
                             liquidacion = (Persona.calcularSueldo() * 1.2) + Persona.getDeuda()
                             Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), liquidacion)
                             msg = msg + Persona.getNombre() + "\n"
+                            if Persona.getOcupacion() != "Seguridad":
+                                if Persona.getOcupacion() != "Aseador":
+                                    Teatro.getInstancia().getTipoProfesor().remove(Persona)
+                                else:
+                                    Teatro.getInstancia().getTipoAseador().remove(Persona)
+                            else:
+                                Teatro.getInstancia().getTipoSeguridad().remove(Persona)
                         continue
                     Teatro.getInstancia().setEmpleadosPorRendimiento(NuevaLista)
 
                     if Despedidos:
-                        titulo = tk.Label(righframe, text="Personas despedidas:")
-                        titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1, bg="#ffb48a")
+                        titulo = tk.Label(righframe, text="Personas despedidas:", bg="#ffb48a")
+                        titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1)
                         despedidos = tk.Label(righframe, text=msg, font=("Calibri", 14), bg="#ffb48a")
                         despedidos.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
                     
