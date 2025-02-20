@@ -2372,7 +2372,7 @@ class Main:
         labelEleccion.place(relx = 0.1, rely = 0.7, relwidth = 0.35, relheight= 0.1)
         entryObra = tk.Entry(frameGestion)
         entryObra.place(relx = 0.55, rely = 0.7, relwidth = 0.35, relheight = 0.1)
-        botonConfirmaEleObra = tk.Button(text = "Confirmar", command = lambda: definirEleccion(Main, entryObra))
+        botonConfirmaEleObra = tk.Button(text = "Confirmar", command = lambda: definirEleccion(Main, entryObra),master=frameGestion)
         botonConfirmaEleObra.pack()
         cls.eleccionObra = ""
         def definirEleccion(cls, entry):
