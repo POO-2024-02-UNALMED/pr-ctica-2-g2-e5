@@ -2,6 +2,8 @@
 
 import datetime
 
+from baseDatos.Teatro import Teatro
+
 
 
 
@@ -17,7 +19,51 @@ class Sala:
         self.ocupado = ocupado
         self.horario = []
         self.capacidad = capacidad
+        Teatro.getInstancia().getSalas().append(self)
+        
+
+    def __init__(self, numero_sala: int = 1, metros_cuadrados: float = 50.0, aseado: bool = True,
+                 ocupado: bool = False, capacidad: int = 100):
+        self.__numero_sala = numero_sala
+        self.__metros_cuadrados = metros_cuadrados
+        self.__aseado = aseado
+        self.__ocupado = ocupado
+        self.__capacidad = capacidad
+        self.sillas = []
+        self.horario = []
         Sala.salas.append(self)  # Agregar instancia a la lista de salas
+
+    # Getters
+    def get_numero_sala(self):
+        return self.__numero_sala
+
+    def get_metros_cuadrados(self):
+        return self.__metros_cuadrados
+
+    def get_aseado(self):
+        return self.__aseado
+
+    def get_ocupado(self):
+        return self.__ocupado
+
+    def get_capacidad(self):
+        return self.__capacidad
+
+    # Setters 
+    def set_numero_sala(self, value):
+        self.__numero_sala = value
+
+    def set_metros_cuadrados(self, value):
+        self.__metros_cuadrados = value
+
+    def set_aseado(self, value):
+        self.__aseado = value
+
+    def set_ocupado(self, value):
+        self.__ocupado = value
+
+    def set_capacidad(self, value):
+        self.__capacidad = value
 
     def is_disponible(self, inicio, fin) -> bool:
         for evento in self.horario:
