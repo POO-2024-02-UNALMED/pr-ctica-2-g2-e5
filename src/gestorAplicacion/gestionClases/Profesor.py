@@ -7,6 +7,7 @@ class Profesor(Empleado):
         super().__init__(nombre, id, "Profesor")  # Llamamos al constructor de la clase base
         
         self.__especializaciones = []
+        self.__puntosPositivos = 0
         valores = list(Aptitud)  
         #Se asignan dos aptitudes aleatorias sin repetir
         while len(self.__especializaciones) < 2:
@@ -32,7 +33,7 @@ class Profesor(Empleado):
         return aptitud in self.__especializaciones
 
     def agregar_puntos(self, puntos: int):   #Agrega puntos positivos al profesor
-        self.puntos_positivos += puntos
+        self.__puntosPositivos += puntos
 
     # Opcional: Getters y setters para el atributo nombre, si se requiere
     

@@ -3202,7 +3202,7 @@ class Main:
                     command=lambda: step_schedule_class(actor, areas[var_index.get()])).pack(pady=10)
 
         # -------------------- PASO 8: Programar la clase (solicitar horario) --------------------
-        '''AVALADA(Excepto por el botón)'''
+        '''AVALADA'''
         def step_schedule_class(actor, areaSeleccionada):
             for widget in process_frame.winfo_children():
                 widget.destroy()
@@ -3255,7 +3255,7 @@ class Main:
             ff.values[1].grid(row=1, column=2)
 
         # -------------------- PASO 9: Procesar horario y asignar sala y profesor --------------------
-        '''Pendiente a prueba(Teóricamente avalada)'''
+        '''AVALADA'''
         def process_schedule(actor, areaSeleccionada, nivelClase, day_str, start_time_str, end_time_str):
             try:
                 # Convertir el día seleccionado a objeto date
@@ -3312,11 +3312,11 @@ class Main:
                 return
             msg = f"Sala asignada: {salaAsignada.get_numero_sala()}\nProfesor asignado: {profesorAsignado.getNombre()}\n"
             messagebox.showinfo("Clase Programada", msg)
-            step_payment(actor, areaSeleccionada, nivelClase, profesorAsignado)
+            step_payment(actor, areaSeleccionada, nivelClase, profesorAsignado, fin)
 
         # -------------------- PASO 10: Procesar pago y evaluación --------------------
-        '''Pendiente a prueba(Teóricamente avalada)'''
-        def step_payment(actor, areaSeleccionada, nivelClase, profesorAsignado):
+        '''AVALADA'''
+        def step_payment(actor, areaSeleccionada, nivelClase, profesorAsignado, fin):
             for widget in process_frame.winfo_children():
                 widget.destroy()
             if nivelClase == "Introducción":
@@ -3328,16 +3328,17 @@ class Main:
             tk.Label(process_frame, text=f"El costo de la clase es: ${costoClase}",
                     font=("Calibri", 14), bg="white").pack(pady=10)
             tk.Button(process_frame, text="Procesar Pago", font=("Calibri", 14),
-                        command=lambda: process_payment(actor, costoClase, areaSeleccionada,
-                                                        profesorAsignado, nivelClase)).pack(pady=10)
+                    command=lambda: process_payment(actor, costoClase, areaSeleccionada,
+                                                    profesorAsignado, nivelClase, fin)).pack(pady=10)
 
-        def process_payment(actor, costoClase, areaSeleccionada, profesorAsignado, nivelClase):
+        def process_payment(actor, costoClase, areaSeleccionada, profesorAsignado, nivelClase, fin):
             if actor.getCuenta().retirar(costoClase):
                 tesoreria = Teatro.getInstancia().getTesoreria()
                 tesoreria.setTotal(tesoreria.getTotal() + costoClase)
                 tesoreria.setDineroEnCaja(tesoreria.getDineroEnCaja() + costoClase)
                 messagebox.showinfo("Pago", "Pago procesado exitosamente.")
-                # Se asigna profesor evaluador (simulación)
+
+                # Selección de profesor evaluador (simulación)
                 profesor_evaluador = None
                 profesores = Teatro.getInstancia().getTipoProfesor()
                 random.shuffle(profesores)
@@ -3346,68 +3347,118 @@ class Main:
                         if random.random() > 0.5:
                             profesor_evaluador = empleado
                             break
+
                 if profesor_evaluador:
+                    # Capturamos la nota inicial antes de la evaluación
+                    initial_note = actor.getCalificacionPorAptitud(areaSeleccionada)
+                    # Se genera la calificación (aleatoria en este ejemplo)
                     calificacion = round(random.random() * 5, 1)
-                    messagebox.showinfo("Evaluación", f"El profesor {profesor_evaluador.getNombre()} calificó al actor con un: {calificacion}")
-                    if calificacion == 5:
-                        if Teatro.getInstancia().getTesoreria().getCuenta().transferencia(actor.getCuenta(), costoClase):
-                            messagebox.showinfo("Reembolso", f"Calificación perfecta. Se ha reembolsado ${costoClase} al actor.")
-                        else:
-                            messagebox.showerror("Error", "Error al procesar el reembolso.")
-                    if not actor.huboMejora(areaSeleccionada):
-                        tk.Button(process_frame, text="Reprogramar clase por falta de mejora", font=("Calibri", 14),
-                                command=lambda: step_reprogramar(actor, areaSeleccionada, profesor_evaluador, nivelClase)).pack(pady=10)
+                    messagebox.showinfo("Evaluación", 
+                                        f"El profesor {profesor_evaluador.getNombre()} calificó al actor con un: {calificacion}")
+
+                    # El profesor que imparte la clase siempre recibe los puntos positivos
+                    puntos = 1 if nivelClase == "Introducción" else (2 if nivelClase == "Profundización" else 3)
+                    profesorAsignado.agregar_puntos(puntos)
+                    messagebox.showinfo("Puntos", 
+                                        f"El profesor {profesorAsignado.getNombre()} ha recibido {puntos} puntos positivos por dictar la clase con nivel {nivelClase}.")
+
+                    # Evaluamos las condiciones de mejora:
+                    if calificacion < 3:
+                        messagebox.showinfo("Evaluación", 
+                            "El actor sacó una nota menor a 3. Se reprogramará la clase por falta de mejora.")
+                        step_reprogramar(actor, areaSeleccionada, nivelClase, profesor_evaluador, fin)
+                    elif calificacion <= initial_note:
+                        messagebox.showinfo("Evaluación", 
+                            "El actor no mejoró su calificación respecto al inicio de la clase. Se reprogramará la clase por falta de mejora.")
+                        step_reprogramar(actor, areaSeleccionada, nivelClase, profesor_evaluador, fin)
                     else:
                         messagebox.showinfo("Proceso Finalizado", "La clase se ha realizado exitosamente.")
-                        puntos = 1 if nivelClase == "Introducción" else (2 if nivelClase == "Profundización" else 3)
-                        profesorAsignado.agregar_puntos(puntos)
-                        messagebox.showinfo("Puntos", f"El profesor {profesorAsignado.getNombre()} ha recibido {puntos} puntos positivos.")
-                        cls.volver()
+                        Main.gestionClases()
                 else:
                     messagebox.showerror("Error", "No hay profesores disponibles para calificar la función.")
+                    Main.gestionClases()
             else:
                 messagebox.showerror("Error", "El actor cuenta con saldo insuficiente para pagar la clase.")
+                Main.gestionClases()
+
 
         # -------------------- PASO 11: Reprogramar clase en caso de falta de mejora --------------------
-        '''Pendiente a prueba(Teóricamente avalada)'''
-        def step_reprogramar(actor, areaSeleccionada, profesorEvaluador, nivelClase):
+        '''AVALADA'''
+        def step_reprogramar(actor, areaSeleccionada, nivelClase, profesorEvaluador, fin):
             for widget in process_frame.winfo_children():
                 widget.destroy()
             tk.Label(process_frame, text="Reprogramar clase por falta de mejora",
                     font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
-            tk.Label(process_frame, text="Ingrese nuevo horario (debe ser posterior al anterior)",
-                    font=("Calibri", 14), bg="white").pack(pady=10)
-            tk.Label(process_frame, text="Nuevo Inicio (YYYY-MM-DD HH:MM):",
-                    font=("Calibri", 14), bg="white").pack(pady=5)
-            entry_start = tk.Entry(process_frame, font=("Calibri", 14))
-            entry_start.pack(pady=5)
-            tk.Label(process_frame, text="Nuevo Fin (YYYY-MM-DD HH:MM):",
-                    font=("Calibri", 14), bg="white").pack(pady=5)
-            entry_end = tk.Entry(process_frame, font=("Calibri", 14))
-            entry_end.pack(pady=5)
-            tk.Button(process_frame, text="Reprogramar", font=("Calibri", 14),
-                    command=lambda: process_reprogramar(actor, areaSeleccionada, entry_start.get(), entry_end.get(), nivelClase, profesorEvaluador)).pack(pady=10)
+            
+            # Obtener la lista de días de la semana con getWeek()
+            week_days = Main.getWeek()  # Retorna una lista de objetos date
+            day_options = [day.strftime("%Y-%m-%d") for day in week_days]
+            
+            # Se utiliza un único FieldFrame para recoger Día, Hora de inicio y Hora de fin
+            ff = FieldFrame(process_frame,
+                            tituloCriterios="Nueva Programación de Clase",
+                            criterios=["Día", "Inicio", "Fin"],
+                            tituloValores="Valor",
+                            valores=[day_options, "", ""],
+                            combobox=False,
+                            command=lambda: (
+                                ff.gatherEntries(),
+                                process_reprogramar(actor, areaSeleccionada,
+                                                    ff.valores[0],  # Día seleccionado (string "YYYY-MM-DD")
+                                                    ff.valores[1],  # Hora de inicio (string "HH:MM")
+                                                    ff.valores[2],  # Hora de fin (string "HH:MM")
+                                                    nivelClase, profesorEvaluador, fin)
+                            ))
+            ff.pack(pady=10, fill="x")
+            # Convertir la entrada del primer campo ("Día") en un Combobox
+            ff.values[1].destroy()  # ff.values[0] es el título; ff.values[1] corresponde al primer campo
+            ff.values[1] = ttk.Combobox(ff, values=day_options)
+            ff.values[1].grid(row=1, column=2)
 
-        def process_reprogramar(actor, areaSeleccionada, inicio_str, fin_str, nivelClase, profesorEvaluador):
+
+        def process_reprogramar(actor, areaSeleccionada, day_str, start_time_str, end_time_str, nivelClase, profesorEvaluador, fin):
+            from datetime import datetime
             try:
-                inicio = datetime.strptime(inicio_str, "%Y-%m-%d %H:%M")
-                fin = datetime.strptime(fin_str, "%Y-%m-%d %H:%M")
+                selected_date = datetime.strptime(day_str, "%Y-%m-%d").date()
+                start_time = datetime.strptime(start_time_str, "%H:%M").time()
+                end_time = datetime.strptime(end_time_str, "%H:%M").time()
             except ValueError:
-                messagebox.showerror("Error", "Formato de fecha/hora incorrecto.")
+                messagebox.showerror("Error", "Formato incorrecto. Use 'YYYY-MM-DD' para el día y 'HH:MM' para la hora.")
                 return
-            if fin <= inicio:
+
+            nuevo_inicio = datetime.combine(selected_date, start_time)
+            nuevo_fin = datetime.combine(selected_date, end_time)
+            
+            if nuevo_fin <= nuevo_inicio:
                 messagebox.showerror("Error", "El fin debe ser después del inicio.")
                 return
+            if nuevo_inicio <= fin:
+                messagebox.showerror("Error", "La nueva clase no puede iniciarse antes de finalizar la clase inicial.")
+                return
+            duration = (nuevo_fin - nuevo_inicio).total_seconds() / 3600
+            if duration < 2 or duration > 4:
+                messagebox.showerror("Error", "La duración debe ser entre 2 y 4 horas.")
+                return
+            # Validar que las clases se programen entre las 10:00 y las 22:00
+            if not (10 <= nuevo_inicio.hour < 22 and 10 < nuevo_fin.hour <= 22):
+                messagebox.showerror("Error", "Las clases deben programarse entre las 10:00 y las 22:00.")
+                return
+
+            # Buscar sala disponible
             salaAsignada = None
             for sala in Teatro.getInstancia().getSalas():
-                if sala.getAseado() and sala.isDisponible(inicio, fin):
+                if sala.get_aseado() and sala.is_disponible(nuevo_inicio, nuevo_fin):
                     salaAsignada = sala
                     break
             if salaAsignada is None:
                 messagebox.showerror("Error", "No hay salas disponibles en el nuevo horario deseado o no están limpias.")
+                Main.gestionClases()
                 return
-            salaAsignada.anadir_horario([inicio, fin])
+            salaAsignada.anadir_horario([nuevo_inicio, nuevo_fin])
+            
+            # Seleccionar profesor especializado (simulación)
             profesorAsignado = None
+            import random
             profesores = Teatro.getInstancia().getTipoProfesor()
             random.shuffle(profesores)
             for empleado in profesores:
@@ -3417,18 +3468,17 @@ class Main:
                         break
             if profesorAsignado is None:
                 messagebox.showerror("Error", "No hay profesores disponibles para la nueva clase en el área seleccionada.")
+                Main.gestionClases()
                 return
+
             messagebox.showinfo("Clase Reprogramada",
-                                f"Clase reprogramada con el profesor {profesorAsignado.getNombre()} en la sala {salaAsignada.getNumeroSala()}.")
+                                f"Clase reprogramada con el profesor {profesorAsignado.getNombre()} en la sala {salaAsignada.get_numero_sala()}.")
+            
             if actor.noHaMejoradoEnCuatroIntentos(areaSeleccionada):
                 nuevaCalificacion = max(0, actor.getCalificacionPorAptitud(areaSeleccionada) - 1)
                 actor.registrarCalificacion(areaSeleccionada, nuevaCalificacion)
-                messagebox.showinfo("Reducción de Nivel", f"El nuevo nivel del área {areaSeleccionada} es: {nuevaCalificacion}")
-            puntos = 1 if nivelClase == "Introducción" else (2 if nivelClase == "Profundización" else 3)
-            profesorAsignado.agregar_puntos(puntos)
-            messagebox.showinfo("Puntos", f"El profesor {profesorAsignado.getNombre()} ha recibido {puntos} puntos positivos.")
-            cls.volver()
-
+                messagebox.showinfo("Reducción de Nivel", f"El nuevo nivel del área {areaSeleccionada.name.capitalize()} es: {nuevaCalificacion}")
+            Main.gestionClases()
         # -------------------- Inicio del proceso: arranca por el Paso 1 --------------------
         step1()
 
