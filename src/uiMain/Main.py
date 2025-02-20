@@ -916,7 +916,7 @@ class Main:
                 cls.clear_frame(Anuncio)
                 texto = tk.Label(Anuncio, text= Deudas + "El saldo actual de la tesoreria es: " + str(Saldo), font=("Calibri", 18), bg="#ffb48a", bd = 10, relief="raised")
                 texto.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.5, anchor="center")
-                Anuncio.after(50, continuar)
+                Anuncio.after(2000, continuar)
             
             def continuar():
                 cls.wait()
@@ -1171,6 +1171,7 @@ class Main:
 
             def contrato(tabla, ocupacion):
                 selected = tabla.selection()
+                #Exepcion de no seleccionar la casilla
                 if selected:
                     valores = tabla.item(selected, "values")
                     if ocupacion != "Seguridad":
@@ -2214,7 +2215,7 @@ class Main:
                     Empleados = list(Teatro.getInstancia().getEmpleadosPorRendimiento())
                     NuevaLista = list(Empleados)
                     Despedidos = []
-
+                    #Exepcion de no seleccionar la casilla
                     msg = ""
                     for Persona in Empleados:
                         if Persona.getMetaSemanal() < 0:
@@ -2249,7 +2250,7 @@ class Main:
             
                 
                 
-            Anuncio.after(50, mostrarSaldo)
+            Anuncio.after(2000, mostrarSaldo)
             
             
         # Encabezado
