@@ -1,4 +1,5 @@
 import datetime
+import random
 import time
 
 from baseDatos.Teatro import Teatro
@@ -159,7 +160,7 @@ class Obra:
         return self.__precio
     
     def setPrecio(self, value):
-        self.precio = value
+        self.__precio = value
 
     def funcionesRecomendadas(self, promedioArt):
         if promedioArt < 2:
@@ -238,9 +239,12 @@ class Obra:
         self.setAsistencia(self.getAsistencia() + 1)
     
     def precioFuncion(self):
-            prom = self.promedioCalificacion()
+            
+            prom = random.randint(1,10)
+
+            
             precioBase = 10000
-            ad = self.getAsistencia()*500
+            ad = 0
             if prom > 8:
                 precioBase = precioBase + prom * 800 + ad
 
@@ -253,7 +257,8 @@ class Obra:
             else:
                 precioBase = precioBase + prom * 100 + ad
             
-            self.precio(precioBase)
+            return precioBase
+            
 
     def imprimirObra(self):
         return str.format(

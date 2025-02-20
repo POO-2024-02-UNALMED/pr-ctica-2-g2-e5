@@ -1,14 +1,14 @@
 from enum import Enum
 
 class Genero(Enum):
-    DRAMA = object()
-    COMEDIA = object()
-    MUSICAL = object()
-    FANTASIA = object() 
-    TERROR = object() 
-    ROMANCE = object() 
-    CIRCO = object() 
-    EXPERIMENTAL = object()
+    DRAMA = "Drama"
+    COMEDIA = "Comedia"
+    MUSICAL = "Musical"
+    FANTASIA = "Fantasía"
+    TERROR = "Terror"
+    ROMANCE = "Romance"
+    CIRCO = "Circo"
+    EXPERIMENTAL = "Experimental"
 
 #No funciona la importación, cuando se inicializa, la instancia Teatro no existe
 #    def __init__(self, directores):

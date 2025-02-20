@@ -7,6 +7,4 @@ class Suscripcion(Enum):
     ELITE = "Elite"
     VIP = "Vip"
 
-# Ejemplo de uso
-print(Suscripcion.BASICA)       # Suscripcion.BASICA
-print(Suscripcion.BASICA.value) # "Basica"
+

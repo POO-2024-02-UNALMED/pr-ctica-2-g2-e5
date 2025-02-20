@@ -1,5 +1,8 @@
 
+from datetime import datetime
 import random
+
+from gestorAplicacion.gestionVentas.Cliente import Cliente
 
 class Tiquete:
 
@@ -8,13 +11,19 @@ class Tiquete:
     def __init__(self, valor: float = 0.0, id: int = 0, cliente=None, funcion=None,
                  personaje=None, obra=None, silla=None):
         self.valor = valor
-        self.id = id
+        self.__id = id
         self.cliente = cliente
         self.funcion = funcion
         self.personaje = personaje
         self.obra = obra
         self.silla = silla
         Tiquete.tiquetes.append(self)  # Agregar instancia a la lista de tiquetes
+
+    def setId(self,id):
+        self.__id=id
+
+    def getId(self):
+        return self.__id
 
     @staticmethod
     def idTiquete() -> int:
@@ -24,8 +33,31 @@ class Tiquete:
                 return codigo
     def verificar(elemento):
         for i in Tiquete.tiquetes:
-            if i.id==elemento:
+            if i.getId==elemento:
                 return True
         return False
-    
-            
+    from datetime import datetime
+
+    @staticmethod
+    def imprimirFactura(cliente, b=0, d=0, p=0, su=0):
+        print(type(cliente))
+        fecha_actual = datetime.now().strftime("%d/%m/%Y")
+
+
+        cliente.getTiquete().setId(Tiquete.idTiquete())
+        
+        s = "================================\n"
+        s += f"Tiquete # {cliente.getTiquete().getId()}\n"
+        s += f"{fecha_actual}\n"
+        s += "================================\n"
+        
+
+
+        s += "================================\n"
+        s += "GRACIAS POR SU COMPRA\n"
+        s += "================================\n"
+
+        return s
+
+        
+                

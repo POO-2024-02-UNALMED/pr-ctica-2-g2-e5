@@ -1,4 +1,6 @@
 import datetime
+from random import Random
+import random
 
 from baseDatos.Teatro import Teatro
 
@@ -189,9 +191,9 @@ class Funcion:
         return obra.califcacionVacia()
 
     def precioFuncion(self):
-        prom = self.obra.promedioCalificacion()
+        prom = random.randint(1,10)
         precioBase = 10000
-        ad = self.obra.asistencia*500
+        ad = 0
         if prom > 8:
             return precioBase + prom * 800 + ad  * 500
         elif prom > 5:

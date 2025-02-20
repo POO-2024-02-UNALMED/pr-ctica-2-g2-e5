@@ -19,7 +19,7 @@ class Cliente(Persona):
         self.correo = correo
         self.__tipo = tipo
         self.__cuentaBancaria = cuenta_bancaria
-        self.tiquete = tiquete
+        self.__tiquete = tiquete
         Teatro.getInstancia().getClientes().append(self)
 
 
@@ -82,6 +82,13 @@ class Cliente(Persona):
     
     def setId(self, value: int) -> None:
         self.__id = value
+
+    def getTiquete(self):
+        return self.__tiquete
+    
+    def setTiquete(self, value: int) -> None:
+        self.__tiquete = value
+    
     
     def set_suscripcion(self,susc):
         self.__suscripcion=susc

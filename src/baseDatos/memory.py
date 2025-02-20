@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from baseDatos.Teatro import Teatro
 from gestorAplicacion.gestionClases.Profesor import Profesor
 from gestorAplicacion.gestionObras.Obra import Obra
@@ -86,9 +86,9 @@ def resetMemory():
     warner.getHistorial().append(actor3)
     warner.getCuentaBancaria().ingresar(3_700_000)
 
-    obra1 = Obra(nombre="pepe")
-    obra2 = Obra(nombre="dante")
-    obra3 = Obra(nombre="labella")
+    obra1 = Obra(nombre="pepe",genero=Genero.CIRCO,duracion = timedelta(hours=2, minutes=30, seconds=15))
+    obra2 = Obra(nombre="dante",genero=Genero.CIRCO)
+    obra3 = Obra(nombre="labella",genero=Genero.CIRCO)
     sala=Sala()
 
     Profesor1 = Profesor("Oscar Arango", 1)

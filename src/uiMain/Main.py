@@ -11,6 +11,8 @@ import random
 
 
 
+
+
 #AGREGAR SRC AL PATH
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -31,6 +33,7 @@ from gestorAplicacion.herramientas.Genero import Genero
 from gestorAplicacion.herramientas.Suscripcion import Suscripcion
 from gestorAplicacion.gestionVentas.Funcion import Funcion
 from gestorAplicacion.gestionVentas.Sala import Sala
+from gestorAplicacion.gestionVentas.Tiquete import Tiquete
 
 from gestorAplicacion.herramientas.FieldFrame import FieldFrame
 
@@ -393,9 +396,11 @@ class Main:
 
     @classmethod
     def gestionVentas(cls):
+        global tiquete
 
-        for i in Teatro.getInstancia().getClientes():
-            print(i.getId())
+        tiquete = Tiquete()
+
+        
 
 
         def Usuario_Nuevo():
@@ -408,6 +413,8 @@ class Main:
             global cliente
             cliente = Cliente(id = code)
             messagebox.showinfo("Éxito", f"Su nuevo ID es {cliente.getId()}")
+            tiquete.setId(code)
+            cliente.setTiquete(tiquete)
             Inicio_preguntas()
             
         
@@ -425,6 +432,8 @@ class Main:
                     messagebox.showerror("Error", "Id no existente")
                     
                 else:
+                    tiquete.setId(numero)
+                    cliente.setTiquete(tiquete)
                     messagebox.showinfo("Éxito", "Iniciando sesion")
                     Inicio_preguntas()
         def Usuario_Antiguo():
@@ -557,17 +566,23 @@ class Main:
             
         def asignar_suscripcion(fieldframe: FieldFrame):
             global cliente
+            global precio_sus
+            precio_sus=0
             
             fieldframe.gatherEntries()
             suscripcion = fieldframe.getValue("Eleccion")
             if suscripcion == "BASICA":
                 cliente.set_suscripcion(Suscripcion.BASICA.value)
+                precio_sus=0
             elif suscripcion == "VIP":
                 cliente.set_suscripcion(Suscripcion.VIP.value)
+                precio_sus=18900
             elif suscripcion == "PREMIUM":
                 cliente.set_suscripcion(Suscripcion.PREMIUM.value)
+                precio_sus=11900
             elif suscripcion == "ELITE":
                 cliente.set_suscripcion(Suscripcion.ELITE.value)
+                precio_sus=39900
             else:
                 raise ValueError("Suscripción no válida")
             
@@ -647,7 +662,11 @@ class Main:
 
             # Agregar datos al Treeview
             for obra in Teatro.getInstancia().getObras():
-                tree.insert("", "end", values=(obra.getNombre(),"comedia", "10:00", "1.000"))
+                obra.setPrecio(obra.precioFuncion())
+                
+                
+                
+                tree.insert("", "end", values=(obra.getNombre(),obra.getGenero().value,obra.getDuracion(), f"${obra.getPrecio():,.2f}"))
             
 
 
@@ -673,6 +692,7 @@ class Main:
                 lista=[]
                 for funcion in Teatro.getInstancia().getFuncionesCreadas():
                     if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getObra().getNombre() == suscripcion:
+
                         
                         lista.append(funcion.getObra().getNombre())
                 
@@ -689,13 +709,13 @@ class Main:
                 #func.place(relheight= 1, relwidth= 1)
 
 
-                tree = ttk.Treeview(frame_central, columns=("Nombre", "Horario"), show="headings",height=5)
+                tree = ttk.Treeview(frame_central, columns=("Fecha", "Horario"), show="headings",height=5)
 
                  
-                tree.heading("Nombre", text="Nombre")
+                tree.heading("Fecha", text="Fecha")
                 tree.heading("Horario", text="Horario")
 
-                tree.column("Nombre", width=180)
+                tree.column("Fecha", width=180)
                 tree.column("Horario", width=100)
 
                 scrollbar = ttk.Scrollbar(frame_central, orient="vertical", command=tree.yview)
@@ -704,8 +724,9 @@ class Main:
                 tree.place(relx=0.2,rely=0.3,relwidth=0.7, relheight=0.3)
                 scrollbar.place(relx=0.90,rely=0.3, relwidth=0.03, relheight=0.3)
                 for funcion in Teatro.getInstancia().getFuncionesCreadas():
+                    print(funcion.getHorario()[0].time())
                     if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getObra().getNombre() == suscripcion:
-                        tree.insert("", "end", values=(funcion.getObra().getNombre(),funcion.getHorario()))
+                        tree.insert("", "end", values=(funcion.getHorario()[0].date(),funcion.getHorario()[0].time()))
                         lista.append(funcion.getObra().getNombre())
                 
                 def on_tree_select(event):
@@ -728,8 +749,7 @@ class Main:
                    
         def buscar_sillas (fecha):
             print(fecha)
-            fecha = fecha.strip("{")
-            fecha = fecha.split("}")[0]
+            
             
             
             widget = cls.content.nametowidget("central") 
@@ -742,30 +762,34 @@ class Main:
             frame_botones = tk.Frame((frame_central), bg="slategray2")
             frame_botones.place(relx=0.15, rely=0.1, relwidth=0.80, relheight=0.60)
 
+            escenario = tk.Label(frame_botones, bg="slategray",text="ESCENARIO")
+            escenario.place(relx=0.35, rely=0.8, relwidth=0.30, relheight=0.20)
+
             for funcion in Teatro.getInstancia().getFuncionesCreadas():
-                print(funcion.getHorario()[0])
-                print(fecha)
-                if not funcion.getObra().getNombre() =="NOTFORITE" and str(funcion.getHorario()[0]) == fecha:
+                
+                if not funcion.getObra().getNombre() =="NOTFORITE" and str(funcion.getHorario()[0].time()) == fecha:
                     
-                    print("Ss")
+                    precio_fun=funcion.getObra().getPrecio()
+                    
+                    
                     global sillas
                     global funcion_elegida
                     funcion_elegida = funcion
                     sillas = funcion.getSillas()
-                    print(len(sillas))
+
 
             def boton_presionado(numero,l):
                 pregun = messagebox.askyesno("Eleccion",f"seleccionaste las silla  {numero}")
                 if pregun :
                     indi = 0
-                    if cliente.verificarSuscripcion(l):
-                        messagebox.showerror("Error", "no puede")
+                    if cliente.verificarSuscripcion(l[0]):
+                        messagebox.showerror("Error", f"Tu suscripcion no te permite comprar sillas tipo {l}")
                     else:
 
                         for i in funcion_elegida.getSillas():
                         
                             if i.getCodigo()==numero:
-                                funcion_elegida.getSillas()[indi].setCodigo("----")
+                                funcion_elegida.getSillas()[indi].setCodigo("ocupado")
 
                             
                             indi += 1
@@ -773,16 +797,23 @@ class Main:
                             
                     
 
+            for fila in range((len(sillas) // 8) + 1):  
+                frame_botones.grid_rowconfigure(fila, weight=0)  # Hace que las filas crezcan
+
+            for columna in range(8):  
+                frame_botones.grid_columnconfigure(columna, weight=1)  # Hace que las columnas crezcan
 
             for i in range(len(sillas)):
                 fila = i // 8  # Calcula en qué fila va
                 columna = i % 8  # Calcula en qué columna va
-                if sillas[i].getCodigo()=="----":
-                    btn = tk.Button(frame_botones, text=f"{sillas[i].getCodigo()}",state=tk.DISABLED)
-                    btn.grid(row=fila, column=columna, padx=5, pady=5)
-                else:    
-                    btn = tk.Button(frame_botones, text=f"{sillas[i].getTipo().value[0:2]} {sillas[i].getCodigo()}", command=lambda i=i: boton_presionado(sillas[i].getCodigo(),sillas[i].getTipo().value[0]))
-                    btn.grid(row=fila, column=columna, padx=5, pady=5)
+                if sillas[i].getCodigo() == "----":
+                    btn = tk.Button(frame_botones, text=f"{sillas[i].getCodigo()}", state=tk.DISABLED,height=1)
+                    btn.grid(row=fila, column=columna, padx=5, pady=5, sticky="nsew", ipady=2)  # Agregar `sticky="nsew"`
+                else:
+                    cod = sillas[i].getCodigo()
+                    btn = tk.Button(frame_botones, text=f"{sillas[i].getTipo().value[0:2]} {cod:04d}", 
+                                    command=lambda i=i: boton_presionado(sillas[i].getCodigo(), sillas[i].getTipo().value),height=1)
+                    btn.grid(row=fila, column=columna, padx=5, pady=5, sticky="nsew", ipady=2)  # Agregar `sticky="nsew"`
 
             def imprimir_factura(numero):
                 widget = cls.content.nametowidget("central") 
@@ -791,6 +822,10 @@ class Main:
 
                 frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
                 frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+                
+                texto=Tiquete.imprimirFactura(cliente)
+                texto = tk.Label(frame_central,text=texto)
+                texto.place(relx=0.3,rely=0.2)
 
 
             
