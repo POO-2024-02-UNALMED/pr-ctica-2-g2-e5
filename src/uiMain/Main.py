@@ -2274,9 +2274,17 @@ class Main:
 
     @classmethod
     def gestionObras(cls):
-        # for widget in cls.content.winfo_children():
-        #     widget.destroy()
+        for widget in cls.content.winfo_children():
+            widget.destroy()
         cls.clear_frame(cls.content)
+        
+        frameGestion = tk.Frame(cls.content, bg="#ffb48a")
+        frameGestion.place(relx=0, rely=0, relwidth=1, relheight=1)
+        
+        # --- Partes del contenido --- #
+        
+        
+        
     
     @classmethod
     def contratarActores(cls) -> None:
@@ -2832,10 +2840,6 @@ class Main:
         pregunta1.place(relx = 0, rely = 0, relheight = 1, relwidth = 1)
 
 
-    @classmethod
-    def gestionObras(cls):
-        pass
-        
 
 
 
