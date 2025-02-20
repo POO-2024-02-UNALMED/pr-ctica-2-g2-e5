@@ -2274,6 +2274,7 @@ class Main:
 
     @classmethod
     def gestionObras(cls):
+        eleccionObra = ""
         for widget in cls.content.winfo_children():
             widget.destroy()
         cls.clear_frame(cls.content)
@@ -2283,9 +2284,26 @@ class Main:
         
         # --- Partes del contenido --- #
         
+        frameObras = tk.Frame(frameGestion, bg="#ffb81a")
+        frameObras.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.5)
+        y = 10
+        for obra in Teatro.getInstancia().getObras():
+            etiquetaObra = tk.Label(frameObras, text = obra.getNombre(), bg = "#ffb81a", font = ("Calibri", 10))
+            etiquetaObra.place(x = 10, y = y)
+            y = y + 20
+            print("i")
+        labelEleccion = tk.Label(frameGestion, bg = "#ffffff", text = "Por favor ingrese el nombre de la obra")
+        labelEleccion.place(relx = 0.1, rely = 0.7, relwidth = 0.35, relheight= 0.1)
+        entryObra = tk.Entry(frameGestion)
+        entryObra.place(relx = 0.55, rely = 0.7, relwidth = 0.35, relheight = 0.1)
+        botonConfirmaEleObra = tk.Button(text = "Confirmar", command = lambda: definirEleccion(Main, entryObra))
+        botonConfirmaEleObra.pack()
+        cls.eleccionObra = ""
+        def definirEleccion(cls, entry):
+            i = entry.get()
+            cls.eleccionObra = i
+        print(cls.eleccionObra)
         
-        
-    
     @classmethod
     def contratarActores(cls) -> None:
         """Menú con opciones para contratar un actor, filtrando por características y presupuesto."""
@@ -2703,11 +2721,11 @@ class Main:
 
                 valores = [
                             ["Rol principal", "Rol secundario"], 
-                           
+                            
                             [genero.name.title() for genero in Genero],
 
                             [aptitud.name.title() for aptitud in Aptitud],
-                             
+                            
                             [day for day in Main.getWeek()]],
 
                 command= lambda: filtrado(primeraRonda),
