@@ -888,35 +888,8 @@ class Main:
         def run():
             cls.clear_frame(f1)
 
-            Anuncio = tk.Frame(f1, bg="#ffb48a")
-            Anuncio.place(relx = 0.5, rely=0.4, anchor="center", relwidth=0.8, relheight=0.5)
-            texto = tk.Label(Anuncio, text="Se estan pagando las deudas pendientes \nPorfavor espere...", font=("Calibri", 18), bg="#ffb48a", bd = 10, relief="raised")
-            texto.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.5, anchor="center")
-
             NOMBRES = ["Juan", "Pedro", "Maria", "Ana", "Luis", "Carlos", "Jose", "Andres", "Sofia", "Laura", "Miguel", "Danna", "Oscar", "Frank", "Pablo"]
             APELLIDOS = ["Gomez", "Perez", "Rodriguez", "Gonzalez", "Martinez", "Hernandez", "Lopez", "Torres", "Ramirez", "Diaz", "Sanchez", "Cruz", "Jimenez", "Rojas", "Vargas", "Velez"]
-            
-            Teatro.getInstancia().getTesoreria().transferenciaFondos
-            
-            # Verificar si hay deudas y pagar
-
-            Deudas = ""
-            for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
-                if Persona.getDeuda() != 0:
-                    if Teatro.getInstancia().getTesoreria().getCuenta().getSaldo > Persona.getDeuda():
-                        transaccion = Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), Persona.getDeuda())
-                        if transaccion:
-                            Deudas = Deudas + "Se realizo el pago a: " + Persona.getNombre() + " por un valor de: " + str(Persona.getDeuda()) + "\n"
-                            Persona.setDeuda(0)
-     
-            Saldo = Teatro.getInstancia().getTesoreria().getCuenta().getSaldo()
-
-            def mostrarSaldo():
-                cls.wait()
-                cls.clear_frame(Anuncio)
-                texto = tk.Label(Anuncio, text= Deudas + "El saldo actual de la tesoreria es: " + str(Saldo), font=("Calibri", 18), bg="#ffb48a", bd = 10, relief="raised")
-                texto.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.5, anchor="center")
-                Anuncio.after(2000, continuar)
             
             def continuar():
                 cls.wait()
@@ -1250,7 +1223,7 @@ class Main:
                     totalTrabajadores_S = len(Teatro.getInstancia().getTipoSeguridad())
                     funcionXTrabajador = 0
                     if totalTrabajadores_S != 0:
-                        funcionXTrabajador = totalFunciones//totalTrabajadores_S
+                        funcionXTrabajador = totalFunciones/totalTrabajadores_S
                     funcionesDisponibles = list(Teatro.getInstancia().getFuncionesCreadas())
                     try:
                         funcionesDisponibles.sort(key=lambda f : f.getHorario()[0])
@@ -1558,7 +1531,7 @@ class Main:
                     totalTrabajadores_A = len(Teatro.getInstancia().getTipoAseador())
                     funcionXTrabajador = 0
                     if totalTrabajadores_A != 0:
-                        funcionXTrabajador = totalFunciones//totalTrabajadores_A
+                        funcionXTrabajador = totalFunciones/totalTrabajadores_A
                     funcionesLimpiadas = list(Teatro.getInstancia().getFuncionesCreadas())
                     try:
                         funcionesLimpiadas.sort(key=lambda f : f.getHorario()[0])
@@ -2066,20 +2039,20 @@ class Main:
                     #Realizar pago
                     if totalSaldos > fondos:
                         Cuentas_Pagadas = []
-                        cantPagada = 0
+                        cantPagada = 0.0
                         linea = 0.2
                         tk.Label(righframe, text="Upps ... No se puede realizar los pagos adecuadamente", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=0, relwidth=1, relheight=0.1)
                         tk.Label(righframe, text="Realizando pagos de manera equitativa", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=0.1, relwidth=1, relheight=0.1)
                         for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
                             transaccion = Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), (Persona.getDeuda() + Persona.calcularSueldo()) * 0.5)
-                        if transaccion:
-                            cantPagada = cantPagada + ((Persona.calcularSueldo() + Persona.getDeuda())*0.5)
-                            Persona.setDeuda((Persona.getDeuda() + (Persona.calcularSueldo() + Persona.getDeuda())* 0.5))
-                            Cuentas_Pagadas.append(Persona)
-                        else:
-                            tk.Label(righframe, text="No se le puede pagar a: " + Persona.getNombre() + ", se le establecio una nueva deuda", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
-                            Persona.setDeuda(Persona.getDeuda() + Persona.calcularSueldo())
-                            linea += 0.1
+                            if transaccion:
+                                cantPagada = cantPagada + ((Persona.calcularSueldo() + Persona.getDeuda())*0.5)
+                                Persona.setDeuda((Persona.getDeuda() + (Persona.calcularSueldo() + Persona.getDeuda())* 0.5))
+                                Cuentas_Pagadas.append(Persona)
+                            else:
+                                tk.Label(righframe, text="No se le puede pagar a: " + Persona.getNombre() + ", se le establecio una nueva deuda", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                Persona.setDeuda(Persona.getDeuda() + Persona.calcularSueldo())
+                                linea += 0.1
                         tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                         linea += 0.1
                         msg = "Se pago un total de: " + str(cantPagada)
@@ -2242,7 +2215,7 @@ class Main:
                         Persona.setTrabajoRealizado(0)
                         Persona.setPuntosPositivos(0)
 
-                    righframe.after(2000, lambda: Despidos())
+                    righframe.after(5000, lambda: Despidos())
 
 
                 def Despidos():
@@ -2282,12 +2255,7 @@ class Main:
                 button_yes.config(command=lambda: yes()) 
                 button_no.config(command=lambda: Despidos()) 
 
-            
-                
-                
-            Anuncio.after(2000, mostrarSaldo)
-            
-            
+            f1.after(1000, lambda: continuar())            
         # Encabezado
         Titulo = tk.Frame(cls.content, bg="white")
         Titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1)
@@ -2296,16 +2264,52 @@ class Main:
         TituloLabel.bind("<Configure>", lambda e: cls.resize(Titulo, TituloLabel, 8, 50, False))
 
         # --- Partes del contenido --- #
+        #f1 es el central
         f1 = tk.Frame(cls.content, bg = "#ffb48a", highlightbackground="#5d2417", highlightthickness=10)
-        f1.place(relx=0.02, rely = 0.15, relwidth = 0.95, relheight= 0.8)
-        ask = tk.Frame(f1)
-        ask.place(relx=0.1, rely = 0.1, relwidth= 0.8, relheight=0.3)
-        Question = tk.Label(ask, text="¿Deseas empezar a correr la funcionalidad?", font=("Calibri", 25), bg="#ffb48a")
-        Question.pack(fill="both", expand=True)
-        # ask.bind("<Configure>", lambda e: )
-        cls.resize(ask, Question, 8, 45, False)
-        button_yes = tk.Button(f1, bg = "#571F1C", text = "Si", fg="White", font=("Calibri", 16), command= run)
-        button_yes.place(relx = 0.5, rely=0.6, relwidth=0.3, relheight=0.1, anchor="center")
+        f1.place(relx=0.1, rely = 0, relwidth = 0.8, relheight= 0.9)
+        
+        #frame izquierdo
+        leftFrame = tk.Frame(cls.content, bg="#5d2417")
+        leftFrame.place(relx=0, rely=0, relwidth=0.1, relheight=1)
+
+        #frame derecho
+        rightFrame = tk.Frame(cls.content, bg="#5d2417")
+        rightFrame.place(relx=0.9, rely=0,relwidth=0.1, relheight=1)
+        
+        #frame inferior
+        bottomFrame = tk.Frame(cls.content, bg="#5d2417", padx=15, pady=20)
+        bottomFrame.place(relx=0.1, rely=0.9, relheight=0.2, relwidth=0.8)
+        
+        #Accion principal
+        Anuncio = tk.Frame(f1, bg="#ffb48a")
+        Anuncio.place(relx = 0.5, rely=0.5, anchor="center", relwidth=0.9, relheight=0.5)
+        texto = tk.Label(Anuncio, text="Se estan pagando las deudas pendientes \nPorfavor espere...", font=("Calibri", 18), bg="#ffb48a", bd = 10, relief="raised")
+        texto.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.5, anchor="center")
+
+        Teatro.getInstancia().getTesoreria().transferenciaFondos()
+            
+        # Verificar si hay deudas y pagar
+
+        Deudas = ""
+        for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
+            if Persona.getDeuda() != 0:
+                if Teatro.getInstancia().getTesoreria().getCuenta().getSaldo() > Persona.getDeuda():
+                    transaccion = Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), Persona.getDeuda())
+                    if transaccion:
+                        Deudas = Deudas + "Se realizo el pago a: " + Persona.getNombre() + " por un valor de: " + str(Persona.getDeuda()) + "\n"
+                        Persona.setDeuda(0)
+     
+        Saldo = Teatro.getInstancia().getTesoreria().getCuenta().getSaldo()
+
+        def mostrarSaldo():
+            cls.wait()
+            cls.clear_frame(Anuncio)
+            texto = tk.Label(Anuncio, text= Deudas + "El saldo actual de la tesoreria es: " + str(Saldo), font=("Calibri", 18), bg="#ffb48a", bd = 10, relief="raised")
+            texto.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.5, anchor="center")
+            Anuncio.after(2000, run())
+        
+        f1.after(1500, lambda: mostrarSaldo())
+
 
     @classmethod
     def gestionObras(cls):
