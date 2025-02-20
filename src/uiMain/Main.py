@@ -1349,11 +1349,17 @@ class Main:
 
                                                 #Verificar que el horario nuevo no se solape
                                                 if not (inicioNuevo > finActual and finNuevo < inicioSiguiente):
-                                                    horarioValido = False
+                                                            horarioValido = False
+                                                else:
+                                                    horarioValido = True
                                                     break
+                                                            
                                             else:
-                                                if not (inicioNuevo > finActual):
+                                                #verificar que el inicio sea despues del horario ya existente
+                                                if not(inicioNuevo > finActual):
                                                     horarioValido = False
+                                                else:
+                                                    horarioValido = True
                                                     break
                                         if horarioValido:
                                             localTime.append(Funciones.getHorario())
@@ -1376,7 +1382,7 @@ class Main:
                             for Persona in Teatro.getInstancia().getTipoSeguridad():
                                 if len(Persona.getHorario()) == 1:
                                     msg = msg + Persona.getNombre() + " Cuidará: 1 Funcion\n"
-                                elif len(Persona.getHorario) > 1 or len(Persona.getHorario) == 0:
+                                elif len(Persona.getHorario()) > 1 or len(Persona.getHorario()) == 0:
                                     msg = msg + Persona.getNombre() + " Cuidará: " + str(len(Persona.getHorario())) + " Funciones\n"
                             mensaje = tk.Label(infoSeguridad, text=msg, font=("Calibri", 12), bg="#ffb48a")
                             mensaje.place(relx = 0.5, rely=0.5, relwidth= 0.8,relheight=0.7, anchor="center")
@@ -1479,11 +1485,17 @@ class Main:
 
                                                 #Verificar que el horario nuevo no se solape
                                                 if not (inicioNuevo > finActual and finNuevo < inicioSiguiente):
-                                                    horarioValido = False
+                                                            horarioValido = False
+                                                else:
+                                                    horarioValido = True
                                                     break
+                                                            
                                             else:
-                                                if not (inicioNuevo > finActual):
+                                                #verificar que el inicio sea despues del horario ya existente
+                                                if not(inicioNuevo > finActual):
                                                     horarioValido = False
+                                                else:
+                                                    horarioValido = True
                                                     break
                                         if horarioValido:
                                             localTime.append(Funciones.getHorario())
@@ -1507,7 +1519,7 @@ class Main:
                             for Persona in Teatro.getInstancia().getTipoSeguridad():
                                 if len(Persona.getHorario()) == 1:
                                     msg = msg + Persona.getNombre() + " Cuidará: 1 Funcion\n"
-                                elif len(Persona.getHorario) > 1 or len(Persona.getHorario) == 0:
+                                elif len(Persona.getHorario()) > 1 or len(Persona.getHorario()) == 0:
                                     msg = msg + Persona.getNombre() + " Cuidará: " + str(len(Persona.getHorario())) + " Funciones\n"
                             mensaje = tk.Label(infoSeguridad, text=msg, font=("Calibri", 12), bg="#ffb48a")
                             mensaje.place(relx = 0.5, rely=0.5, relwidth= 0.8,relheight=0.7, anchor="center")
@@ -1585,12 +1597,17 @@ class Main:
                                                         #Verificar que el horario nuevo no se solapa
                                                         if not (inicioNuevo > finActual and finNuevo < inicioSiguiente):
                                                             horarioValido = False
+                                                        else:
+                                                            horarioValido = True
                                                             break
+                                                            
                                                     else:
                                                         #verificar que el inicio sea despues del horario ya existente
                                                         if not(inicioNuevo > finActual):
                                                             horarioValido = False
-                                                            break
+                                                        else:
+                                                            horarioValido = True
+                                                            break         
                                                 if horarioValido:
                                                     asignadas +=1
                                                     sublista = []
@@ -1598,8 +1615,8 @@ class Main:
                                                     sublista.append(finNuevo)
                                                     localTime.append(sublista)
                                                     if Funciones.getSala() is not None:
-                                                        Persona.getTrabajos().append(Funciones.getSala().getMetrosCuadrados())
-                                                        Funciones.getSala().setAseado(True)
+                                                        Persona.getTrabajos().append(Funciones.getSala().get_metros_cuadrados())
+                                                        Funciones.getSala().set_aseado(True)
                                                     funcionesLimpiadas.pop(i)
                                                 else:
                                                     i +=1
@@ -1616,8 +1633,8 @@ class Main:
                                                 localTime.append(sublista)
                                                 funcionesLimpiadas.pop(i)
                                                 if Funciones.getSala() is not None:
-                                                    Persona.getTrabajos().append(Funciones.getSala().getMetrosCuadrados())
-                                                    Funciones.getSala().setAseado(True)
+                                                    Persona.getTrabajos().append(Funciones.getSala().get_metros_cuadrados())
+                                                    Funciones.getSala().set_aseado(True)
                                         else:
                                             funcionesSinHorario += 1
                                             funcionesLimpiadas.pop(i)
@@ -1657,13 +1674,20 @@ class Main:
                                                 inicioSiguiente = horarioSiguiente[0]
                                                 
                                                 #Verificar que no se solape
-                                                if not(inicioNuevo > finActual and finNuevo < inicioSiguiente):
-                                                    horarioValido =False
-                                                    break
-                                            else:
-                                                if not (inicioNuevo > finActual):
+                                                if not (inicioNuevo > finActual and finNuevo < inicioSiguiente):
                                                     horarioValido = False
+                                                else:
+                                                    horarioValido = True
                                                     break
+                                                            
+                                            else:
+                                            #verificar que el inicio sea despues del horario ya existente
+                                                if not(inicioNuevo > finActual):
+                                                    horarioValido = False
+                                                else:
+                                                    horarioValido = True
+                                                    break
+                                                
                                         if horarioValido:
                                             sublista = []
                                             sublista.append(inicioNuevo)
@@ -1671,8 +1695,8 @@ class Main:
                                             localTime.append(sublista)
                                             funcionesLimpiadas.pop(i)
                                             if Funciones.getSala() is not None:
-                                                Persona.getTrabajos().append(Funciones.getSala().getMetrosCuadrados())
-                                                Funciones.getSala().setAseado(True)
+                                                Persona.getTrabajos().append(Funciones.getSala().get_metros_cuadrados())
+                                                Funciones.getSala().set_aseado(True)
                                         else:
                                             i += 1
 
@@ -1692,7 +1716,7 @@ class Main:
                             funcionesPorMetros.sort(
                                 key = lambda f: (
                                     f.getHorario()[0],
-                                    -f.getSala().getMetrosCuadrados()
+                                    -f.getSala().get_metros_cuadrados()
                                 )
                             )
                             funcionesLimpiadas = funcionesPorMetros
@@ -1722,11 +1746,16 @@ class Main:
                                                         #Verificar que el horario nuevo no se solapa
                                                         if not (inicioNuevo > finActual and finNuevo < inicioSiguiente):
                                                             horarioValido = False
+                                                        else:
+                                                            horarioValido = True
                                                             break
+                                                            
                                                     else:
                                                         #verificar que el inicio sea despues del horario ya existente
                                                         if not(inicioNuevo > finActual):
                                                             horarioValido = False
+                                                        else:
+                                                            horarioValido = True
                                                             break
                                                 if horarioValido:
                                                     asignadas +=1
@@ -1735,8 +1764,8 @@ class Main:
                                                     sublista.append(finNuevo)
                                                     localTime.append(sublista)
                                                     if Funciones.getSala is not None:
-                                                        Persona.getTrabajos().append(Funciones.getSala().getMetrosCuadrados())
-                                                        Funciones.getSala().setAseado(True)
+                                                        Persona.getTrabajos().append(Funciones.getSala().get_metros_cuadrados())
+                                                        Funciones.getSala().set_aseado(True)
                                                     funcionesLimpiadas.pop(i)
                                                 else:
                                                     i +=1
@@ -1753,8 +1782,8 @@ class Main:
                                                 localTime.append(sublista)
                                                 funcionesLimpiadas.pop(i)
                                                 if Funciones.getSala() is not None:
-                                                    Persona.getTrabajos().append(Funciones.getSala().getMetrosCuadrados())
-                                                    Funciones.getSala().setAseado(True)
+                                                    Persona.getTrabajos().append(Funciones.getSala().get_metros_cuadrados())
+                                                    Funciones.getSala().set_aseado(True)
                                         else:
                                             funcionesSinHorario += 1
                                             funcionesLimpiadas.pop(i)
@@ -1777,7 +1806,7 @@ class Main:
                             
                             if len(funcionesLimpiadas) != 0:
                                 for Persona in Teatro.getInstancia().getTipoAseador():
-                                    localTime = list(Persona.getHorario)
+                                    localTime = list(Persona.getHorario())
                                     i = 0
                                     while i < len(funcionesLimpiadas):
                                         Funciones = funcionesLimpiadas[i]
@@ -1794,12 +1823,18 @@ class Main:
                                                 inicioSiguiente = horarioSiguiente[0]
                                                 
                                                 #Verificar que no se solape
-                                                if not(inicioNuevo > finActual and finNuevo < inicioSiguiente):
-                                                    horarioValido =False
+                                                if not (inicioNuevo > finActual and finNuevo < inicioSiguiente):
+                                                            horarioValido = False
+                                                else:
+                                                    horarioValido = True
                                                     break
+                                                            
                                             else:
-                                                if not (inicioNuevo > finActual):
+                                                #verificar que el inicio sea despues del horario ya existente
+                                                if not(inicioNuevo > finActual):
                                                     horarioValido = False
+                                                else:
+                                                    horarioValido = True
                                                     break
                                         if horarioValido:
                                             sublista = []
@@ -1808,8 +1843,8 @@ class Main:
                                             localTime.append(sublista)
                                             funcionesLimpiadas.pop(i)
                                             if Funciones.getSala() is not None:
-                                                Persona.getTrabajos().append(Funciones.getSala().getMetrosCuadrados())
-                                                Funciones.getSala().setAseado(True)
+                                                Persona.getTrabajos().append(Funciones.getSala().get_metros_cuadrados())
+                                                Funciones.getSala().set_aseado(True)
                                         else:
                                             i += 1
 
@@ -1818,7 +1853,7 @@ class Main:
                     
                             msg = ""
                             for Persona in Teatro.getInstancia().getTipoAseador():
-                                if len(Persona.getHorario) == 1:
+                                if len(Persona.getHorario()) == 1:
                                     msg = msg + Persona.getNombre() + " Limpiará: 1 vez\n"
                                 else:
                                     msg = msg + Persona.getNombre() + " Limpiará: " + str(len(Persona.getHorario())) + " veces\n"
