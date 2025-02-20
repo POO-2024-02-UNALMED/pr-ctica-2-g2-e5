@@ -1872,10 +1872,11 @@ class Main:
                             for Persona in Teatro.getInstancia().getTipoSeguridad():
                                 if Persona.getMetaSemanal() == 6:
                                     principiantes += 1
+                                   
                             if principiantes == len(Teatro.getInstancia().getTipoSeguridad()):
                                 for Persona in Teatro.getInstancia().getTipoSeguridad():
                                     for Hora in Persona.getTrabajos():
-                                        randomValue = random.random()
+                                        randomValue = round(random.uniform(0, 1), 2)
                                         if randomValue > 0.5:
                                             Persona.getTrabajoCorrecto().append(True)
                                             Persona.setTrabajoRealizado(Persona.getTrabajoRealizado() + Hora)
@@ -1885,7 +1886,6 @@ class Main:
                             else:
                                 for Persona in Teatro.getInstancia().getTipoSeguridad():
                                     for Hora in Persona.getTrabajos():
-                                        randomValue = random.random()
                                         randomValue = round(random.uniform(0, 1), 2)
                                         if Persona.getMetaSemanal() > 20:
                                             if Hora >= 4:
