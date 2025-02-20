@@ -572,16 +572,16 @@ class Main:
             fieldframe.gatherEntries()
             suscripcion = fieldframe.getValue("Eleccion")
             if suscripcion == "BASICA":
-                cliente.set_suscripcion(Suscripcion.BASICA.value)
+                cliente.set_suscripcion(Suscripcion.BASICA)
                 precio_sus=0
             elif suscripcion == "VIP":
-                cliente.set_suscripcion(Suscripcion.VIP.value)
+                cliente.set_suscripcion(Suscripcion.VIP)
                 precio_sus=18900
             elif suscripcion == "PREMIUM":
-                cliente.set_suscripcion(Suscripcion.PREMIUM.value)
+                cliente.set_suscripcion(Suscripcion.PREMIUM)
                 precio_sus=11900
             elif suscripcion == "ELITE":
-                cliente.set_suscripcion(Suscripcion.ELITE.value)
+                cliente.set_suscripcion(Suscripcion.ELITE)
                 precio_sus=39900
             else:
                 raise ValueError("Suscripción no válida")
@@ -822,8 +822,8 @@ class Main:
 
                 frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
                 frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
-                
-                texto=Tiquete.imprimirFactura(cliente)
+                global precio_sus
+                texto=Tiquete.imprimirFactura(cliente,su=precio_sus,p=precio_fun)
                 texto = tk.Label(frame_central,text=texto)
                 texto.place(relx=0.3,rely=0.2)
 

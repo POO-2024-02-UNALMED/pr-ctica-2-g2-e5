@@ -45,17 +45,17 @@ class Cliente(Persona):
             b = 0
         
         # Asignación de valores a 'a' según la suscripción del cliente
-        if self.get_suscripcion() == "Basica":
+        if self.get_suscripcion().value == "Basica":
             a = 0
-        elif self.get_suscripcion() == "Premium":
+        elif self.get_suscripcion().value  == "Premium":
             a = 1
-        elif self.get_suscripcion() == "Vip":
+        elif self.get_suscripcion().value  == "Vip":
             a = 2
-        elif self.get_suscripcion() == "Elite":
+        elif self.get_suscripcion().value  == "Elite":
             a = 3
         
         # Comparación entre 'a' y 'b'
-        return not (a >= b)
+        return not (a >=b)
 
     def buscarPorId(id: int) -> Cliente | bool:
         for cliente in Teatro.getInstancia().getClientes():
