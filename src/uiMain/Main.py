@@ -84,6 +84,17 @@ class Main:
     def resize(cls, frame, text, tamano = 18, reescalamiento = 30, aplicar = True):
         frame.bind("<Configure>", lambda e: cls.update_font(e, frame, text, tamano, reescalamiento, aplicar))
 
+     
+
+    def resize_image(event, original_image, label):
+        new_width = event.width
+        new_height = event.height
+        # Redimensionar la imagen original al tamaño actual del widget
+        resized = original_image.resize((new_width, new_height), Image.Resampling.LANCZOS)
+        new_image = ImageTk.PhotoImage(resized)
+        label.config(image=new_image)
+        label.image = new_image  # Guardar la referencia para evitar que se elimine la imagen
+
     # --- NUEVAS VARIABLES PARA PROGRAMADORES ---
     current_programador_index = -1
     programadores = [
@@ -2468,7 +2479,7 @@ class Main:
         #limpiar frame
         for widget in cls.content.winfo_children():
             widget.destroy()
-
+        
         #frame izquierdo
         leftFrame = tk.Frame(cls.content, bg="blue")
         leftFrame.place(relx=0, rely=0, relwidth=0.175, relheight=0.9)
@@ -2503,16 +2514,7 @@ class Main:
 
         #configurar el crecimiento adaptable de las columnas del frame central
         centerFrame.columnconfigure(0, weight=1) 
-        centerFrame.columnconfigure(1, weight=1) 
-
-        def resize_image(event, original_image, label):
-            new_width = event.width
-            new_height = event.height
-            # Redimensionar la imagen original al tamaño actual del widget
-            resized = original_image.resize((new_width, new_height), Image.Resampling.LANCZOS)
-            new_image = ImageTk.PhotoImage(resized)
-            label.config(image=new_image)
-            label.image = new_image  # Guardar la referencia para evitar que se elimine la imagen
+        centerFrame.columnconfigure(1, weight=1)
 
         '''IMAGEN BOTTOM (ASIENTOS)'''
         # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
@@ -2524,7 +2526,7 @@ class Main:
         bottom_label.place(relheight=1, relwidth=1)
 
         # Vincular el evento <Configure> usando lambda para pasar la imagen y el label a la función
-        bottomFrame.bind("<Configure>", lambda event: resize_image(event, imagen_bottom, bottom_label))
+        bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
 
         '''IMAGEN RIGHT (CORTINA DER)'''
         imagen_right = Image.open("src/media/theme/Courtain right.png")  
@@ -2533,7 +2535,7 @@ class Main:
         right_label = tk.Label(rightFrame, image=image_der, bg="black")
         right_label.place(relheight=1, relwidth=1)
 
-        rightFrame.bind("<Configure>", lambda event: resize_image(event, imagen_right, right_label))
+        rightFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_right, right_label))
 
         '''IMAGEN LEFT (CORTINA IZQ)'''
 
@@ -2543,7 +2545,7 @@ class Main:
         left_label = tk.Label(leftFrame, image=image_izq, bg="black")
         left_label.place(relheight=1, relwidth=1)
 
-        leftFrame.bind("<Configure>", lambda event: resize_image(event, imagen_left, left_label))
+        leftFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_left, left_label))
         
         #PREGUNTA NO. 1
         criteriosTipoEmpresa = ["Tipo de Empresa"]
@@ -3062,18 +3064,65 @@ class Main:
 
         # --- FRAME DE BIENVENIDA ---
         '''AVALADA'''
-        frame_bienvenida = Frame(cls.content, bg="red")
-        frame_bienvenida.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-        saludo = tk.Label(frame_bienvenida,
-                            text="Gestion de clases",
-                            font=("Calibri", 16),
-                            bg="black", fg="white")
-        saludo.place(relx=0, rely=0, relwidth=1, relheight=1)
-        frame_bienvenida.bind("<Configure>", lambda e: cls.resize(frame_bienvenida, saludo))
+        
+        #frame izquierdo
+        leftFrame = tk.Frame(cls.content, bg="blue")
+        leftFrame.place(relx=0, rely=0, relwidth=0.175, relheight=0.9)
+
+        #frame derecho
+        rightFrame = tk.Frame(cls.content, bg="blue")
+        rightFrame.place(relx=0.825, rely=0, relwidth=0.175, relheight=0.9)
+        
+        #frame inferior
+        bottomFrame = tk.Frame(cls.content, bg="pink")
+        bottomFrame.place(relx=0, rely=0.9, relheight=0.2, relwidth=1)
 
         # --- FRAME PRINCIPAL PARA EL PROCESO ---
         process_frame = Frame(cls.content, bg="white")
-        process_frame.place(relx=0, rely=0.1, relwidth=1, relheight=0.9)
+        process_frame.place(relx=0.175, rely=0.1, relwidth=0.65, relheight=0.8)
+        
+        frame_bienvenida = Frame(cls.content, bg="red")
+        frame_bienvenida.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
+        saludo = tk.Label(frame_bienvenida,
+                            text="Gestion de clases",
+                            font=("Calibri", 10),
+                            bg="black", fg="white")
+        saludo.place(relx=0, rely=0, relwidth=1, relheight=1)
+        frame_bienvenida.bind(
+            "<Configure>",
+            lambda e: cls.resize(frame_bienvenida, saludo, 10, 60, False)
+        ) 
+
+        '''IMAGEN BOTTOM (ASIENTOS)'''
+        # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
+        imagen_bottom = Image.open("src/media/theme/bottom.png")  
+        image = ImageTk.PhotoImage(imagen_bottom)
+
+        # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
+        bottom_label = tk.Label(bottomFrame, image=image)
+        bottom_label.place(relheight=1, relwidth=1)
+
+        # Vincular el evento <Configure> usando lambda para pasar la imagen y el label a la función
+        bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
+
+        '''IMAGEN RIGHT (CORTINA DER)'''
+        imagen_right = Image.open("src/media/theme/Courtain right.png")  
+        image_der = ImageTk.PhotoImage(imagen_right)
+
+        right_label = tk.Label(rightFrame, image=image_der, bg="black")
+        right_label.place(relheight=1, relwidth=1)
+
+        rightFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_right, right_label))
+
+        '''IMAGEN LEFT (CORTINA IZQ)'''
+
+        imagen_left = Image.open("src/media/theme/Courtain left.png")  
+        image_izq = ImageTk.PhotoImage(imagen_left)
+
+        left_label = tk.Label(leftFrame, image=image_izq, bg="black")
+        left_label.place(relheight=1, relwidth=1)
+
+        leftFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_left, left_label))
 
         # -------------------- PASO 1: Mostrar Artistas y solicitar ID -------------------- 
         '''AVALADA'''
