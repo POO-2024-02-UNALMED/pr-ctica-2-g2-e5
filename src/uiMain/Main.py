@@ -178,7 +178,6 @@ class Main:
         cls.bottomFrame.bind("<Enter>", cls.cambiar_imagen)
         cls.bottomFrame.bind("<Configure>", cls.update_image)
 
-
         #Frame izquierdo Superior
     
 
@@ -194,7 +193,7 @@ class Main:
         cls.titleLabel.place(relx=0.5, rely=0.5, anchor="center")
     
         # Vinculacion de eventos
-        cls.titleLabel.bind("<Button-1>", lambda e: cls.abrir_nueva_ventana())
+        cls.label.bind("<Button-1>", lambda e: cls.abrir_nueva_ventana())
         cls.resize(cls.topFrame, cls.titleLabel)
 
         #En este método está todo lo relacionado a la sección de programadores
@@ -271,6 +270,9 @@ class Main:
         cls.root.destroy()
 
         cls.new_window = tk.Tk()
+        ico = Image.open("src/media/icon.jpg")
+        logo = ImageTk.PhotoImage(ico)
+        cls.new_window.wm_iconphoto(False, logo)
         cls.new_window.title("Teatro Escuela Carlos Mayolo")
         cls.new_window.geometry("960x540")
 
@@ -312,8 +314,10 @@ class Main:
         messagebox.showinfo("info", mensaje)
         if accion:
             accion()
+
     def aplicacion():
-        messagebox.showinfo("Aplicacion", "Bienvenido al Teatro Escuela")
+        mensaje = "El programa está diseñado para manejar la logística de un teatro, en las que se simplifican tareas como:\n-Vender tiquetes.\n-Organizar las funciones a presentar.\n-Gestionar a los empleados.\n-Gestionar las clases de teatro.\nTodo esto diseñado para que la interacción con el usuario sea lo más sencillo  y completo posible, ya que implementa diferentes herramientas gráficas como tablas o incluso la implementación de colores para que que sea más intuitivo el comportamiento del mismo programa"
+        messagebox.showinfo("Aplicacion", mensaje)
 
     def autores():
         messagebox.showinfo("Acerca de", "Autores: \n- Francisco Jose Ceren Porto\n- Danna Valeria Perez Niño\n- Oscar David Arango Garcia\n- Juan Pablo Miras Cañas\n- Miguel Velez Bernal")
@@ -325,7 +329,7 @@ class Main:
             # Obtener el tamaño actual del frame
             frame_width = cls.bottomFrame.winfo_width()
             frame_height = cls.bottomFrame.winfo_height()
-
+            
             # Evitar redimensionar si el tamaño aún no está definido
             if frame_width < 10 or frame_height < 10:
                 return
