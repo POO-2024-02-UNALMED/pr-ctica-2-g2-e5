@@ -37,6 +37,8 @@ from gestorAplicacion.gestionVentas.Tiquete import Tiquete
 
 from gestorAplicacion.herramientas.FieldFrame import FieldFrame
 
+from excepciones.errorEntradaNula import errorEntradaNula
+from excepciones.errorEntradaNoNumerica import errorEntradaNoNumerica
 
 
 class Main:
@@ -3075,6 +3077,9 @@ class Main:
         left_label.place(relheight=1, relwidth=1)
 
         leftFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_left, left_label))
+
+        def toCop(value: float):
+            return "$" + "".join([val + "," if (i+1)%3 == 0 and (i+1) != len(str(value).split(".")[0]) else val for i, val in enumerate(str(value).split(".")[0][::-1])])[::-1] + "." + str(value).split(".")[1]
         
         #PREGUNTA NO. 1
         criteriosTipoEmpresa = ["Tipo de Empresa"]
@@ -3090,12 +3095,12 @@ class Main:
         
         CALIFICACION_ALTA = 4
 
-        def nullInEntries(fieldframe: FieldFrame) -> bool:
-            entries = [entry.get() for i, entry in enumerate(fieldframe.values) if i > 0]
-            for entry in entries:
-                if entry == "" or entry is None:
-                    return True
-            return False
+        #def nullInEntries(fieldframe: FieldFrame) -> bool:
+        #    entries = [entry.get() for i, entry in enumerate(fieldframe.values) if i > 0]
+        #    for entry in entries:
+        #        if entry == "" or entry is None:
+        #            return True
+        #F    return False
 
         def mostrarActores(fieldframe: FieldFrame, topFrame: Frame) -> None:
             """Se toma el presupuesto del fieldframe de entrada y muestra los actores que se pueden contratar.\n
@@ -3106,46 +3111,22 @@ class Main:
             global empresa
             global fechaInicio
             global fechaFin
-
-            fieldframe.gatherEntries()
-
-            if nullInEntries(fieldframe):
-                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
-                return
-
-            presupuesto = fieldframe.getValue("Presupuesto")
+            
             try:
-                presupuesto = float(presupuesto)
-            except Exception:
-                messagebox.showerror("Error", "La entrada debe ser numérica")
+                presupuesto = parseNumber(fieldframe, "Presupuesto", float)
+            except errorEntradaNoNumerica:
+                messagebox.showerror("Error", errorEntradaNoNumerica)
                 return
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula)
+
             
             actorsForRental = list(filter(lambda actor: actor.getPrecioContrato(duration) <= presupuesto, actorsForRental))
-
-            #actors = [(actor.getNombre(), actor.getId(), actor.getEdad(), actor.getCalificacion(), actor.getPrecioContrato(duration))
-            #            for actor in actorsForRental]
 
             if len(actorsForRental) == 0:
                 messagebox.showerror("Error", "No se hallaron actores para el presupuesto")
                 Main.contratarActores()
             else:
-
-                # columns = ("Nombre", "Id", "Edad", "Calificación", "Precio de contratación")
-                # widths = (60, 10, 10, 10, 60)
-                # tree = ttk.Treeview(topFrame,
-                #                     columns= columns,
-                #                     show= "headings")
-                # for col, width in zip(columns, widths):
-                #     tree.heading(col, text=col)
-                #     tree.column(column = col, width = width)
-                # scrollbar = ttk.Scrollbar(topFrame, orient=tk.VERTICAL, command=tree.yview)
-                # tree.configure(yscroll=scrollbar.set)
-
-                # for actor in actors:
-                #     tree.insert('', tk.END, values=actor)
-
-                # tree.place(relheight=1, relwidth= .98, relx= 0)
-                # scrollbar.place(relheight=1, relwidth=.02, relx= .98)
 
                 actores = FieldFrame(
                     centerFrame,
@@ -3164,11 +3145,11 @@ class Main:
                     if cls.filterDebug:
                         print(fechaInicio, fechaFin)
 
-                    if nullInEntries(fieldframe):
-                        messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+                    try:
+                        fieldframe.gatherEntries()
+                    except errorEntradaNula:
+                        messagebox.showerror("Error", errorEntradaNula())
                         return
-                    
-                    fieldframe.gatherEntries()
 
                     actorNames = [str(actor) for actor in actorsForRental]
                     actorEscogido: Actor = actorsForRental[actorNames.index(fieldframe.getValue("Actor"))]
@@ -3178,7 +3159,7 @@ class Main:
                     id = actorEscogido.getId()
 
                     contratar = messagebox.askyesno("Contratación de actores", 
-                                        f"Actor seleccionado:\n\nNombre: {actorEscogido}\nEdad: {edad}\nCalificación: {calificacion}\nPrecio de contratación: {precio}\n\n¿Desea contratarlo?")
+                                        f"Actor seleccionado:\n\nNombre: {actorEscogido}\nEdad: {edad}\nCalificación: {calificacion}\nPrecio de contratación: {toCop(precio)}\n\n¿Desea contratarlo?")
                     if contratar:
                         actor = Artista.buscarPorId(id)
                         empresa.pagarContratoActor(actor, float(precio))
@@ -3189,7 +3170,7 @@ class Main:
                         if cls.filterDebug:
                             print("horario nuevo", actor.getHorario())
 
-                        messagebox.showinfo("Success", f"¡Actor contratado!\n\nEl actor escogido fue {actorEscogido} por un precio de {precio}")
+                        messagebox.showinfo("Operación exitosa", f"¡Actor contratado!\n\nEl actor escogido fue {actorEscogido} por un precio de {toCop(precio)}")
                         Main.contratarActores()
                 
 
@@ -3202,7 +3183,7 @@ class Main:
             minActorPrecio = min(actorsForRental, key= lambda actor: actor.getPrecioContrato(duration)).getPrecioContrato(duration)
             maxActorPrecio = max(actorsForRental, key= lambda actor: actor.getPrecioContrato(duration)).getPrecioContrato(duration)
 
-            messagebox.showinfo("Información", "Antes de elegir el presupuesto de contratación, tenga en cuenta que el rango de los precios es de " + str(minActorPrecio) + " a " + str(maxActorPrecio))
+            messagebox.showinfo("Información", "Antes de elegir el presupuesto de contratación, tenga en cuenta que el rango de los precios es de " + toCop(minActorPrecio) + " a " + toCop(maxActorPrecio))
 
             presupuesto = FieldFrame(
                 topFrame,
@@ -3229,7 +3210,7 @@ class Main:
                 messagebox.showerror("Error", "No hay artistas disponibles con los requerimientos pedidos.")
             else:
                 if not avanzado:
-                    messagebox.showinfo("Success", str(len(actorsForRental)) + " actor/es encontrado/s durante la preselección")
+                    messagebox.showinfo("Operación exitosa", str(len(actorsForRental)) + " actor/es encontrado/s durante la preselección")
                 
                 actorsForRental.sort(key=lambda actor: actor not in historialEmpresa)
 
@@ -3244,10 +3225,10 @@ class Main:
 
             global actorsForRental
 
-            fieldframe.gatherEntries()
-
-            if nullInEntries(fieldframe):
-                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+            try:
+                fieldframe.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
                 return
 
             contadores = [[actor, 0] for actor in actorsForRental]
@@ -3285,7 +3266,7 @@ class Main:
                 messagebox.showerror("Error", "No se encontraron actores que se ajusten bien a las características")
                 return
             else:
-                messagebox.showinfo("Success", str(len(contadores)) + " actor/es se ajustaron a una o más características avanzadas.")
+                messagebox.showinfo("Operación exitosa", str(len(contadores)) + " actor/es se ajustaron a una o más características avanzadas.")
                 contadorActores = [tupla[0] for tupla in contadores]
 
                 if cls.filterDebug:
@@ -3315,7 +3296,7 @@ class Main:
             edad.place(relheight= 1, relwidth= 1)
 
         def setSchedule(fieldframe: FieldFrame, fecha: str, topFrame: str) -> None:
-            """Toma las entradas de un fieldframe que incluyan hora de inicio y fin de contratación, yr evisa si el horario cumple con los lineamientos."""
+            """Toma las entradas de un fieldframe que incluyan hora de inicio y fin de contratación, y revisa si el horario cumple con los lineamientos."""
 
             global actorsForRental
             global duration
@@ -3325,10 +3306,10 @@ class Main:
             if cls.filterDebug:
                 print("al entrar a setSchedule", [actor.getNombre() for actor in actorsForRental])
 
-            fieldframe.gatherEntries()
-
-            if nullInEntries(fieldframe):
-                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+            try:
+                fieldframe.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
                 return
             
             horaInicio = fieldframe.values[1].get()
@@ -3405,10 +3386,10 @@ class Main:
 
             global actorsForRental
 
-            fieldframe.gatherEntries()
-
-            if nullInEntries(fieldframe):
-                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+            try:
+                fieldframe.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
                 return
 
             responses = [entry.get() for i, entry in enumerate(fieldframe.values) if i > 0]
@@ -3471,23 +3452,22 @@ class Main:
 
             primeraRonda.place(relwidth= 1, relheight= 1)
 
-        def parseInt(fieldframe : FieldFrame, value: str) -> int | None:
+        def parseNumber(fieldframe : FieldFrame, value: str, cls = int) -> int | float:
             """Revisa si una entrada especfica de un fieldframe puede convertirse a entero"""
 
-            fieldframe.gatherEntries()
-
-            if nullInEntries(fieldframe):
-                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+            try:
+                fieldframe.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
                 return
 
             ans = fieldframe.getValue(value)
 
-            try:
-                ans = int(ans)
-                return ans
-            except Exception:
-                messagebox.showerror("Error", "La entrada no puede convertirse a entero")
-                return None
+            if not ans.isnumeric():
+                raise errorEntradaNoNumerica()
+
+            ans = cls(ans)
+            return ans
             
         def idExists(id: int) -> Cliente | bool:
             """Revisa si un número de identificación existe en la base de datos, y en caso de que exista, si es de tipo Empresa."""
@@ -3502,13 +3482,18 @@ class Main:
             global empresa
             global historialEmpresa
 
-            fieldframe.gatherEntries()
-
-            if nullInEntries(fieldframe):
-                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+            try:
+                fieldframe.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
                 return
 
-            id = parseInt(fieldframe, "Generar nuevo ID")
+            try:
+                id = parseNumber(fieldframe, "Generar nuevo ID", int)
+            except errorEntradaNoNumerica:
+                messagebox.showerror("Error", errorEntradaNoNumerica())
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
 
             if id is None: 
                 return
@@ -3518,7 +3503,7 @@ class Main:
             if not cliente:
                 empresa = Cliente(id= id, tipo = "Empresa")
                 historialEmpresa = empresa.getHistorial()
-                messagebox.showinfo("Success", "Cliente nuevo agregado a la base de datos")
+                messagebox.showinfo("Operación exitosa", "Cliente nuevo agregado a la base de datos")
                 initPrimeraRonda(centerFrame)
 
             else:
@@ -3529,14 +3514,20 @@ class Main:
 
             global empresa
             global historialEmpresa
+            id = None
 
-            fieldframe.gatherEntries()
-
-            if nullInEntries(fieldframe):
-                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+            try:
+                fieldframe.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
                 return
 
-            id = parseInt(fieldframe, "Inserte ID existente")
+            try:
+                id = parseNumber(fieldframe, "Inserte ID existente", int)
+            except errorEntradaNoNumerica:
+                messagebox.showerror("Error", errorEntradaNoNumerica())
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
 
             if id is None:
                 return
@@ -3544,7 +3535,7 @@ class Main:
             cliente = idExists(id)
             
             if cliente:
-                messagebox.showinfo("Success", "Cliente confirmado en base de datos")
+                messagebox.showinfo("Operación exitosa", "Cliente confirmado en base de datos")
                 historialEmpresa = cliente.getHistorial()
                 empresa = cliente
                 initPrimeraRonda(centerFrame)
@@ -3554,10 +3545,10 @@ class Main:
         def definirTipoEmpresa(fieldframe: FieldFrame, topFrame: Frame) -> None:
             """Antes de empezar con el filtrado, se elige si el cliente que va a llevar a cabo la contratación existe en la base de datos o es nuevo."""
 
-            fieldframe.gatherEntries()
-            
-            if nullInEntries(fieldframe):
-                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+            try:
+                fieldframe.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
                 return
 
             choice = fieldframe.getValue("Tipo de Empresa")
@@ -3583,10 +3574,6 @@ class Main:
                                     command= lambda: createId(idFrame),
                                     tituloGuardar= "Crear cuenta")
                     idFrame.place(relwidth= 1, relheight= 1)
-
-            else:
-                ##MANEJO DE EXCEPCION
-                messagebox.showerror("Error", "Opción Inválida")
 
         pregunta1 = FieldFrame(root = centerFrame, 
                                 criterios = criteriosTipoEmpresa,
