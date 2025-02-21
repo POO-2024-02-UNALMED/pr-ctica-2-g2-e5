@@ -95,6 +95,28 @@ class Main:
         label.config(image=new_image)
         label.image = new_image  # Guardar la referencia para evitar que se elimine la imagen
 
+    @classmethod
+    def resize_programador_images(cls, event):
+        # Recalcular dimensiones del frame y de cada celda
+        frame_width = cls.programadorFrameBottom.winfo_width()
+        frame_height = cls.programadorFrameBottom.winfo_height()
+        cell_width = frame_width // 2
+        cell_height = frame_height // 2
+
+        # Iterar sobre cada imagen y actualizar el label correspondiente
+        for idx, img_path in enumerate(cls.current_programador_image_paths):
+            try:
+                pil_image = Image.open(img_path)
+                pil_image = pil_image.resize((cell_width, cell_height), Image.Resampling.LANCZOS)
+                new_img = ImageTk.PhotoImage(pil_image)
+            except Exception as e:
+                print(f"Error redimensionando la imagen {img_path}: {e}")
+                new_img = tk.PhotoImage(width=cell_width, height=cell_height)
+            # Actualiza el label y la referencia de imagen
+            cls.programador_labels[idx].config(image=new_img)
+            cls.programadorFrameBottom.image_refs[idx] = new_img  # Actualiza la referencia para evitar la recolección de basura
+
+
     # --- NUEVAS VARIABLES PARA PROGRAMADORES ---
     current_programador_index = -1
     programadores = [
@@ -213,7 +235,7 @@ class Main:
     @classmethod
     def init_programador_functionality(cls):
         """
-        Inicializa la sección de programadores en el RightFrame.\n
+        Inicializa la sección de programadores en el RightFrame.
         Se crean dos subframes:
             - programadorFrameTop: contiene un botón que muestra la info del programador.
             - programadorFrameBottom: muestra en formato 2x2 las imágenes asociadas.
@@ -226,12 +248,9 @@ class Main:
         
         cls.btn_info = tk.Button(cls.programadorFrameTop, text="Programadores", command=cls.update_programador)
         cls.btn_info.pack(expand=True, fill="both")
-
-        # Vincula el evento <Configure> del frame superior para actualizar la fuente del botón
-        cls.programadorFrameTop.bind(
-            "<Configure>",
-            cls.resize(cls.programadorFrameTop, cls.btn_info)
-        )
+        
+        # Vincula el evento <Configure> del frame inferior para actualizar las imágenes al redimensionar
+        cls.programadorFrameBottom.bind("<Configure>", cls.resize_programador_images)
 
 
     @classmethod
@@ -248,8 +267,10 @@ class Main:
         for widget in cls.programadorFrameBottom.winfo_children():
             widget.destroy()
         
-        # Lista para mantener referencias a las imágenes y evitar que sean recolectadas
-        cls.programadorFrameBottom.image_refs = []
+        # Guardar referencias para evitar que las imágenes se eliminen y para poder redimensionarlas
+        cls.programadorFrameBottom.image_refs = []   # Referencias a las imágenes
+        cls.programador_labels = []                    # Referencias a los labels de cada imagen
+        cls.current_programador_image_paths = image_paths  # Guardamos las rutas originales
         
         # Configurar la cuadrícula: 2 filas y 2 columnas
         for i in range(2):
@@ -274,6 +295,7 @@ class Main:
             cls.programadorFrameBottom.image_refs.append(img)
             label = tk.Label(cls.programadorFrameBottom, image=img, bg="white")
             label.grid(row=idx // 2, column=idx % 2, sticky="nsew", padx=5, pady=5)
+            cls.programador_labels.append(label)
 
 
     @classmethod
