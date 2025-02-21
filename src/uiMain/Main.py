@@ -3777,8 +3777,8 @@ class Main:
             for widget in process_frame.winfo_children():
                 widget.destroy()
             # Configuramos los criterios y valores iniciales para ingresar el nombre y el tipo de artista
-            criterios = ["Nombre", "Tipo de artista"]
-            valores = ["", ""]  # valores vacíos inicialmente
+            criterios = ["ID", "Nombre", "Tipo de artista"]
+            valores = [f"{id_num}", "", ""]  # valores vacíos inicialmente
             # Se crea el FieldFrame; al presionar "Guardar" se llamará a la función lambda
             # que invoca process_new_artist con los datos ingresados.
             ff = FieldFrame(process_frame,
@@ -3786,6 +3786,7 @@ class Main:
                             criterios=criterios,
                             tituloValores="Ingrese valor",
                             valores=valores,
+                            habilitado= ["Nombre", "Tipo de artista"],
                             combobox=False,
                             command=lambda: (ff.gatherEntries(), process_new_artist(id_num, ff.valores[0], ff.valores[1])))
             ff.pack(pady=10, fill="both", expand=True)
@@ -3908,8 +3909,8 @@ class Main:
             var_index = tk.IntVar(value=0)
             # Crear radiobuttons usando el índice
             for i, area in enumerate(areas):
-                tk.Radiobutton(process_frame, text=str(area), variable=var_index,
-                            value=i, font=("Calibri", 12), bg="white").pack(anchor="w", padx=20)
+                tk.Radiobutton(process_frame, text=area.name.capitalize(), variable=var_index,
+                            value=i, font=("Calibri", 12), bg="#701C1A", fg='#FCE6C9', selectcolor="#4B2D2E").pack(anchor="w", padx=20)
             tk.Button(process_frame, text="Siguiente", font=("Calibri", 14),
                     command=lambda: step_schedule_class(actor, areas[var_index.get()])).pack(pady=10)
 
