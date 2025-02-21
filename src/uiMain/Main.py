@@ -66,6 +66,8 @@ class Main:
     @classmethod
     def update_font(cls, event, frame, text, tamano, reescalamiento, aplicar):
         """Actualiza el tamaño de la fuente del título al cambiar el tamaño de la ventana."""
+        if not text.winfo_exists():
+            return
         # new_size = max(tamano, event.width // reescalamiento)
         if aplicar:
             if event.height < 140 or event.width < 350:
@@ -3678,13 +3680,17 @@ class Main:
 
             artistas = Teatro.getInstancia().getArtistas()
             if artistas:
-                lbl_artistas = tk.Label(process_frame, text="Artistas existentes en la base de datos:",
-                                        font=("Calibri", 14), bg="white")
-                lbl_artistas.pack(pady=10)
-                txt_artistas = tk.Text(process_frame, height=10, width=80, font=("Calibri", 12))
-                txt_artistas.pack(pady=10)
+                lbl_artistas = tk.Label(process_frame,
+                                    text="Artistas existentes en la base de datos:",
+                                    font=("Calibri", 14),
+                                    bg="#701C1A", fg="#FCE6C9")
+                lbl_artistas.pack(pady=10, fill="x")
+                txt_artistas = tk.Text(process_frame,
+                               height=6, width=80,
+                               font=("Calibri", 12),
+                               bg="#701C1A", fg="#FCE6C9")
+                txt_artistas.pack(pady=10, fill="both", expand=True)
                 for artista in artistas:
-                    # Diferenciamos actores y directores: suponemos que si el artista tiene atributo "edad" es Actor.
                     if isinstance(artista, Actor):
                         linea = f"- Actor {artista.getNombre()} con ID {artista.getId()}\n"
                     else:
@@ -3692,17 +3698,27 @@ class Main:
                     txt_artistas.insert("end", linea)
                 txt_artistas.config(state="disabled")
             else:
-                tk.Label(process_frame, text="No hay artistas en la base de datos.",
-                        font=("Calibri", 14), bg="white").pack(pady=10)
+                tk.Label(process_frame,
+                        text="No hay artistas en la base de datos.",
+                        font=("Calibri", 14),
+                        bg="#701C1A", fg="#FCE6C9").pack(pady=10, fill="x")
 
-            lbl_id = tk.Label(process_frame, text="Ingrese el ID del artista para gestionar clases:",
-                                font=("Calibri", 14), bg="white")
-            lbl_id.pack(pady=10)
+            lbl_id = tk.Label(process_frame,
+                      text="Ingrese el ID del artista para gestionar clases:",
+                      font=("Calibri", 14),
+                      bg="#701C1A", fg="#FCE6C9")
+            lbl_id.pack(pady=10, fill="x")
             entry_id = tk.Entry(process_frame, font=("Calibri", 14))
             entry_id.pack(pady=5)
-            btn_buscar = tk.Button(process_frame, text="Buscar", font=("Calibri", 14),
-                                    command=lambda: process_artist(entry_id.get()))
+            btn_buscar = tk.Button(process_frame,
+                                text="Buscar",
+                                font=("Calibri", 14),
+                                bg="#701C1A", fg="#FCE6C9",
+                                command=lambda: process_artist(entry_id.get()))
             btn_buscar.pack(pady=10)
+
+            # Se asocia el evento de resize al label (puedes hacerlo a otros widgets según convenga)
+            Main.resize(process_frame, lbl_artistas, 14, 60, True)
 
         # -------------------- PASO 2: Procesar el ID ingresado --------------------
         '''AVALADA'''
@@ -3723,14 +3739,26 @@ class Main:
         def step_artist_not_found(id_num):
             for widget in process_frame.winfo_children():
                 widget.destroy()
-            tk.Label(process_frame, text=f"Artista con ID {id_num} no encontrado.",
-                        font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
-            tk.Label(process_frame, text="¿Desea crear un nuevo Artista con este ID?",
-                        font=("Calibri", 14), bg="white").pack(pady=10)
-            tk.Button(process_frame, text="Sí", font=("Calibri", 14),
-                        command=lambda: step_create_artist(id_num)).pack(pady=5)
-            tk.Button(process_frame, text="No", font=("Calibri", 14),
-                        command=lambda: step_show_obras_criticas_and_fin()).pack(pady=5)
+            tk.Label(process_frame,
+             text=f"Artista con ID {id_num} no encontrado.",
+             font=("Calibri", 14),
+             bg="#701C1A", fg="#FCE6C1").pack(pady=10, fill="x")
+            tk.Label(process_frame,
+                    text="¿Desea crear un nuevo Artista con este ID?",
+                    font=("Calibri", 14),
+                    bg="#701C1A", fg="#FCE6C1").pack(pady=10, fill="x")
+            tk.Button(process_frame,
+                    text="Sí",
+                    font=("Calibri", 14),
+                    bg="#701C1A", fg="#FCE6C1",
+                    width=10,
+                    command=lambda: step_create_artist(id_num)).pack(pady=5)
+            tk.Button(process_frame,
+                    text="No",
+                    font=("Calibri", 14),
+                    bg="#701C1A", fg="#FCE6C1",
+                    width=10,
+                    command=lambda: step_show_obras_criticas_and_fin()).pack(pady=5)
 
         # -------------------- MÉTODO REQUERIDO: Obras críticas y terminar -------------------- 
         '''AVALADA'''
@@ -3744,20 +3772,24 @@ class Main:
             obras_criticas = Obra.mostrarObrasCriticas()  
             if not obras_criticas:
                 tk.Label(process_frame, text="No hay obras en estado crítico en el teatro.",
-                        font=("Calibri", 20), bg="white", fg="yellow").pack(pady=10)
+                        font=("Calibri", 20), bg="#701C1A", fg="#FCE6C1").pack(pady=10)
             else:
-                tk.Label(process_frame, text="Obras en estado crítico del teatro:",
-                        font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
-                txt_obras = tk.Text(process_frame, height=10, width=80, font=("Calibri", 12))
-                txt_obras.pack(pady=10)
-                # Itera sobre la lista de obras y agrega una línea para cada obra
+                tk.Label(process_frame,
+                        text="Obras en estado crítico del teatro:",
+                        font=("Calibri", 14),
+                        bg="#701C1A", fg="#FCE6C1").pack(pady=10, fill="x")
+                txt_obras = tk.Text(process_frame,
+                                    height=8, width=80,
+                                    font=("Calibri", 12),
+                                    bg="#701C1A", fg="#FCE6C1")
+                txt_obras.pack(pady=10, fill="both", expand=True)
                 for obra in obras_criticas:
-                    # Se asume que cada obra tiene métodos getNombre() y promedioCalificacion()
                     linea = f"- '{obra.getNombre()}' (Promedio: {obra.promedioCalificacion()})\n"
                     txt_obras.insert("end", linea)
                 txt_obras.config(state="disabled")
             
-            Main.gestionClases()
+            tk.Button(process_frame, text="Volver al inicio", font=("Calibri", 16), bg="#701C1A", fg="#FCE6C1",
+                command=Main.gestionClases).pack(pady=10)
 
         # -------------------- PASO 4: Crear nuevo artista --------------------
         '''AVALADA'''
@@ -3776,10 +3808,12 @@ class Main:
                             valores=valores,
                             habilitado= ["Nombre", "Tipo de artista"],
                             combobox=False,
-                            command=lambda: (ff.gatherEntries(), process_new_artist(id_num, ff.valores[0], ff.valores[1])))
+                            command=lambda: (ff.gatherEntries(), process_new_artist(id_num, ff.valores[1], ff.valores[2])))
             ff.pack(pady=10, fill="both", expand=True)
-            tk.Label(process_frame, text="(Si se ingresa 'actor' se pedirá la edad posteriormente)",
-                    font=("Calibri", 12), bg="white").pack(pady=5)
+            tk.Label(process_frame,
+                    text="(Si se ingresa 'actor' se pedirá la edad posteriormente)",
+                    font=("Calibri", 12),
+                    bg="#701C1A", fg="#FCE6C1").pack(pady=5, fill="x")
 
         def process_new_artist(id_num, nombre, tipo):
             tipo = tipo.lower().strip()
@@ -3798,12 +3832,17 @@ class Main:
             else:
                 for widget in process_frame.winfo_children():
                     widget.destroy()
-                tk.Label(process_frame, text="Ingrese la edad del nuevo actor (entre 4 y 80):",
-                        font=("Calibri", 14), bg="white").pack(pady=10)
+                tk.Label(process_frame,
+                    text="Ingrese la edad del nuevo actor (entre 4 y 80):",
+                    font=("Calibri", 14),
+                    bg="#701C1A", fg="#FCE6C1").pack(pady=30, fill="x")
                 entry_age = tk.Entry(process_frame, font=("Calibri", 14))
                 entry_age.pack(pady=5)
-                tk.Button(process_frame, text="Guardar", font=("Calibri", 14),
-                            command=lambda: process_new_actor(id_num, nombre, entry_age.get())).pack(pady=10)
+                tk.Button(process_frame,
+                        text="Guardar",
+                        font=("Calibri", 14),
+                        bg="#701C1A", fg="#FCE6C1",
+                        command=lambda: process_new_actor(id_num, nombre, entry_age.get())).pack(pady=10)
 
         def process_new_actor(id_num, nombre, age_str):
             try:
@@ -3837,31 +3876,37 @@ class Main:
                 if len(artista.getCalificacionesPublico()) == 0:
                     Artista.inicializarCalificacionesPublico(artista)
                 # Mostrar información de calificaciones
-                txt_info = tk.Text(process_frame, height=8, width=80, font=("Calibri", 12))
-                txt_info.pack(pady=10)
-                info_text = f"Calificaciones de calificadores: {artista.getCalificacionesAptitudes()}\n"
+                info_text = f"Calificaciones de profesores: {artista.getCalificacionesAptitudes()}\n"
                 info_text += f"Calificaciones del público: {artista.getCalificacionesPublico()}\n"
-                txt_info.insert("end", info_text)
-                txt_info.config(state="disabled")
+                lbl_info = tk.Label(process_frame, text=info_text, font=("Calibri", 18), bg="#701C1A", fg="#FCE6C1")
+                lbl_info.pack(pady=5)
                 # Mostrar obras críticas
                 tk.Label(process_frame, text="Obras en estado crítico del teatro:",
-                        font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
+                        font=("Calibri", 14), bg="#701C1A", fg="#FCE6C1").pack(pady=10)
                 obras = Obra.mostrarObrasCriticas()  # Se asume que este método existe
                 if not obras:
                     tk.Label(process_frame, text="No hay obras en estado crítico.",
-                            font=("Calibri", 14), bg="white", fg="yellow").pack(pady=5)
+                            font=("Calibri", 14), bg="#701C1A", fg="#FCE6C1").pack(pady=5)
                 else:
-                    txt_obras = tk.Text(process_frame, height=6, width=80, font=("Calibri", 12))
-                    txt_obras.pack(pady=5)
+                    txt_obras = tk.Text(process_frame, height=6, width=80, font=("Calibri", 12),
+                                bg="#701C1A", fg="#FCE6C1")
+                    txt_obras.pack(pady=5, fill="both", expand=True)
                     for obra in obras:
                         linea = f"- '{obra.nombre}' (Promedio: {obra.promedioCalificacion()})\n"
                         txt_obras.insert("end", linea)
                     txt_obras.config(state="disabled")
-                tk.Button(process_frame, text="Programar clase", font=("Calibri", 14),
-                            command=lambda: step_select_area(artista)).pack(pady=10)
-                
-                tk.Button(process_frame, text="Volver al inicio", font=("Calibri", 14),
-                command=Main.gestionClases).pack(pady=10)
+                tk.Button(process_frame,
+                        text="Programar clase",
+                        font=("Calibri", 14),
+                        bg="#701C1A", fg="#FCE6C1",
+                        width=13,
+                        command=lambda: step_select_area(artista)).pack(pady=10)
+                tk.Button(process_frame,
+                        text="Volver al inicio",
+                        font=("Calibri", 14),
+                        bg="#701C1A", fg="#FCE6C1",
+                        width=13,
+                        command=Main.gestionClases).pack(pady=10)
 
         # -------------------- PASO 6: Seleccionar área de mejora --------------------
         '''AVALADA'''
@@ -3869,22 +3914,33 @@ class Main:
             for widget in process_frame.winfo_children():
                 widget.destroy()
             areas_recomendadas = actor.obtenerAreasDeMejora()
-            txt_areas = tk.Text(process_frame, height=6, width=80, font=("Calibri", 12))
-            txt_areas.pack(pady=10)
             if not areas_recomendadas:
                 step_select_custom_area(actor)
             else:
+                txt_areas = tk.Text(process_frame, height=6, width=80, font=("Calibri", 12),
+                                bg="#701C1A", fg="#FCE6C1")
+                txt_areas.pack(pady=10, fill="both", expand=True)
                 txt_areas.insert("end", "Áreas recomendadas para mejorar del actor " + actor.getNombre() + ":\n")
                 for i, area in enumerate(areas_recomendadas[:3]):
                     cal = actor.getCalificacionPorAptitud(area)
                     txt_areas.insert("end", f"{i+1}. {area.name.capitalize()} (Calificación: {cal})\n")
                 txt_areas.config(state="disabled")
-                tk.Label(process_frame, text="¿Desea programar una clase basada en las áreas recomendadas?",
-                    font=("Calibri", 14), bg="white").pack(pady=10)
-                tk.Button(process_frame, text="Sí", font=("Calibri", 14),
-                    command=lambda: step_schedule_class(actor, areas_recomendadas[0])).pack(pady=5)
-                tk.Button(process_frame, text="No", font=("Calibri", 14),
-                    command=lambda: step_select_custom_area(actor)).pack(pady=5)
+                tk.Label(process_frame,
+                        text="¿Desea programar una clase basada en las áreas recomendadas?",
+                        font=("Calibri", 14),
+                        bg="#701C1A", fg="#FCE6C1").pack(pady=10, fill="x")
+                tk.Button(process_frame,
+                        text="Sí",
+                        font=("Calibri", 14),
+                        bg="#701C1A", fg="#FCE6C1",
+                        width=10,
+                        command=lambda: step_schedule_class(actor, areas_recomendadas[0])).pack(pady=5)
+                tk.Button(process_frame,
+                        text="No",
+                        font=("Calibri", 14),
+                        bg="#701C1A", fg="#FCE6C1",
+                        width=10,
+                        command=lambda: step_select_custom_area(actor)).pack(pady=5)
 
         # -------------------- PASO 7: Selección personalizada de área --------------------
         '''AVALADA'''
@@ -3923,9 +3979,9 @@ class Main:
             
             tk.Label(process_frame,
                     text=f"Área seleccionada: {area_display}\nNivel de clase: {nivelClase}",
-                    font=("Calibri", 14), bg="white").pack(pady=10)
+                    font=("Calibri", 14), bg="#701C1A", fg="#FCE6C1").pack(pady=10)
             
-            tk.Label(process_frame, text="Programe la clase:", font=("Calibri", 14), bg="white").pack(pady=5)
+            tk.Label(process_frame, text="Programe la clase:", font=("Calibri", 14), bg="#701C1A", fg="#FCE6C1").pack(pady=5)
             
             # Obtener la lista de días de la semana con getWeek()
             week_days = Main.getWeek()  # Retorna una lista de objetos date
@@ -4028,8 +4084,9 @@ class Main:
             else:
                 costoClase = 90000
             tk.Label(process_frame, text=f"El costo de la clase es: ${costoClase}",
-                    font=("Calibri", 14), bg="white").pack(pady=10)
+                    font=("Calibri", 14), bg="#701C1A", fg="#FCE6C1").pack(pady=10)
             tk.Button(process_frame, text="Procesar Pago", font=("Calibri", 14),
+                    bg="#701C1A", fg="#FCE6C1",
                     command=lambda: process_payment(actor, costoClase, areaSeleccionada,
                                                     profesorAsignado, nivelClase, fin)).pack(pady=10)
 
@@ -4090,7 +4147,7 @@ class Main:
             for widget in process_frame.winfo_children():
                 widget.destroy()
             tk.Label(process_frame, text="Reprogramar clase por falta de mejora",
-                    font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
+                    font=("Calibri", 14), bg="#701C1A", fg="#FCE6C1").pack(pady=10)
             
             # Obtener la lista de días de la semana con getWeek()
             week_days = Main.getWeek()  # Retorna una lista de objetos date
