@@ -95,28 +95,6 @@ class Main:
         label.config(image=new_image)
         label.image = new_image  # Guardar la referencia para evitar que se elimine la imagen
 
-    @classmethod
-    def resize_programador_images(cls, event):
-        # Recalcular dimensiones del frame y de cada celda
-        frame_width = cls.programadorFrameBottom.winfo_width()
-        frame_height = cls.programadorFrameBottom.winfo_height()
-        cell_width = frame_width // 2
-        cell_height = frame_height // 2
-
-        # Iterar sobre cada imagen y actualizar el label correspondiente
-        for idx, img_path in enumerate(cls.current_programador_image_paths):
-            try:
-                pil_image = Image.open(img_path)
-                pil_image = pil_image.resize((cell_width, cell_height), Image.Resampling.LANCZOS)
-                new_img = ImageTk.PhotoImage(pil_image)
-            except Exception as e:
-                print(f"Error redimensionando la imagen {img_path}: {e}")
-                new_img = tk.PhotoImage(width=cell_width, height=cell_height)
-            # Actualiza el label y la referencia de imagen
-            cls.programador_labels[idx].config(image=new_img)
-            cls.programadorFrameBottom.image_refs[idx] = new_img  # Actualiza la referencia para evitar la recolección de basura
-
-
     # --- NUEVAS VARIABLES PARA PROGRAMADORES ---
     current_programador_index = -1
     programadores = [
@@ -249,7 +227,10 @@ class Main:
         cls.btn_info = tk.Button(cls.programadorFrameTop, text="Programadores", command=cls.update_programador)
         cls.btn_info.pack(expand=True, fill="both")
         
-        # Vincula el evento <Configure> del frame inferior para actualizar las imágenes al redimensionar
+        # Vincula el evento <Configure> del frame superior para redimensionar la fuente del botón
+        cls.resize(cls.programadorFrameTop, cls.btn_info, tamano=18, reescalamiento=30, aplicar=True)
+        
+        # Vincula el evento <Configure> del frame inferior para actualizar las imágenes
         cls.programadorFrameBottom.bind("<Configure>", cls.resize_programador_images)
 
 
@@ -296,6 +277,34 @@ class Main:
             label = tk.Label(cls.programadorFrameBottom, image=img, bg="white")
             label.grid(row=idx // 2, column=idx % 2, sticky="nsew", padx=5, pady=5)
             cls.programador_labels.append(label)
+
+    @classmethod
+    def resize_programador_images(cls, event):
+        # Si no se ha establecido la lista de rutas, salir sin hacer nada.
+        if not hasattr(cls, "current_programador_image_paths") or not cls.current_programador_image_paths:
+            return
+
+        frame_width = cls.programadorFrameBottom.winfo_width()
+        frame_height = cls.programadorFrameBottom.winfo_height()
+        cell_width = frame_width // 2
+        cell_height = frame_height // 2
+
+        # Iterar sobre cada imagen y actualizar el label correspondiente
+        for idx, img_path in enumerate(cls.current_programador_image_paths):
+            try:
+                pil_image = Image.open(img_path)
+                pil_image = pil_image.resize((cell_width, cell_height), Image.Resampling.LANCZOS)
+                new_img = ImageTk.PhotoImage(pil_image)
+            except Exception as e:
+                print(f"Error redimensionando la imagen {img_path}: {e}")
+                new_img = tk.PhotoImage(width=cell_width, height=cell_height)
+            # Actualizar el label solo si existe
+            if hasattr(cls, "programador_labels") and idx < len(cls.programador_labels) and cls.programador_labels[idx].winfo_exists():
+                cls.programador_labels[idx].config(image=new_img)
+            # Actualizar la referencia para evitar la recolección de basura
+            if hasattr(cls.programadorFrameBottom, "image_refs") and idx < len(cls.programadorFrameBottom.image_refs):
+                cls.programadorFrameBottom.image_refs[idx] = new_img
+
 
 
     @classmethod
