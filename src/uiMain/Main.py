@@ -99,15 +99,15 @@ class Main:
     current_programador_index = -1
     programadores = [
         ("Programador 1:\nNombre: Francisco Jose Ceren Porto\n Edad: 17 \nID: 1023631713",
-         ["src/media/Programadores/perro.png", "src/media/Programadores/perro.png", "src/media/Programadores/perro.png", "src/media/Programadores/perro.png"]),
+            ["src/media/Programadores/perro.png", "src/media/Programadores/perro.png", "src/media/Programadores/perro.png", "src/media/Programadores/perro.png"]),
         ("Programador 2:\nNombre: Danna Valeria Perez Niño\n Edad: 17 \nID: 1052839541",
-         ["src/media/Programadores/Danna1 (9).png", "src/media/Programadores/Danna1 (5).png", "src/media/Programadores/Danna1 (8).png", "src/media/Programadores/Danna1 (10).png"]),
+            ["src/media/Programadores/Danna1 (9).png", "src/media/Programadores/Danna1 (5).png", "src/media/Programadores/Danna1 (8).png", "src/media/Programadores/Danna1 (10).png"]),
         ("Programador 3:\nNombre: Oscar David Arango Garcia\n Edad: 17 \nID: 1011591946",
-         ["src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png"]),
+            ["src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png"]),
         ("Programador 4:\nNombre: Juan Pablo Miras Cañas\n Edad: 18 \nID: 4",
-         ["src/media/Programadores/Pablo.png", "src/media/Programadores/Pablo.png", "src/media/Programadores/Pablo.png", "src/media/Programadores/Pablo.png"]),
+            ["src/media/Programadores/Pablo.png", "src/media/Programadores/Pablo.png", "src/media/Programadores/Pablo.png", "src/media/Programadores/Pablo.png"]),
         ("Programador 5:\nNombre: Miguel Velez Bernal\n Edad: 18 \nID: 1023524572",
-         ["src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png"])
+            ["src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png"])
     ]
 
     imagenes = [
@@ -2448,24 +2448,14 @@ class Main:
         entryObra = tk.Entry(frameGestion)
         entryObra.place(relx = 0.55, rely = 0.7, relwidth = 0.35, relheight = 0.1)
         eleccionObra= None
-        def definirEleccion(entry):
+        def definirEleccion(entry, eleccionObra):
             i = entry.get()
             for obra in Teatro.getInstancia().getObras():
                 if obra.getNombre() == i:
                     eleccionObra = obra
                     break
-            print(i)
-        botonConfirmaEleObra = tk.Button(text = "Confirmar", command = lambda: definirEleccion(entryObra),master=frameGestion)
+        botonConfirmaEleObra = tk.Button(text = "Confirmar", command = lambda: definirEleccion(entryObra, eleccionObra),master=frameGestion)
         botonConfirmaEleObra.place(rely = 0.85, relx = 0.45, relwidth = 0.1, relheight = 0.05)
-        def definirEleccion(entry):
-            i = entry.get()
-            for obra in Teatro.getInstancia().getObras():
-                if obra.getNombre() == i:
-                    eleccionObra = obra
-                    break
-            print(i)
-            print(eleccionObra)
-
 
 
 
