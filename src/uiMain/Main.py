@@ -2173,11 +2173,11 @@ class Main:
                 question.place(relx=0, rely=0, relwidth=1, relheight=0.1)
                 ask = tk.Label(question, text="¿Deseas realizar los pagos?", font=("Calibri", 14), bg="#701C1A", fg="white")
                 ask.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
-                botones = tk.Frame(righframe, bg = "#ffb48a")
+                botones = tk.Frame(righframe, bg = "#701C1A")
                 botones.place(relx=0, rely=0.1, relwidth=1, relheight=0.1)
-                button_yes = tk.Button(botones, bg="#571F1C", text = "Si", fg="White", font=("Calibri", 12))
+                button_yes = tk.Button(botones, text = "Si", bg="#AE1918" ,fg="White", font=("Calibri", 12))
                 button_yes.pack(side="left", fill="both", padx=15, pady=5, anchor="center", expand=True)
-                button_no = tk.Button(botones, bg="#571F1C", text = "No", fg="White", font=("Calibri", 12))
+                button_no = tk.Button(botones, bg="#AE1918", text = "No", fg="White", font=("Calibri", 12))
                 button_no.pack(side="left", fill="both", padx=15, pady=5, anchor="center", expand=True)
 
                 def yes():
