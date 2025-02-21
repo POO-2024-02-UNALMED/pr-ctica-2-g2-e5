@@ -2335,7 +2335,7 @@ class Main:
                     if transaccion:
                         Deudas = Deudas + "Se realizo el pago a: " + Persona.getNombre() + " por un valor de: " + str(Persona.getDeuda()) + "\n"
                         Persona.setDeuda(0)
-     
+    
         Saldo = Teatro.getInstancia().getTesoreria().getCuenta().getSaldo()
 
         def mostrarSaldo():
@@ -2372,14 +2372,24 @@ class Main:
         labelEleccion.place(relx = 0.1, rely = 0.7, relwidth = 0.35, relheight= 0.1)
         entryObra = tk.Entry(frameGestion)
         entryObra.place(relx = 0.55, rely = 0.7, relwidth = 0.35, relheight = 0.1)
-        botonConfirmaEleObra = tk.Button(text = "Confirmar", command = lambda: definirEleccion(Main, entryObra),master=frameGestion)
-        botonConfirmaEleObra.pack()
-        cls.eleccionObra = ""
-        def definirEleccion(cls, entry):
+        eleccionObra= None
+        def definirEleccion(entry):
             i = entry.get()
-            cls.eleccionObra = i
-        print(cls.eleccionObra)
-        
+            for obra in Teatro.getInstancia().getObras():
+                if obra.getNombre() == i:
+                    eleccionObra = obra
+                    break
+            print(i)
+        botonConfirmaEleObra = tk.Button(text = "Confirmar", command = lambda: definirEleccion(entryObra),master=frameGestion)
+        botonConfirmaEleObra.place(rely = 0.85, relx = 0.45, relwidth = 0.1, relheight = 0.05)
+        def definirEleccion(entry):
+            i = entry.get()
+            for obra in Teatro.getInstancia().getObras():
+                if obra.getNombre() == i:
+                    eleccionObra = obra
+                    break
+            print(i)
+            print(eleccionObra)
     @classmethod
     def contratarActores(cls) -> None:
         """Menú con opciones para contratar un actor, filtrando por características y presupuesto."""
