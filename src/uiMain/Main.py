@@ -857,7 +857,7 @@ class Main:
             for i in range(len(sillas)):
                 fila = i // 8  # Calcula en qué fila va
                 columna = i % 8  # Calcula en qué columna va
-                if sillas[i].getCodigo() == "----":
+                if sillas[i].getCodigo() == "ocupado":
                     btn = tk.Button(frame_botones, text=f"{sillas[i].getCodigo()}", state=tk.DISABLED,height=1)
                     btn.grid(row=fila, column=columna, padx=5, pady=5, sticky="nsew", ipady=2)  # Agregar `sticky="nsew"`
                 else:
