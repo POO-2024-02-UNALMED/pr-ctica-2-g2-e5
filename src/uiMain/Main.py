@@ -3115,10 +3115,11 @@ class Main:
             try:
                 presupuesto = parseNumber(fieldframe, "Presupuesto", float)
             except errorEntradaNoNumerica:
-                messagebox.showerror("Error", errorEntradaNoNumerica)
+                messagebox.showerror("Error", errorEntradaNoNumerica())
                 return
             except errorEntradaNula:
-                messagebox.showerror("Error", errorEntradaNula)
+                messagebox.showerror("Error", errorEntradaNula())
+                return
 
             
             actorsForRental = list(filter(lambda actor: actor.getPrecioContrato(duration) <= presupuesto, actorsForRental))
