@@ -2454,6 +2454,13 @@ class Main:
                     break
             print(i)
             print(eleccionObra)
+
+
+
+
+
+
+
     @classmethod
     def contratarActores(cls) -> None:
         """Menú con opciones para contratar un actor, filtrando por características y presupuesto."""
@@ -2464,19 +2471,19 @@ class Main:
 
         #frame izquierdo
         leftFrame = tk.Frame(cls.content, bg="blue")
-        leftFrame.place(relx=0, rely=0, relwidth=0.15, relheight=1)
+        leftFrame.place(relx=0, rely=0, relwidth=0.175, relheight=0.9)
 
         #frame derecho
         rightFrame = tk.Frame(cls.content, bg="blue")
-        rightFrame.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
+        rightFrame.place(relx=0.825, rely=0, relwidth=0.175, relheight=0.9)
         
         #frame inferior
-        bottomFrame = tk.Frame(cls.content, bg="pink")#, padx=15, pady=20)
-        bottomFrame.place(relx=0.15, rely=0.9, relheight=0.2, relwidth=0.70)
+        bottomFrame = tk.Frame(cls.content, bg="pink")
+        bottomFrame.place(relx=0, rely=0.9, relheight=0.2, relwidth=1)
 
         #frame central, donde irán todos los fieldframes
         centerFrame = tk.Frame(cls.content, bg="purple", padx=20, pady=20)
-        centerFrame.place(relx=0.15, rely=0.1, relwidth=.7, relheight=.8)
+        centerFrame.place(relx=0.175, rely=0.1, relwidth=0.65, relheight=0.8)
         
         #frame superior, que lleva el mensaje de bienvenida a la funcionalidad
         captionFrame = Frame(cls.content,background="black")
@@ -2498,28 +2505,46 @@ class Main:
         centerFrame.columnconfigure(0, weight=1) 
         centerFrame.columnconfigure(1, weight=1) 
 
-         # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
-        original_image = Image.open("src/media/theme/bottom.png")  # Cambia "nombre_imagen.png" por el nombre de tu imagen
-        
-        image = ImageTk.PhotoImage(original_image)
+        def resize_image(event, original_image, label):
+            new_width = event.width
+            new_height = event.height
+            # Redimensionar la imagen original al tamaño actual del widget
+            resized = original_image.resize((new_width, new_height), Image.Resampling.LANCZOS)
+            new_image = ImageTk.PhotoImage(resized)
+            label.config(image=new_image)
+            label.image = new_image  # Guardar la referencia para evitar que se elimine la imagen
+
+        '''IMAGEN BOTTOM (ASIENTOS)'''
+        # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
+        imagen_bottom = Image.open("src/media/theme/bottom.png")  
+        image = ImageTk.PhotoImage(imagen_bottom)
 
         # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
         bottom_label = tk.Label(bottomFrame, image=image)
-        bottom_label.image = image
         bottom_label.place(relheight=1, relwidth=1)
 
-        def resize_image(event):
-            new_width = event.width
-            new_height = event.height
-            # Redimensionar la imagen original al tamaño actual del bottomFrame
-            resized = original_image.resize((new_width, new_height), Image.Resampling.LANCZOS)
-            new_image = ImageTk.PhotoImage(resized)
-            bottom_label.config(image=new_image)
-            bottom_label.image = new_image  # Actualizar la referencia
+        # Vincular el evento <Configure> usando lambda para pasar la imagen y el label a la función
+        bottomFrame.bind("<Configure>", lambda event: resize_image(event, imagen_bottom, bottom_label))
 
-        # Vincular el evento <Configure> para que se actualice la imagen al cambiar el tamaño
-        bottomFrame.bind("<Configure>", resize_image)
+        '''IMAGEN RIGHT (CORTINA DER)'''
+        imagen_right = Image.open("src/media/theme/Courtain right.png")  
+        image_der = ImageTk.PhotoImage(imagen_right)
 
+        right_label = tk.Label(rightFrame, image=image_der, bg="black")
+        right_label.place(relheight=1, relwidth=1)
+
+        rightFrame.bind("<Configure>", lambda event: resize_image(event, imagen_right, right_label))
+
+        '''IMAGEN LEFT (CORTINA IZQ)'''
+
+        imagen_left = Image.open("src/media/theme/Courtain left.png")  
+        image_izq = ImageTk.PhotoImage(imagen_left)
+
+        left_label = tk.Label(leftFrame, image=image_izq, bg="black")
+        left_label.place(relheight=1, relwidth=1)
+
+        leftFrame.bind("<Configure>", lambda event: resize_image(event, imagen_left, left_label))
+        
         #PREGUNTA NO. 1
         criteriosTipoEmpresa = ["Tipo de Empresa"]
         valoresTipoEmpresa = [["Empresa registrada", "Empresa nueva"]]
