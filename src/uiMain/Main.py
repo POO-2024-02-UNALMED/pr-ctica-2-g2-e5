@@ -2407,24 +2407,8 @@ class Main:
         rightFrame.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
         
         #frame inferior
-        bottomFrame = tk.Frame(cls.content, bg="white", padx=15, pady=20)
+        bottomFrame = tk.Frame(cls.content, bg="pink")#, padx=15, pady=20)
         bottomFrame.place(relx=0.15, rely=0.9, relheight=0.2, relwidth=0.70)
-        
-        '''def redimensionar_imagen(event):
-            ancho = event.width
-            alto = event.height
-            # Redimensiona la imagen original al tamaño actual del frame
-            imagen_redimensionada = pil_image.resize((ancho, alto), Image.ANTIALIAS)
-            nueva_imagen = ImageTk.PhotoImage(imagen_redimensionada)
-            labelImagen.config(image=nueva_imagen)
-            labelImagen.image = nueva_imagen
-
-        pil_image = Image.open("src/media/Programadores/Perro2.png")
-        img = ImageTk.PhotoImage(pil_image)
-        labelImagen = tk.Label(bottomFrame, image=img)
-        labelImagen.place(relheight=1, relwidth=1)
-        
-        bottomFrame.bind("<Configure>", redimensionar_imagen)'''
 
         #frame central, donde irán todos los fieldframes
         centerFrame = tk.Frame(cls.content, bg="purple", padx=20, pady=20)
@@ -2449,6 +2433,28 @@ class Main:
         #configurar el crecimiento adaptable de las columnas del frame central
         centerFrame.columnconfigure(0, weight=1) 
         centerFrame.columnconfigure(1, weight=1) 
+
+         # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
+        original_image = Image.open("src/media/theme/bottom.png")  # Cambia "nombre_imagen.png" por el nombre de tu imagen
+        
+        image = ImageTk.PhotoImage(original_image)
+
+        # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
+        bottom_label = tk.Label(bottomFrame, image=image)
+        bottom_label.image = image
+        bottom_label.place(relheight=1, relwidth=1)
+
+        def resize_image(event):
+            new_width = event.width
+            new_height = event.height
+            # Redimensionar la imagen original al tamaño actual del bottomFrame
+            resized = original_image.resize((new_width, new_height), Image.Resampling.LANCZOS)
+            new_image = ImageTk.PhotoImage(resized)
+            bottom_label.config(image=new_image)
+            bottom_label.image = new_image  # Actualizar la referencia
+
+        # Vincular el evento <Configure> para que se actualice la imagen al cambiar el tamaño
+        bottomFrame.bind("<Configure>", resize_image)
 
         #PREGUNTA NO. 1
         criteriosTipoEmpresa = ["Tipo de Empresa"]
