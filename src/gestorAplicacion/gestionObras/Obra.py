@@ -175,7 +175,7 @@ class Obra:
     def calcAudienciaEsperada(self, calificacion):
         u = calificacion * 12
         self.setAudienciaEsperada(u)
-         
+        
     def calcularCalificacion(self, calificaciones):
         u = 0
         t = 1
@@ -268,9 +268,10 @@ class Obra:
             self.getDuracionFormato(),
             str.format("$%,.2f", self.precioObra(self.nombre)) + "\n",
         )
-        
-    def buscarObra(self, nombre):
-        from baseDatos import Teatro
+    
+    @classmethod    
+    def buscarObra(cls, nombre):
+        from baseDatos.Teatro import Teatro
         return next(
             (
                 obra
