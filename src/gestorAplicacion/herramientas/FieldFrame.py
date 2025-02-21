@@ -9,8 +9,8 @@ class FieldFrame(Frame):
     fieldTest = False
 
     def __init__(self, root: Tk, tituloCriterios: str = "Requerimientos", criterios: list = [], 
-                 tituloValores: str = "Por favor digite:", valores: list = None, habilitado: list = None, 
-                 combobox = False, command = None, tituloGuardar = "Aceptar", tituloBorrar = "Borrar"):
+                tituloValores: str = "Por favor digite:", valores: list = None, habilitado: list = None, 
+                combobox = False, command = None, tituloGuardar = "Aceptar", tituloBorrar = "Borrar"):
         #todos los colores en tkinter: https://www.plus2net.com/python/tkinter-colors.php
         super().__init__(master = root, width = 800, height = 450, bg = FieldFrame.bg) #16:9
         self.root = root
