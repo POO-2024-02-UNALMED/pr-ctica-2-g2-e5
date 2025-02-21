@@ -952,31 +952,48 @@ class Main:
 
                 #Organizar tabla de empleados
                 #Estilo tablas
-                style = ttk.Style()
-                style.configure("Treeview", background = "white", relief = "solid", rowheight = 25)
-                style.configure("Treeview.Heading", background = "#ffb48a", foreground = "black", font = ("Calibri", 14, "bold"))
                 #Seguridad
                 seguridad = tk.Label(p1, text="Seguridad", font=("Calibri", 18), bg="#ffb48a")
                 seguridad.pack()
                 cls.resize(p1, seguridad,10, 20,False)
                 #Tabla Seguridad
+                frame_tabla = tk.Frame(p1)
+                frame_tabla.pack(expand=True, fill="both", padx=10, pady=5)
+
+                #Encabezados
+                encabezados = ["Nombre", "IDs"]
+                for col, texto in enumerate(encabezados):
+                    encabezado = tk.Label(frame_tabla, text=texto, font=("Calibri", 14, "bold"), bg="#d3d3d3", padx=10, pady=5)
+                    encabezado.grid(row=0, column=col, sticky="ew")
+                
+                #Fila de datos
+                for fila, emp in enumerate(Teatro.getInstancia().getTipoSeguridad(), start=1):
+                    nombre = tk.Label(frame_tabla, text=emp.getNombre(), padx=10, pady=5 )
+                    nombre.grid(row=fila, column=0, sticky="ew")
+
+                    id = tk.Label(frame_tabla, text=emp.getId(), padx=10, pady=5)
+                    id.grid(row=fila, column=1, sticky="ew")
+                
+                #Ajustar columnas
+                for col in range(2):
+                    frame_tabla.grid_columnconfigure(col, weight=1)
                 # datos = [
                 #     ("Juan", 25),
                 #     ("Ana", 30),
                 #     ("Luis", 22)
                 # ]
-                tablaS = ttk.Treeview(p1, columns=("Nombre", "IDs"), show="headings", style= "Treeview")
-                tablaS.heading("Nombre", text="Nombre")
-                tablaS.heading("IDs", text="IDs")
-                tablaS.column("Nombre", width=100, anchor="center")
-                tablaS.column("IDs", width=50, anchor="center")
-                #Agregar los empleados
-                #caso prueba
-                # for emp in datos:
-                #     tablaS.insert("", "end", values = emp)
-                for emp in Teatro.getInstancia().getTipoSeguridad():
-                    tablaS.insert("", "end", values=(emp.getNombre(), emp.getId()))
-                tablaS.pack(expand=True, fill="both", padx=10, pady=5)
+                # tablaS = ttk.Treeview(p1, columns=("Nombre", "IDs"), show="headings", style= "Treeview")
+                # tablaS.heading("Nombre", text="Nombre")
+                # tablaS.heading("IDs", text="IDs")
+                # tablaS.column("Nombre", width=100, anchor="center")
+                # tablaS.column("IDs", width=50, anchor="center")
+                # #Agregar los empleados
+                # #caso prueba
+                # # for emp in datos:
+                # #     tablaS.insert("", "end", values = emp)
+                # for emp in Teatro.getInstancia().getTipoSeguridad():
+                #     tablaS.insert("", "end", values=(emp.getNombre(), emp.getId()))
+                # tablaS.pack(expand=True, fill="both", padx=10, pady=5)
 
                 #Aseador
                 Aseador = tk.Label(p2, text="Aseador", font=("Calibri", 18), bg="#ffb48a")
@@ -1043,11 +1060,36 @@ class Main:
 
 
                 #Modificar para los empleados de la lista
-                def despedirEmpleado(tabla, listaOcupacion):
-                    selected_item = tabla.selection()  # Obtiene la fila seleccionada
-                    if selected_item:
-                        valores = tabla.item(selected_item, "values")
-                        id = valores[1]
+                def despedirEmpleado(listaOcupacion):
+                    cls.clear_frame(f1)
+                    seguridad = tk.Label(f1, text="Seguridad", font=("Calibri", 18), bg="#ffb48a")
+                    seguridad.pack()
+                    frame_tabla = tk.Frame(f1)
+                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=5)
+                    
+
+                    #Encabezados
+                    encabezados = ["Nombre", "IDs", "Despedir"]
+                    for col, texto in enumerate(encabezados):
+                        encabezado = tk.Label(frame_tabla, text=texto, font=("Calibri", 14, "bold"), bg="#d3d3d3", padx=10, pady=5)
+                        encabezado.grid(row=0, column=col, sticky="ew")
+                
+                    #Fila de datos
+                    for fila, emp in enumerate(listaOcupacion, start=1):
+                        nombre = tk.Label(frame_tabla, text=emp.getNombre(), padx=10, pady=5 )
+                        nombre.grid(row=fila, column=0, sticky="ew")
+
+                        id = tk.Label(frame_tabla, text=emp.getId(), padx=10, pady=5)
+                        id.grid(row=fila, column=1, sticky="ew")
+
+                        despedir = tk.Button(frame_tabla, text="Despedir", command= lambda i = emp.getId(): Despedir(listaOcupacion, i))
+                        despedir.grid(row=fila, column=2, padx= 10, pady=5)
+                    
+                    #Ajustar columnas
+                    for col in range(2):
+                        frame_tabla.grid_columnconfigure(col, weight=1)
+                    
+                    def Despedir(listaOcupacion, id):
                         for emp in listaOcupacion:
                             if emp.getId() == id:
                                 listaOcupacion.remove(emp)
@@ -1058,14 +1100,32 @@ class Main:
                                 liquidacion = (emp.calcularSueldo()*1.2) + emp.getDeuda()
                                 Teatro.getInstancia().getTesoreria().getCuenta().transferencia(emp.getCuenta(), liquidacion)
                                 mensaje = "Se despidio a " + emp.getNombre() + " y se le pago su respectiva liquidacion"
-                                cls.ventanaDialogo(mensaje)
+                                cls.ventanaDialogo(mensaje, continuar())
                                 break
-                        tabla.delete(selected_item)
+                    
+                        
+                #     selected_item = tabla.selection()  # Obtiene la fila seleccionada
+                #     if selected_item:
+                #         valores = tabla.item(selected_item, "values")
+                #         id = valores[1]
+                #         for emp in listaOcupacion:
+                #             if emp.getId() == id:
+                #                 listaOcupacion.remove(emp)
+                #                 break
+                #         for emp in Teatro.getInstancia().getEmpleadosPorRendimiento():
+                #             if emp.getId() == id:
+                #                 Teatro.getInstancia().getEmpleadosPorRendimiento().remove(emp)
+                #                 liquidacion = (emp.calcularSueldo()*1.2) + emp.getDeuda()
+                #                 Teatro.getInstancia().getTesoreria().getCuenta().transferencia(emp.getCuenta(), liquidacion)
+                #                 mensaje = "Se despidio a " + emp.getNombre() + " y se le pago su respectiva liquidacion"
+                #                 cls.ventanaDialogo(mensaje)
+                #                 break
+                #         tabla.delete(selected_item)
 
-                # Modificar cada botón de "Despedir"
-                despedirS.config(command=lambda: despedirEmpleado(tablaS, Teatro.getInstancia().getTipoSeguridad()))
-                despedirA.config(command=lambda: despedirEmpleado(tablaA, Teatro.getInstancia().getTipoAseador()))
-                despedirP.config(command=lambda: despedirEmpleado(tablaP, Teatro.getInstancia().getTipoProfesor()))
+                # # Modificar cada botón de "Despedir"
+                despedirS.config(command=lambda: despedirEmpleado(Teatro.getInstancia().getTipoSeguridad()))
+                despedirA.config(command=lambda: despedirEmpleado(Teatro.getInstancia().getTipoAseador()))
+                despedirP.config(command=lambda: despedirEmpleado(Teatro.getInstancia().getTipoProfesor()))
 
                 def contratarSeguridad():
                     cls.clear_frame(f1)
@@ -1214,7 +1274,7 @@ class Main:
                         general.append(newSeguridad)
                         Teatro.getInstancia().setEmpleadosPorRendimiento(general)
                     
-                    cls.ventanaDialogo("se contrato a:" + valores[0], continuar)
+                    cls.ventanaDialogo("se contrato a:" + valores[0], continuar())
 
             def continuar2():
                 cls.clear_frame(f1)
