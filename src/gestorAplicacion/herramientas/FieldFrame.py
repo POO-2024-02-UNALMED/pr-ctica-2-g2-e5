@@ -3,7 +3,8 @@ from tkinter import Frame, Tk, ttk
 
 class FieldFrame(Frame):
 
-    bg = "slategray1"
+    bg = "#701C1A"
+    fg = '#FCE6C9'
     font = "Calibri 11"
     fieldTest = False
 
@@ -25,15 +26,15 @@ class FieldFrame(Frame):
         tituloCriteriosWidget = tk.Label(self, text = self.tituloCriterios, bg = FieldFrame.bg)
         tituloValoresWidget = tk.Label(self, text = self.tituloValores, bg = FieldFrame.bg)
 
-        tituloCriteriosWidget.configure(font = (FieldFrame.font, 11, "bold"))
-        tituloValoresWidget.configure(font = (FieldFrame.font, 11, "bold"))
+        tituloCriteriosWidget.configure(font = (FieldFrame.font, 11, "bold"), fg = FieldFrame.fg )
+        tituloValoresWidget.configure(font = (FieldFrame.font, 11, "bold"), fg= FieldFrame.fg)
 
         #expande las columnas según crece la pantalla
         self.columnconfigure(0, weight=2) 
         self.columnconfigure(1, weight=1)  
         self.columnconfigure(2, weight=2)  
 
-        self.labels = [tituloCriteriosWidget] + [ tk.Label(self, text = label, font = (FieldFrame.font, 11), bg = FieldFrame.bg) for label in self.criterios]
+        self.labels = [tituloCriteriosWidget] + [ tk.Label(self, text = label, font = (FieldFrame.font, 11), bg = FieldFrame.bg, fg = FieldFrame.fg) for label in self.criterios]
         
         for i, label in enumerate(self.labels):
             label.grid(row = i, column = 0, padx= 3, pady= 5)

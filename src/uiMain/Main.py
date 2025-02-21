@@ -130,7 +130,7 @@ class Main:
     def initRoot(cls):
         """Inicializa la ventana raíz, le asigna un ícono, título y frame. Además, inicia la ventana principal"""
         cls.root = Tk() 
-        ico = Image.open("src/media/icon.jpg")
+        ico = Image.open("src/media/icon.png")
         logo = ImageTk.PhotoImage(ico)
         cls.root.wm_iconphoto(False, logo)
         cls.root.geometry("960x540") #16:9
@@ -2493,7 +2493,7 @@ class Main:
         bottomFrame.place(relx=0, rely=0.9, relheight=0.2, relwidth=1)
 
         #frame central, donde irán todos los fieldframes
-        centerFrame = tk.Frame(cls.content, bg="purple", padx=20, pady=20)
+        centerFrame = tk.Frame(cls.content, bg="#4B2D2E", padx=20, pady=20)
         centerFrame.place(relx=0.175, rely=0.1, relwidth=0.65, relheight=0.8)
         
         #frame superior, que lleva el mensaje de bienvenida a la funcionalidad
@@ -2503,7 +2503,9 @@ class Main:
         #mensaje de bienvenida
         caption = tk.Label(captionFrame, 
                             text="Bienvenido al panel de contratación de actores.",
-                            font= ("Calibri", 10))
+                            font= ("Calibri", 10),
+                            bg="#070709",
+                            fg = "#FCE6C9")
         caption.place(relx = 0, rely = 0, relheight= 1, relwidth= 1)
         
         #reasignación de tamaño de letra
