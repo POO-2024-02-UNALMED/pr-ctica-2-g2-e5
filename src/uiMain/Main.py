@@ -3122,37 +3122,60 @@ class Main:
             
             actorsForRental = list(filter(lambda actor: actor.getPrecioContrato(duration) <= presupuesto, actorsForRental))
 
-            actors = [(actor.getNombre(), actor.getId(), actor.getEdad(), actor.getCalificacion(), actor.getPrecioContrato(duration))
-                        for actor in actorsForRental]
+            #actors = [(actor.getNombre(), actor.getId(), actor.getEdad(), actor.getCalificacion(), actor.getPrecioContrato(duration))
+            #            for actor in actorsForRental]
 
             if len(actorsForRental) == 0:
                 messagebox.showerror("Error", "No se hallaron actores para el presupuesto")
                 Main.contratarActores()
             else:
 
-                columns = ("Nombre", "Id", "Edad", "Calificación", "Precio de contratación")
-                widths = (60, 10, 10, 10, 60)
-                tree = ttk.Treeview(topFrame,
-                                    columns= columns,
-                                    show= "headings")
-                for col, width in zip(columns, widths):
-                    tree.heading(col, text=col)
-                    tree.column(column = col, width = width)
-                scrollbar = ttk.Scrollbar(topFrame, orient=tk.VERTICAL, command=tree.yview)
-                tree.configure(yscroll=scrollbar.set)
+                # columns = ("Nombre", "Id", "Edad", "Calificación", "Precio de contratación")
+                # widths = (60, 10, 10, 10, 60)
+                # tree = ttk.Treeview(topFrame,
+                #                     columns= columns,
+                #                     show= "headings")
+                # for col, width in zip(columns, widths):
+                #     tree.heading(col, text=col)
+                #     tree.column(column = col, width = width)
+                # scrollbar = ttk.Scrollbar(topFrame, orient=tk.VERTICAL, command=tree.yview)
+                # tree.configure(yscroll=scrollbar.set)
 
-                for actor in actors:
-                    tree.insert('', tk.END, values=actor)
+                # for actor in actors:
+                #     tree.insert('', tk.END, values=actor)
 
-                tree.place(relheight=1, relwidth= .98, relx= 0)
-                scrollbar.place(relheight=1, relwidth=.02, relx= .98)
+                # tree.place(relheight=1, relwidth= .98, relx= 0)
+                # scrollbar.place(relheight=1, relwidth=.02, relx= .98)
 
-                def actorEscogido(event):
+                actores = FieldFrame(
+                    centerFrame,
+                    tituloCriterios= "Escoger actor",
+                    tituloValores= "Respuesta",
+                    tituloGuardar= "Contratar",
+                    criterios= ["Actor"],
+                    valores = [[str(actor) for actor in actorsForRental]],
+                    combobox= True,
+                    command = lambda: actorEscogido(actores)
+                )
+                actores.place(relheight=1, relwidth=1)
+
+                def actorEscogido(fieldframe: FieldFrame):
 
                     if cls.filterDebug:
                         print(fechaInicio, fechaFin)
 
-                    actorEscogido, id, edad, calificacion, precio = tree.item(tree.selection()[0])["values"]
+                    if nullInEntries(fieldframe):
+                        messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+                        return
+                    
+                    fieldframe.gatherEntries()
+
+                    actorNames = [str(actor) for actor in actorsForRental]
+                    actorEscogido: Actor = actorsForRental[actorNames.index(fieldframe.getValue("Actor"))]
+                    edad = actorEscogido.getEdad()
+                    precio = actorEscogido.getPrecioContrato(duration)
+                    calificacion = actorEscogido.getCalificacion()
+                    id = actorEscogido.getId()
 
                     contratar = messagebox.askyesno("Contratación de actores", 
                                         f"Actor seleccionado:\n\nNombre: {actorEscogido}\nEdad: {edad}\nCalificación: {calificacion}\nPrecio de contratación: {precio}\n\n¿Desea contratarlo?")
@@ -3169,7 +3192,6 @@ class Main:
                         messagebox.showinfo("Success", f"¡Actor contratado!\n\nEl actor escogido fue {actorEscogido} por un precio de {precio}")
                         Main.contratarActores()
                 
-                tree.bind('<<TreeviewSelect>>', actorEscogido)
 
         def presupuesto(topFrame: Frame) -> None:
             """Toma el mínimo y máximo posible de precio de contratación para los actores filtrados, y pide al usuario el presupuesto."""
@@ -3286,7 +3308,8 @@ class Main:
                 valores = [["Infantil", "Juvenil", "Adulto", "Adulto mayor"], 
                             ["Masculino", "Femenino"]],
                 combobox= True,
-                command= lambda: filtradoAvanzado(edad, topFrame)
+                command= lambda: filtradoAvanzado(edad, topFrame),
+                tituloGuardar= "Encontrar actores"
             )
 
             edad.place(relheight= 1, relwidth= 1)
@@ -3367,7 +3390,8 @@ class Main:
                 tituloCriterios = "Horario de actor",
                 tituloValores = "Respuesta",
                 valores = ["", ""],
-                command= lambda: setSchedule(schedule, fecha, topFrame)
+                command= lambda: setSchedule(schedule, fecha, topFrame),
+                tituloGuardar="Continuar"
             )
 
             schedule.place(relheight= 1, relwidth= 1)
@@ -3441,7 +3465,8 @@ class Main:
                             [day for day in Main.getWeek()]],
 
                 command= lambda: filtrado(primeraRonda),
-                combobox= True
+                combobox= True,
+                tituloGuardar = "Continuar",
             )
 
             primeraRonda.place(relwidth= 1, relheight= 1)
@@ -3555,7 +3580,8 @@ class Main:
                                     tituloCriterios= "", 
                                     tituloValores= "", 
                                     valores = [""],
-                                    command= lambda: createId(idFrame))
+                                    command= lambda: createId(idFrame),
+                                    tituloGuardar= "Crear cuenta")
                     idFrame.place(relwidth= 1, relheight= 1)
 
             else:

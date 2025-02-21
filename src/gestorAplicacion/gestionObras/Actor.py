@@ -108,6 +108,9 @@ class Actor(Artista):
         inicial = [0] * len(self.__aptitudes)
         return inicial == self.__calificacionesAptitudes
     
+    def __str__(self):
+        return super().getNombre()
+    
     def getGeneros(self):
         return self.__generos
 
