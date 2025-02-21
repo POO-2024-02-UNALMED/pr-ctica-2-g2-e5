@@ -3079,16 +3079,19 @@ class Main:
         bottomFrame = tk.Frame(cls.content, bg="pink")
         bottomFrame.place(relx=0, rely=0.9, relheight=0.2, relwidth=1)
 
+        frame_marco = tk.Frame(cls.content, bg="#4B2D2E", padx=20, pady=20)
+        frame_marco.place(relx=0.175, rely=0.1, relwidth=0.65, relheight=0.8)
+
         # --- FRAME PRINCIPAL PARA EL PROCESO ---
-        process_frame = Frame(cls.content, bg="white")
-        process_frame.place(relx=0.175, rely=0.1, relwidth=0.65, relheight=0.8)
+        process_frame = Frame(frame_marco, bg="#701C1A", padx=20, pady=20)
+        process_frame.place(relwidth= 1, relheight= 1)
         
         frame_bienvenida = Frame(cls.content, bg="red")
         frame_bienvenida.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
         saludo = tk.Label(frame_bienvenida,
                             text="Gestion de clases",
-                            font=("Calibri", 10),
-                            bg="black", fg="white")
+                            font=("Calibri", 16),
+                            bg="#070709", fg="#FCE6C9")
         saludo.place(relx=0, rely=0, relwidth=1, relheight=1)
         frame_bienvenida.bind(
             "<Configure>",
@@ -3394,6 +3397,7 @@ class Main:
                             tituloValores="Valor",
                             valores=[day_options, "", ""],
                             combobox=False,
+                            tituloGuardar="Programar",
                             command=lambda: (
                         ff.gatherEntries(),
                         process_schedule(actor, areaSeleccionada, nivelClase,
@@ -3557,6 +3561,7 @@ class Main:
                             tituloValores="Valor",
                             valores=[day_options, "", ""],
                             combobox=False,
+                            tituloGuardar="Programar",
                             command=lambda: (
                                 ff.gatherEntries(),
                                 process_reprogramar(actor, areaSeleccionada,
