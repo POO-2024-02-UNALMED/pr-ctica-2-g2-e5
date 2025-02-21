@@ -281,7 +281,7 @@ class Main:
         cls.root.destroy()
 
         cls.new_window = tk.Tk()
-        ico = Image.open("src/media/icon.jpg")
+        ico = Image.open("src/media/icon.png")
         logo = ImageTk.PhotoImage(ico)
         cls.new_window.wm_iconphoto(False, logo)
         cls.new_window.title("Teatro Escuela Carlos Mayolo")
