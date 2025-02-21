@@ -1,4 +1,5 @@
 from excepciones.errorAplicacion import errorAplicacion
 
 class errorEntrada(errorAplicacion):
-    pass
+    def __init__(self, mensaje = ""):
+        super().__init__("Entrada rellenada de forma inválida. " + mensaje)
