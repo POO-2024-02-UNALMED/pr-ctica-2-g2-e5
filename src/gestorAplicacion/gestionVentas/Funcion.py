@@ -5,8 +5,6 @@ import random
 from baseDatos.Teatro import Teatro
 
 class Funcion:
-    funcionesCreadas = []  # Lista estática de funciones creadas
-    funcionesALaVenta = []  # Lista estática de funciones a la venta
 
     def __init__(self, obra = None, tiquetesVendidos = 0, horario = [], sillas = [], sala = None, calificador = False,
             audienciaEsperada = 0, trabajador = False, asistentes = [], precio = 0.0, week = []):
@@ -20,7 +18,6 @@ class Funcion:
         self.__trabajador = trabajador
         self.__asistentes = asistentes
         self.__precio = precio
-        Funcion.funcionesCreadas.append(self)
         Teatro.getInstancia().getFuncionesCreadas().append(self)
         
         if len(week)>0:

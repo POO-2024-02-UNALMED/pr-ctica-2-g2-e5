@@ -6,8 +6,6 @@ from gestorAplicacion.gestionVentas.Cliente import Cliente
 
 class Tiquete:
 
-    tiquetes = []  # Lista estática de tiquetes
-
     def __init__(self, valor: float = 0.0, id: int = 0, cliente=None, funcion=None,
                  personaje=None, obra=None, silla=None):
         self.valor = valor
