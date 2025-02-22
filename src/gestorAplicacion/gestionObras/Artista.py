@@ -33,6 +33,13 @@ class Artista(PersonaConHorario):
         return None
     
     @classmethod
+    def buscarPorNombre(cls, nombre: str) -> Artista | None:
+        for artista in Teatro.getInstancia().getArtistas():
+            if (artista.getNombre() == nombre):
+                return artista
+        return None
+    
+    @classmethod
     def inicializarCalificacionesPublico(cls, artista: Artista) -> None:
         artista.__calificacionesPublico += [ round(random() * 50)/10.0 for i in range(5)]
 

@@ -110,9 +110,10 @@ class Main:
 
     # --- NUEVAS VARIABLES PARA PROGRAMADORES ---
     current_programador_index = -1
+
     programadores = [
         ("Programador 1:\nNombre: Francisco Jose Ceren Porto\n Edad: 17 \nID: 1023631713",
-            ["src/media/Programadores/perro.png", "src/media/Programadores/perro.png", "src/media/Programadores/perro.png", "src/media/Programadores/perro.png"]),
+            ["src/media/Programadores/fran1.png", "src/media/Programadores/fran2.png", "src/media/Programadores/fran3.png", "src/media/Programadores/fran4.png"]),
         ("Programador 2:\nNombre: Danna Valeria Perez Niño\n Edad: 17 \nID: 1052839541",
             ["src/media/Programadores/Danna1 (9).png", "src/media/Programadores/Danna1 (5).png", "src/media/Programadores/Dannaa.png", "src/media/Programadores/Danna1 (10).png"]),
         ("Programador 3:\nNombre: Oscar David Arango Garcia\n Edad: 17 \nID: 1011591946",
@@ -2837,27 +2838,45 @@ class Main:
                 widget.destroy()
             obras = Teatro.getInstancia().getObras()
             if obras:
-                lbl_obras = tk.Label(process_frameO, text="Obras existentes en la base de datos:",
-                                        font=("Calibri", 14), bg="white")
+                lbl_obras = tk.Label(process_frameO, 
+                                    text = "Obras existentes en la base de datos:",
+                                    font = ("Calibri", 14), 
+                                    bg = "#701C1A",
+                                    fg = "#FCE6C9")
                 lbl_obras.pack(pady=10)
-                txt_obras = tk.Text(process_frameO, height=10, width=80, font=("Calibri", 12))
-                txt_obras.pack(pady=10)
+                txt_obras = tk.Text(process_frameO, 
+                                    height=6, width=80,
+                                    font=("Calibri", 12),
+                                    bg = "#701C1A",
+                                    fg = "#FCE6C9")
+                txt_obras.pack(pady=10, fill="both", expand=True)
                 for obra in obras:
                     linea = f"- Obra {obra.getNombre()}\n"
                     txt_obras.insert("end", linea)
                 txt_obras.config(state="disabled")
             else:
-                tk.Label(process_frameO, text="No hay obras en la base de datos.",
-                        font=("Calibri", 14), bg="white").pack(pady=10)
+                tk.Label(process_frameO, 
+                        text="No hay obras en la base de datos.",
+                        font=("Calibri", 14), 
+                        bg="#701C1A", fg="#FCE6C9").pack(pady=10, 
+                                                        fill = "x")
 
-            lbl_name = tk.Label(process_frameO, text="Ingrese el nombre de la obra que desea gestionar:",
-                                font=("Calibri", 14), bg="white")
-            lbl_name.pack(pady=10)
-            entry_name = tk.Entry(process_frameO, font=("Calibri", 14))
+            lbl_name = tk.Label(process_frameO, 
+                                text="Ingrese el nombre de la obra que desea gestionar:",
+                                font=("Calibri", 14), 
+                                bg="#701C1A", fg="#FCE6C9")
+            lbl_name.pack(pady=10, fill="x")
+            entry_name = tk.Entry(process_frameO, 
+                                font=("Calibri", 14))
             entry_name.pack(pady=5)
-            btn_buscarN = tk.Button(process_frameO, text="Buscar", font=("Calibri", 14),
+            btn_buscarN = tk.Button(process_frameO,
+                                    text="Buscar", 
+                                    font=("Calibri", 14),
+                                    bg = "#701C1A", fg = "#FCE6C9",
                                     command=lambda: process_obra(entry_name.get()))
             btn_buscarN.pack(pady=10)
+            
+            Main.resize(process_frameO, lbl_obras, 14, 60, True)
 
         # -------------------- PASO 2: Procesar el ID ingresado --------------------
         '''AVALADA'''
@@ -2873,422 +2892,90 @@ class Main:
         def step_obra_not_found(name_str):
             for widget in process_frameO.winfo_children():
                 widget.destroy()
-            tk.Label(process_frameO, text=f"Obra con nombre {name_str} no encontrada.",
-                        font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
-            tk.Label(process_frameO, text="¿Desea crear una nueva Obra con este nombre?",
-                        font=("Calibri", 14), bg="white").pack(pady=10)
-            tk.Button(process_frameO, text="Sí", font=("Calibri", 14),
-                        command=lambda: step_create_obra(name_str)).pack(pady=5)
-            tk.Button(process_frameO, text="No", font=("Calibri", 14),
-                        command=lambda: step1Obras())
+            tk.Label(process_frameO, 
+                    text=f"Obra con nombre {name_str} no encontrada.",
+                    font=("Calibri", 14), 
+                    bg="#701C1A", fg="#FCE6C1").pack(pady=10, 
+                                                    fill = "x")
+            tk.Label(process_frameO, 
+                    text="¿Desea crear una nueva Obra con este nombre?",
+                    font=("Calibri", 14), 
+                    bg= "#701C1A", fg = "#FCE6C1").pack(pady=10)
+            tk.Button(process_frameO, 
+                    text="Sí", 
+                    font=("Calibri", 14),
+                    bg="#701C1A", fg="#FCE6C1",
+                    width = 10,
+                    command=lambda: step_create_obra(name_str)).pack(pady=5)
+            tk.Button(process_frameO, 
+                    text="No", 
+                    font=("Calibri", 14),
+                    bg = "#701C1A", fg = "#FCE6C1",
+                    width = 10,
+                    command=lambda: step1Obras()).pack(pady=5)
 
         # -------------------- PASO 4: Crear nuevo artista --------------------
         '''AVALADA'''
         def step_create_obra(name_str):
             for widget in process_frameO.winfo_children():
                 widget.destroy()
-            criteriosObra = ["Nombre", "Actores", "Aptitudes", "Genero", "Director","Costo de producción", "Duración de la obra (HHMMSS)"]
-            valoresObra = [name_str, [], [], None, None, 0, 0]
+            criteriosObra = ["Nombre", "Actor", "Aptitud", "Genero", "Director","Costo de producción", "Duración de la obra (HHMMSS)"]
+            valoresObra = [f"{name_str}", "", "", "", "", "", ""]
             ff = FieldFrame(process_frameO,
                             tituloCriterios="Datos de la nueva obra",
                             criterios=criteriosObra,
                             tituloValores="Ingrese su respuesta <3",
                             valores=valoresObra,
                             combobox=False,
-                            command=lambda: (ff.gatherEntries(), process_new_obra(name_str, ff.valoresObra[0], 
-                                                                                ff.valoresObra[1],
-                                                                                ff.valoresObra[2], 
-                                                                                ff.valoresObra[3],
-                                                                                ff.valoresObra[4],
-                                                                                ff.valoresObra[5],
-                                                                                ff.valoresObra[6])))
+                            command=lambda: (ff.gatherEntries(), 
+                                            process_new_obra(name_str, 
+                                                            ff.valores[1], 
+                                                            ff.valores[2],
+                                                            ff.valores[3], 
+                                                            ff.valores[4],
+                                                            ff.valores[5],
+                                                            ff.valores[6])))
             ff.pack(pady=10, fill="both", expand=True)
 
-        def process_new_obra(name_str, actores, aptitudes, genero, director, costo, duracion):
+        def process_new_obra(name_str, actor, aptitud, genero, director, costo, duracion):
+            name_str = str(name_str)
+            actor = Artista.buscarPorNombre(actor)
+            aptitud = Aptitud[aptitud.upper()]
+            genero = Genero[genero.upper()]
+            director = Artista.buscarPorNombre(director)
+            costo = float(costo)
+            duracion = float(duracion)
             if director == None:
+                for widget in process_frameO.winfo_children():
+                    widget.destroy()
+                print("entre")
+                criteriosDir = ["Nombre", "ID", "Genero"]
+                valoresDir = ["", 0, genero]
                 fieldframedir = FieldFrame(process_frameO, 
-                                        titulosCriterios = "Datos del nuevo director", 
-                                        )
-            obra = Obra(nombre = name_str, reparto = actores, papeles = aptitudes, director = director,
+                                        tituloCriterios = "Datos del nuevo director", 
+                                        criterios= criteriosDir,
+                                        tituloValores = "Ingrese su respuesta <3",  
+                                        valores = valoresDir,
+                                        combobox=False,
+                                        command = lambda: (fieldframedir.gatherEntries(), Director(fieldframedir.valores[0], fieldframedir.valores[1], fieldframedir.valores[2])))
+                fieldframedir.pack(pady=10, fill="both", expand=True)
+                step_create_obra(name_str)
+            if actor == None:
+                messagebox.showerror("Error", "El actor que ingresaste no existe en nuestra base de datos :(")
+                step_create_obra(name_str)
+            obra = Obra(nombre = name_str, reparto = actor, papeles = aptitud, genero  = genero, director = director,
                         costoProducción= costo, duracion = duracion)
-        def process_new_director(id_num, nombre, age_str):
-            try:
-                edad = int(age_str)
-            except ValueError:
-                messagebox.showerror("Error", "La edad debe ser un número entero.")
-                return
-            if edad < 4 or edad > 80:
-                messagebox.showerror("Error", "La edad debe estar entre 4 y 80 años.")
-                return
-            actor = Actor(nombre, id_num, edad)
-            messagebox.showinfo("Éxito", f"Nuevo actor agregado: {nombre} con ID {id_num} y edad {edad}.")
-            step_artist_found(actor)
+            print(obra)
+            print(director)
+            print(type(director))
 
         # -------------------- PASO 5: Artista encontrado --------------------
         '''Avalada'''
-        def step_artist_found(artista):
-            if isinstance(artista, Director):
-                messagebox.showinfo("Información","Los directores no reciben clase.")
-                Main.gestionClases()
-            else:
-                for widget in process_frame.winfo_children():
-                    widget.destroy()
-                # Si el actor no tiene calificaciones, se inicializan
-                if artista.sigueIgual():
-                    resultado = Empleado.casting(artista, Teatro.getInstancia().getTipoProfesor())
-                    if not resultado:
-                        messagebox.showerror("Error", "No hay profesores disponibles para inicializar las calificaciones del actor.")
-                    else:
-                        messagebox.showinfo("Información", "Se han inicializado las calificaciones del actor.")
-                if len(artista.getCalificacionesPublico()) == 0:
-                    Artista.inicializarCalificacionesPublico(artista)
-                # Mostrar información de calificaciones
-                txt_info = tk.Text(process_frame, height=8, width=80, font=("Calibri", 12))
-                txt_info.pack(pady=10)
-                info_text = f"Calificaciones de calificadores: {artista.getCalificacionesAptitudes()}\n"
-                info_text += f"Calificaciones del público: {artista.getCalificacionesPublico()}\n"
-                txt_info.insert("end", info_text)
-                txt_info.config(state="disabled")
-                # Mostrar obras críticas
-                tk.Label(process_frame, text="Obras en estado crítico del teatro:",
-                        font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
-                obras = Obra.mostrarObrasCriticas()  # Se asume que este método existe
-                if not obras:
-                    tk.Label(process_frame, text="No hay obras en estado crítico.",
-                            font=("Calibri", 14), bg="white", fg="yellow").pack(pady=5)
-                else:
-                    txt_obras = tk.Text(process_frame, height=6, width=80, font=("Calibri", 12))
-                    txt_obras.pack(pady=5)
-                    for obra in obras:
-                        linea = f"- '{obra.nombre}' (Promedio: {obra.promedioCalificacion()})\n"
-                        txt_obras.insert("end", linea)
-                    txt_obras.config(state="disabled")
-                tk.Button(process_frame, text="Programar clase", font=("Calibri", 14),
-                            command=lambda: step_select_area(artista)).pack(pady=10)
-                
-                tk.Button(process_frame, text="Volver al inicio", font=("Calibri", 14),
-                command=Main.gestionClases).pack(pady=10)
-
-        # -------------------- PASO 6: Seleccionar área de mejora --------------------
-        '''AVALADA'''
-        def step_select_area(actor):
-            for widget in process_frame.winfo_children():
+        def step_obra_found(obra):
+            for widget in process_frameO.winfo_children():
                 widget.destroy()
-            areas_recomendadas = actor.obtenerAreasDeMejora()
-            txt_areas = tk.Text(process_frame, height=6, width=80, font=("Calibri", 12))
-            txt_areas.pack(pady=10)
-            if not areas_recomendadas:
-                step_select_custom_area(actor)
-            else:
-                txt_areas.insert("end", "Áreas recomendadas para mejorar del actor " + actor.getNombre() + ":\n")
-                for i, area in enumerate(areas_recomendadas[:3]):
-                    cal = actor.getCalificacionPorAptitud(area)
-                    txt_areas.insert("end", f"{i+1}. {area.name.capitalize()} (Calificación: {cal})\n")
-                txt_areas.config(state="disabled")
-                tk.Label(process_frame, text="¿Desea programar una clase basada en las áreas recomendadas?",
-                    font=("Calibri", 14), bg="white").pack(pady=10)
-                tk.Button(process_frame, text="Sí", font=("Calibri", 14),
-                    command=lambda: step_schedule_class(actor, areas_recomendadas[0])).pack(pady=5)
-                tk.Button(process_frame, text="No", font=("Calibri", 14),
-                    command=lambda: step_select_custom_area(actor)).pack(pady=5)
-
-        # -------------------- PASO 7: Selección personalizada de área --------------------
-        '''AVALADA'''
-        def step_select_custom_area(actor):
-            for widget in process_frame.winfo_children():
-                widget.destroy()
-            tk.Label(process_frame, text="Seleccione el área para programar la clase:",
-                    font=("Calibri", 14), bg="white").pack(pady=10)
-            areas = actor.getAptitudes()  # Lista de objetos Aptitud
-            var_index = tk.IntVar(value=0)
-            # Crear radiobuttons usando el índice
-            for i, area in enumerate(areas):
-                tk.Radiobutton(process_frame, text=str(area), variable=var_index,
-                            value=i, font=("Calibri", 12), bg="white").pack(anchor="w", padx=20)
-            tk.Button(process_frame, text="Siguiente", font=("Calibri", 14),
-                    command=lambda: step_schedule_class(actor, areas[var_index.get()])).pack(pady=10)
-
-        # -------------------- PASO 8: Programar la clase (solicitar horario) --------------------
-        '''AVALADA'''
-        def step_schedule_class(actor, areaSeleccionada):
-            for widget in process_frame.winfo_children():
-                widget.destroy()
-            # Determinar el nivel de clase según la calificación actual
-            calificacionActual = actor.getCalificacionPorAptitud(areaSeleccionada)
-            if calificacionActual < 3.0:
-                nivelClase = "Introducción"
-            elif calificacionActual < 4.0:
-                nivelClase = "Profundización"
-            else:
-                nivelClase = "Perfeccionamiento"
             
-            # Mostrar solo el nombre de la aptitud (sin el prefijo "Aptitud.")
-            # Si el objeto es un enum, se usará su atributo 'name'
-            area_display = areaSeleccionada.name.capitalize() if hasattr(areaSeleccionada, "name") else str(areaSeleccionada).split('.')[-1].capitalize()
-
             
-            tk.Label(process_frame,
-                    text=f"Área seleccionada: {area_display}\nNivel de clase: {nivelClase}",
-                    font=("Calibri", 14), bg="white").pack(pady=10)
-            
-            tk.Label(process_frame, text="Programe la clase:", font=("Calibri", 14), bg="white").pack(pady=5)
-            
-            # Obtener la lista de días de la semana con getWeek()
-            week_days = Main.getWeek()  # Retorna una lista de objetos date
-            day_options = [day.strftime("%Y-%m-%d") for day in week_days]
-            
-            # Crear un único FieldFrame para ingresar Día, Hora de inicio y Hora de fin.
-            # Se pasan tres criterios y tres valores (el primero es una lista de opciones para el día).
-            ff = FieldFrame(process_frame,
-                            tituloCriterios="Programación de Clase",
-                            criterios=["Día", "Inicio", "Fin"],
-                            tituloValores="Valor",
-                            valores=[day_options, "", ""],
-                            combobox=False,
-                            tituloGuardar="Programar",
-                            command=lambda: (
-                        ff.gatherEntries(),
-                        process_schedule(actor, areaSeleccionada, nivelClase,
-                                        ff.valores[0],  # Día seleccionado (string "YYYY-MM-DD")
-                                        ff.valores[1],  # Hora de inicio (string "HH:MM")
-                                        ff.valores[2]   # Hora de fin (string "HH:MM")
-                                        )
-                    ))
-            ff.pack(pady=10, fill="x")
-            
-            # Por defecto, FieldFrame crea entradas (Entry) para todos los campos.
-            # Convertimos la entrada correspondiente a "Día" (el primer campo) en un Combobox.
-            ff.values[1].destroy()  # ff.values[0] es el título de la columna de valores, ff.values[1] corresponde al primer campo
-            ff.values[1] = ttk.Combobox(ff, values=day_options)
-            ff.values[1].grid(row=1, column=2)
-
-        # -------------------- PASO 9: Procesar horario y asignar sala y profesor --------------------
-        '''AVALADA'''
-        def process_schedule(actor, areaSeleccionada, nivelClase, day_str, start_time_str, end_time_str):
-            try:
-                # Convertir el día seleccionado a objeto date
-                selected_date = datetime.strptime(day_str, "%Y-%m-%d").date()
-                # Convertir las horas a objeto time (formato HH:MM)
-                start_time = datetime.strptime(start_time_str, "%H:%M").time()
-                end_time = datetime.strptime(end_time_str, "%H:%M").time()
-            except ValueError:
-                messagebox.showerror("Error", "Formato incorrecto en día o en hora. Use YYYY-MM-DD para el día y HH:MM para la hora.")
-                return
-
-            # Combinar la fecha con las horas para obtener datetime completos
-            inicio = datetime.combine(selected_date, start_time)
-            fin = datetime.combine(selected_date, end_time)
-
-            if fin <= inicio:
-                messagebox.showerror("Error", "El fin debe ser después del inicio.")
-                return
-            duration = (fin - inicio).total_seconds() / 3600
-            if duration < 2 or duration > 4:
-                messagebox.showerror("Error", "La duración debe ser entre 2 y 4 horas.")
-                return
-            # Validar que las clases se programen entre las 10:00 y las 22:00
-            if not (10 <= inicio.hour < 22 and 10 < fin.hour <= 22):
-                messagebox.showerror("Error", "Las clases deben programarse entre las 10:00 y las 22:00.")
-                return
-            # Buscar una sala disponible
-            salaAsignada = None
-            for sala in Teatro.getInstancia().getSalas():
-                if sala.get_aseado() and sala.is_disponible(inicio, fin):
-                    salaAsignada = sala
-                    break
-            if salaAsignada is None:
-                messagebox.showerror("Error", "No hay salas disponibles en el horario deseado o no están limpias.")
-                for widget in process_frame.winfo_children():
-                    widget.destroy()
-                Main.gestionClases()
-                return
-            salaAsignada.anadir_horario([inicio, fin])
-            # Selección de profesor especializado (simulación de disponibilidad)
-            profesorAsignado = None
-            profesores = Teatro.getInstancia().getTipoProfesor()
-            random.shuffle(profesores)
-            for empleado in profesores:
-                if isinstance(empleado, Profesor) and empleado.tiene_especializacion(areaSeleccionada):
-                    if random.random() > 0.5:
-                        profesorAsignado = empleado
-                        break
-            if profesorAsignado is None:
-                for widget in process_frame.winfo_children():
-                    widget.destroy()
-                messagebox.showerror("Error", "No hay profesores disponibles con especialización en el área seleccionada o están ocupados.")
-                Main.gestionClases()
-                return
-            msg = f"Sala asignada: {salaAsignada.get_numero_sala()}\nProfesor asignado: {profesorAsignado.getNombre()}\n"
-            messagebox.showinfo("Clase Programada", msg)
-            step_payment(actor, areaSeleccionada, nivelClase, profesorAsignado, fin)
-
-        # -------------------- PASO 10: Procesar pago y evaluación --------------------
-        '''AVALADA'''
-        def step_payment(actor, areaSeleccionada, nivelClase, profesorAsignado, fin):
-            for widget in process_frame.winfo_children():
-                widget.destroy()
-            if nivelClase == "Introducción":
-                costoClase = 50000
-            elif nivelClase == "Profundización":
-                costoClase = 75000
-            else:
-                costoClase = 90000
-            tk.Label(process_frame, text=f"El costo de la clase es: ${costoClase}",
-                    font=("Calibri", 14), bg="white").pack(pady=10)
-            tk.Button(process_frame, text="Procesar Pago", font=("Calibri", 14),
-                    command=lambda: process_payment(actor, costoClase, areaSeleccionada,
-                                                    profesorAsignado, nivelClase, fin)).pack(pady=10)
-
-        def process_payment(actor, costoClase, areaSeleccionada, profesorAsignado, nivelClase, fin):
-            if actor.getCuenta().retirar(costoClase):
-                tesoreria = Teatro.getInstancia().getTesoreria()
-                tesoreria.setTotal(tesoreria.getTotal() + costoClase)
-                tesoreria.setDineroEnCaja(tesoreria.getDineroEnCaja() + costoClase)
-                messagebox.showinfo("Pago", "Pago procesado exitosamente.")
-
-                # Selección de profesor evaluador (simulación)
-                profesor_evaluador = None
-                profesores = Teatro.getInstancia().getTipoProfesor()
-                random.shuffle(profesores)
-                for empleado in profesores:
-                    if isinstance(empleado, Profesor) and empleado.tiene_especializacion(areaSeleccionada):
-                        if random.random() > 0.5:
-                            profesor_evaluador = empleado
-                            break
-
-                if profesor_evaluador:
-                    # Capturamos la nota inicial antes de la evaluación
-                    initial_note = actor.getCalificacionPorAptitud(areaSeleccionada)
-                    # Se genera la calificación (aleatoria en este ejemplo)
-                    calificacion = round(random.random() * 5, 1)
-                    messagebox.showinfo("Evaluación", 
-                                        f"El profesor {profesor_evaluador.getNombre()} calificó al actor con un: {calificacion}")
-
-                    # El profesor que imparte la clase siempre recibe los puntos positivos
-                    puntos = 1 if nivelClase == "Introducción" else (2 if nivelClase == "Profundización" else 3)
-                    profesorAsignado.agregar_puntos(puntos)
-                    messagebox.showinfo("Puntos", 
-                                        f"El profesor {profesorAsignado.getNombre()} ha recibido {puntos} puntos positivos por dictar la clase con nivel {nivelClase}.")
-
-                    # Evaluamos las condiciones de mejora:
-                    if calificacion < 3:
-                        messagebox.showinfo("Evaluación", 
-                            "El actor sacó una nota menor a 3. Se reprogramará la clase por falta de mejora.")
-                        step_reprogramar(actor, areaSeleccionada, nivelClase, profesor_evaluador, fin)
-                    elif calificacion <= initial_note:
-                        messagebox.showinfo("Evaluación", 
-                            "El actor no mejoró su calificación respecto al inicio de la clase. Se reprogramará la clase por falta de mejora.")
-                        step_reprogramar(actor, areaSeleccionada, nivelClase, profesor_evaluador, fin)
-                    else:
-                        messagebox.showinfo("Proceso Finalizado", "La clase se ha realizado exitosamente.")
-                        Main.gestionClases()
-                else:
-                    messagebox.showerror("Error", "No hay profesores disponibles para calificar la función.")
-                    Main.gestionClases()
-            else:
-                messagebox.showerror("Error", "El actor cuenta con saldo insuficiente para pagar la clase.")
-                Main.gestionClases()
-
-
-        # -------------------- PASO 11: Reprogramar clase en caso de falta de mejora --------------------
-        '''AVALADA'''
-        def step_reprogramar(actor, areaSeleccionada, nivelClase, profesorEvaluador, fin):
-            for widget in process_frame.winfo_children():
-                widget.destroy()
-            tk.Label(process_frame, text="Reprogramar clase por falta de mejora",
-                    font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
-            
-            # Obtener la lista de días de la semana con getWeek()
-            week_days = Main.getWeek()  # Retorna una lista de objetos date
-            day_options = [day.strftime("%Y-%m-%d") for day in week_days]
-            
-            # Se utiliza un único FieldFrame para recoger Día, Hora de inicio y Hora de fin
-            ff = FieldFrame(process_frame,
-                            tituloCriterios="Nueva Programación de Clase",
-                            criterios=["Día", "Inicio", "Fin"],
-                            tituloValores="Valor",
-                            valores=[day_options, "", ""],
-                            combobox=False,
-                            tituloGuardar="Programar",
-                            command=lambda: (
-                                ff.gatherEntries(),
-                                process_reprogramar(actor, areaSeleccionada,
-                                                    ff.valores[0],  # Día seleccionado (string "YYYY-MM-DD")
-                                                    ff.valores[1],  # Hora de inicio (string "HH:MM")
-                                                    ff.valores[2],  # Hora de fin (string "HH:MM")
-                                                    nivelClase, profesorEvaluador, fin)
-                            ))
-            ff.pack(pady=10, fill="x")
-            # Convertir la entrada del primer campo ("Día") en un Combobox
-            ff.values[1].destroy()  # ff.values[0] es el título; ff.values[1] corresponde al primer campo
-            ff.values[1] = ttk.Combobox(ff, values=day_options)
-            ff.values[1].grid(row=1, column=2)
-
-
-        def process_reprogramar(actor, areaSeleccionada, day_str, start_time_str, end_time_str, nivelClase, profesorEvaluador, fin):
-            from datetime import datetime
-            try:
-                selected_date = datetime.strptime(day_str, "%Y-%m-%d").date()
-                start_time = datetime.strptime(start_time_str, "%H:%M").time()
-                end_time = datetime.strptime(end_time_str, "%H:%M").time()
-            except ValueError:
-                messagebox.showerror("Error", "Formato incorrecto. Use 'YYYY-MM-DD' para el día y 'HH:MM' para la hora.")
-                return
-
-            nuevo_inicio = datetime.combine(selected_date, start_time)
-            nuevo_fin = datetime.combine(selected_date, end_time)
-            
-            if nuevo_fin <= nuevo_inicio:
-                messagebox.showerror("Error", "El fin debe ser después del inicio.")
-                return
-            if nuevo_inicio <= fin:
-                messagebox.showerror("Error", "La nueva clase no puede iniciarse antes de finalizar la clase inicial.")
-                return
-            duration = (nuevo_fin - nuevo_inicio).total_seconds() / 3600
-            if duration < 2 or duration > 4:
-                messagebox.showerror("Error", "La duración debe ser entre 2 y 4 horas.")
-                return
-            # Validar que las clases se programen entre las 10:00 y las 22:00
-            if not (10 <= nuevo_inicio.hour < 22 and 10 < nuevo_fin.hour <= 22):
-                messagebox.showerror("Error", "Las clases deben programarse entre las 10:00 y las 22:00.")
-                return
-
-            # Buscar sala disponible
-            salaAsignada = None
-            for sala in Teatro.getInstancia().getSalas():
-                if sala.get_aseado() and sala.is_disponible(nuevo_inicio, nuevo_fin):
-                    salaAsignada = sala
-                    break
-            if salaAsignada is None:
-                messagebox.showerror("Error", "No hay salas disponibles en el nuevo horario deseado o no están limpias.")
-                Main.gestionClases()
-                return
-            salaAsignada.anadir_horario([nuevo_inicio, nuevo_fin])
-            
-            # Seleccionar profesor especializado (simulación)
-            profesorAsignado = None
-            import random
-            profesores = Teatro.getInstancia().getTipoProfesor()
-            random.shuffle(profesores)
-            for empleado in profesores:
-                if isinstance(empleado, Profesor) and empleado.tiene_especializacion(areaSeleccionada):
-                    if random.random() > 0.5:
-                        profesorAsignado = empleado
-                        break
-            if profesorAsignado is None:
-                messagebox.showerror("Error", "No hay profesores disponibles para la nueva clase en el área seleccionada.")
-                Main.gestionClases()
-                return
-
-            messagebox.showinfo("Clase Reprogramada",
-                                f"Clase reprogramada con el profesor {profesorAsignado.getNombre()} en la sala {salaAsignada.get_numero_sala()}.")
-            
-            if actor.noHaMejoradoEnCuatroIntentos(areaSeleccionada):
-                nuevaCalificacion = max(0, actor.getCalificacionPorAptitud(areaSeleccionada) - 1)
-                actor.registrarCalificacion(areaSeleccionada, nuevaCalificacion)
-                messagebox.showinfo("Reducción de Nivel", f"El nuevo nivel del área {areaSeleccionada.name.capitalize()} es: {nuevaCalificacion}")
-            Main.gestionClases()
-        # -------------------- Inicio del proceso: arranca por el Paso 1 --------------------
         step1Obras()
 
 
@@ -3604,15 +3291,12 @@ class Main:
             
             horaInicio = fieldframe.values[1].get()
             horaFin = fieldframe.values[2].get()
-            
-            try:
-                horaInicio = datetime.strptime(horaInicio, "%H:%M").time()
-                horaFin = datetime.strptime(horaFin, "%H:%M").time()
-            except Exception:
-                messagebox.showerror("Error", "Los horarios deben estar en formato 24 horas")
-                return
 
-            fecha = datetime.strptime(fecha, "%Y-%m-%d").date()
+            try:
+                fecha, horaInicio, horaFin = Main.validar_formatos(fecha, horaInicio, horaFin)
+            except errorFormatoHorario:
+                messagebox.showerror("Error", errorFormatoHorario())
+                return
 
             fechaInicio = datetime.combine(fecha, horaInicio)
             fechaFin = datetime.combine(fecha, horaFin)
@@ -3973,9 +3657,9 @@ class Main:
                                     bg="#701C1A", fg="#FCE6C9")
                 lbl_artistas.pack(pady=10, fill="x")
                 txt_artistas = tk.Text(process_frame,
-                               height=6, width=80,
-                               font=("Calibri", 12),
-                               bg="#701C1A", fg="#FCE6C9")
+                                height=6, width=80,
+                                font=("Calibri", 12),
+                                bg="#701C1A", fg="#FCE6C9")
                 txt_artistas.pack(pady=10, fill="both", expand=True)
                 for artista in artistas:
                     if isinstance(artista, Actor):
@@ -3991,9 +3675,9 @@ class Main:
                         bg="#701C1A", fg="#FCE6C9").pack(pady=10, fill="x")
 
             lbl_id = tk.Label(process_frame,
-                      text="Ingrese el ID del artista para gestionar clases:",
-                      font=("Calibri", 14),
-                      bg="#701C1A", fg="#FCE6C9")
+                    text="Ingrese el ID del artista para gestionar clases:",
+                    font=("Calibri", 14),
+                    bg="#701C1A", fg="#FCE6C9")
             lbl_id.pack(pady=10, fill="x")
             entry_id = tk.Entry(process_frame, font=("Calibri", 14))
             entry_id.pack(pady=5)
@@ -4027,9 +3711,9 @@ class Main:
             for widget in process_frame.winfo_children():
                 widget.destroy()
             tk.Label(process_frame,
-             text=f"Artista con ID {id_num} no encontrado.",
-             font=("Calibri", 14),
-             bg="#701C1A", fg="#FCE6C1").pack(pady=10, fill="x")
+                text=f"Artista con ID {id_num} no encontrado.",
+                font=("Calibri", 14),
+                bg="#701C1A", fg="#FCE6C1").pack(pady=10, fill="x")
             tk.Label(process_frame,
                     text="¿Desea crear un nuevo Artista con este ID?",
                     font=("Calibri", 14),
