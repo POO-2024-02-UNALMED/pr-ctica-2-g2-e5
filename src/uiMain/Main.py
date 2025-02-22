@@ -109,7 +109,7 @@ class Main:
         ("Programador 3:\nNombre: Oscar David Arango Garcia\n Edad: 17 \nID: 1011591946",
             ["src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png"]),
         ("Programador 4:\nNombre: Juan Pablo Miras Cañas\n Edad: 18 \nID: 4",
-            ["src/media/Programadores/Pablo.png", "src/media/Programadores/Pablo.png", "src/media/Programadores/Pablo.png", "src/media/Programadores/Pablo.png"]),
+            ["src/media/Programadores/pablo1.png", "src/media/Programadores/pablo2.png", "src/media/Programadores/pablo5.png", "src/media/Programadores/pablo4.png"]),
         ("Programador 5:\nNombre: Miguel Velez Bernal\n Edad: 18 \nID: 1023524572",
             ["src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png"])
     ]
@@ -463,6 +463,7 @@ class Main:
 
             global cliente
             cliente = Cliente(id = code)
+            cliente.set_suscripcion(Suscripcion.BASICA)
             messagebox.showinfo("Éxito", f"Su nuevo ID es {cliente.getId()}")
             tiquete.setId(code)
             cliente.setTiquete(tiquete)
@@ -488,24 +489,30 @@ class Main:
                     messagebox.showinfo("Éxito", "Iniciando sesion")
                     Inicio_preguntas()
         def Usuario_Antiguo():
+            
+
             for widget in cls.content.winfo_children():
                 widget.destroy()
             global cliente
             cliente=Cliente(id=12)
             
             
-            frame_izq = tk.Frame(cls.content, bg="slategray")
-            frame_izq.place(relx=0, rely=0, relwidth=0.15, relheight=1)  # Se ubica en la izquierda
-
+            frame_izq = tk.Frame(cls.content, bg="#5d2417")
+            frame_izq.place(relx=0, rely=0.1, relwidth=0.1, relheight=0.9)
             # Frame derecho
-            frame_der = tk.Frame(cls.content, bg="slategray")
-            frame_der.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
-
+            frame_der = tk.Frame(cls.content, bg="#5d2417")
+            frame_der.place(relx=0.9, rely=0.1,relwidth=0.1, relheight=0.9)
             
 
-            frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
-            frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+            f1 = tk.Frame(cls.content, bg = "#4B2D2E")
+            f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
+            
+            frame_central = tk.Frame(f1, bg="#701C1A")
+            frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
 
+            bottomFrame = tk.Frame(cls.content, bg="#5d2417")
+            bottomFrame.place(relx=0, rely=0.9, relheight=0.1, relwidth=1)
+            
             frame_2 = tk.Frame(frame_central, bg="slategray2", padx=15, pady=20)
             frame_2.place(relx=0.5, rely=0.85,anchor="center")
             
@@ -515,8 +522,41 @@ class Main:
             top_frame = Frame(cls.content,background="black")
             top_frame.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
 
-            top_label = tk.Label(top_frame,text="Venta de tiquetes",font=("Calibri", 25), bg="black",fg="white")
-            top_label.place(relx=0.5, rely=0.1, anchor="n")
+            Titulo = tk.Frame(cls.content, bg="#070709")
+            Titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1)
+            TituloLabel = tk.Label(Titulo, text="Bienvenido a la venta de tiquetes", font=("Calibri", 14), fg="#FCE6C9", bg="#070709")
+            TituloLabel.pack(fill="both", expand=True)
+            TituloLabel.bind("<Configure>", lambda e: cls.resize(Titulo, TituloLabel, 8, 50, False))
+
+            '''IMAGEN BOTTOM (ASIENTOS)'''
+            # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
+            imagen_bottom = Image.open("src/media/theme/bottom.png")  
+            image = ImageTk.PhotoImage(imagen_bottom)
+
+            # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
+            bottom_label = tk.Label(bottomFrame, image=image)
+            bottom_label.place(relheight=1, relwidth=1)
+
+            # Vincular el evento <Configure> usando lambda para pasar la imagen y el label a la función
+            bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
+            '''IMAGEN RIGHT (CORTINA DER)'''
+            imagen_right = Image.open("src/media/theme/Courtain right.png")  
+            image_der = ImageTk.PhotoImage(imagen_right)
+
+            right_label = tk.Label(frame_der, image=image_der, bg="black")
+            right_label.place(relheight=1, relwidth=1)
+
+            frame_der.bind("<Configure>", lambda event: Main.resize_image(event, imagen_right, right_label))
+
+            '''IMAGEN LEFT (CORTINA IZQ)'''
+
+            imagen_left = Image.open("src/media/theme/Courtain left.png")  
+            image_izq = ImageTk.PhotoImage(imagen_left)
+
+            left_label = tk.Label(frame_izq, image=image_izq, bg="black")
+            left_label.place(relheight=1, relwidth=1)
+
+            frame_izq.bind("<Configure>", lambda event: Main.resize_image(event, imagen_left, left_label))
 
 
 
@@ -547,9 +587,15 @@ class Main:
             )
             id.place(relheight= 1, relwidth= 1)
         def validar_id(fieldframe : FieldFrame):
-            fieldframe.gatherEntries()
-            suscripcion = fieldframe.getValue("ID")
-            validar(suscripcion)
+            try:
+                fieldframe.gatherEntries()
+                suscripcion = fieldframe.getValue("ID")
+                validar(suscripcion)
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
+                return
+            
+            
 
 
 
@@ -559,23 +605,64 @@ class Main:
                 widget.destroy()
             global frame_central
             
-            frame_izq = tk.Frame(cls.content, bg="slategray")
-            frame_izq.place(relx=0, rely=0, relwidth=0.15, relheight=1)  # Se ubica en la izquierda
-
+            frame_izq = tk.Frame(cls.content, bg="#5d2417")
+            frame_izq.place(relx=0, rely=0.1, relwidth=0.1, relheight=0.9)
             # Frame derecho
-            frame_der = tk.Frame(cls.content, bg="slategray")
-            frame_der.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
-
+            frame_der = tk.Frame(cls.content, bg="#5d2417")
+            frame_der.place(relx=0.9, rely=0.1,relwidth=0.1, relheight=0.9)
+            
             top_frame = Frame(cls.content,background="black")
             top_frame.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
 
-            frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
-            frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+            
+            
 
+            f1 = tk.Frame(cls.content, bg = "#4B2D2E")
+            f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
+            
+            frame_central = tk.Frame(f1, bg="#701C1A",name="central")
+            frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
 
+            bottomFrame = tk.Frame(cls.content, bg="#5d2417")
+            bottomFrame.place(relx=0, rely=0.9, relheight=0.1, relwidth=1)
+            
+        
+            Titulo = tk.Frame(cls.content, bg="#070709")
+            Titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1)
+            TituloLabel = tk.Label(Titulo, text="Bienvenido a la venta de tiquetes", font=("Calibri", 14), fg="#FCE6C9", bg="#070709")
+            TituloLabel.pack(fill="both", expand=True)
+            TituloLabel.bind("<Configure>", lambda e: cls.resize(Titulo, TituloLabel, 8, 50, False))
 
-            top_label = tk.Label(top_frame,text="Venta de tiquetes",font=("Calibri", 25), bg="black",fg="white")
-            top_label.place(relx=0.5, rely=0.1, anchor="n")
+            
+            '''IMAGEN BOTTOM (ASIENTOS)'''
+            # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
+            imagen_bottom = Image.open("src/media/theme/bottom.png")  
+            image = ImageTk.PhotoImage(imagen_bottom)
+
+            # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
+            bottom_label = tk.Label(bottomFrame, image=image)
+            bottom_label.place(relheight=1, relwidth=1)
+
+            # Vincular el evento <Configure> usando lambda para pasar la imagen y el label a la función
+            bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
+            '''IMAGEN RIGHT (CORTINA DER)'''
+            imagen_right = Image.open("src/media/theme/Courtain right.png")  
+            image_der = ImageTk.PhotoImage(imagen_right)
+
+            right_label = tk.Label(frame_der, image=image_der, bg="black")
+            right_label.place(relheight=1, relwidth=1)
+
+            frame_der.bind("<Configure>", lambda event: Main.resize_image(event, imagen_right, right_label))
+
+            '''IMAGEN LEFT (CORTINA IZQ)'''
+
+            imagen_left = Image.open("src/media/theme/Courtain left.png")  
+            image_izq = ImageTk.PhotoImage(imagen_left)
+
+            left_label = tk.Label(frame_izq, image=image_izq, bg="black")
+            left_label.place(relheight=1, relwidth=1)
+
+            frame_izq.bind("<Configure>", lambda event: Main.resize_image(event, imagen_left, left_label))
 
             label = tk.Label(cls.content,text="Desea mejorar su suscripcion?", font=("Calibri", 25), fg="black",bg="slategray2",name="suscripcion")
             label.place(relx=0.5, rely=0.3, anchor="center")
@@ -612,15 +699,18 @@ class Main:
                 
             )
             susc.place(relheight= 1, relwidth= 1)
-            main_label = tk.Label(frame_central,bg = "slategray1",text="BÁSICA $0.00 -------\n\nPREMIUM \n$11,900.00\n 10% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\n\nVIP \n$18,900.00\n 25% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\n\nELITE \n$39,900.00 \nFUNCIONES GRATIS\nILIMITADAS Y\nASIENTO GOLD GRATIS")
-            main_label.place(relx=0.53, rely=0.5, anchor="center")
+            main_label = tk.Label(frame_central,bg = "slategray1",text="BÁSICA $0.00 -------\nPREMIUM \n$11,900.00\n 10% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\nVIP \n$18,900.00\n 25% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\nELITE \n$39,900.00 \nFUNCIONES GRATIS\nILIMITADAS Y\nASIENTO GOLD GRATIS")
+            main_label.place(relx=0.53, rely=0.4, anchor="center")
             
         def asignar_suscripcion(fieldframe: FieldFrame):
             global cliente
-            global precio_sus
-            precio_sus=0
             
-            fieldframe.gatherEntries()
+            
+            try:
+                fieldframe.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
+                return
             suscripcion = fieldframe.getValue("Eleccion")
             if suscripcion == "BASICA":
                 cliente.set_suscripcion(Suscripcion.BASICA)
@@ -666,8 +756,12 @@ class Main:
                 widget.destroy()
             except KeyError:
                 print("error label")
-            frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
-            frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+            f1 = tk.Frame(cls.content, bg = "#4B2D2E")
+            f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
+            
+            frame_central = tk.Frame(f1, bg="#701C1A",name="central")
+            frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
+
             lista=[]
 
             
@@ -723,22 +817,33 @@ class Main:
 
 
         def asignar_obra(fieldframe :FieldFrame):
-            fieldframe.gatherEntries()
+            global precio_sus
+            precio_sus=0
+            
+            
+
+            try:
+                fieldframe.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
+                return
             suscripcion = fieldframe.getValue("Eleccion")
 
             global cliente
 
             cliente.obra=suscripcion
             print(suscripcion)
-            if suscripcion=="":
+            if suscripcion=="#!#!###":
                 messagebox.showerror("Error", "seleccione una opcion")
             else:
-                widget = cls.content.nametowidget("central") 
-                widget.destroy()
+                
                 global frame_central
 
-                frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
-                frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+                f1 = tk.Frame(cls.content, bg = "#4B2D2E")
+                f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
+                
+                frame_central = tk.Frame(f1, bg="#701C1A",name="central")
+                frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
 
                 lista=[]
                 for funcion in Teatro.getInstancia().getFuncionesCreadas():
@@ -775,8 +880,9 @@ class Main:
                 tree.place(relx=0.2,rely=0.3,relwidth=0.7, relheight=0.3)
                 scrollbar.place(relx=0.90,rely=0.3, relwidth=0.03, relheight=0.3)
                 for funcion in Teatro.getInstancia().getFuncionesCreadas():
-                    print(funcion.getHorario()[0].time())
+                    print(suscripcion)
                     if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getObra().getNombre() == suscripcion:
+                        print("entro")
                         tree.insert("", "end", values=(funcion.getHorario()[0].date(),funcion.getHorario()[0].time()))
                         lista.append(funcion.getObra().getNombre())
                 
@@ -803,15 +909,17 @@ class Main:
             
             
             
-            widget = cls.content.nametowidget("central") 
-            widget.destroy()
+            
             global frame_central
 
-            frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
-            frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+            f1 = tk.Frame(cls.content, bg = "#4B2D2E")
+            f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
+                
+            frame_central = tk.Frame(f1, bg="#701C1A",name="central")
+            frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
 
             frame_botones = tk.Frame((frame_central), bg="slategray2")
-            frame_botones.place(relx=0.15, rely=0.1, relwidth=0.80, relheight=0.60)
+            frame_botones.place(relx=0.1, rely=0.1, relwidth=0.80, relheight=0.60)
 
             escenario = tk.Label(frame_botones, bg="slategray",text="ESCENARIO")
             escenario.place(relx=0.35, rely=0.8, relwidth=0.30, relheight=0.20)
@@ -867,16 +975,22 @@ class Main:
                     btn.grid(row=fila, column=columna, padx=5, pady=5, sticky="nsew", ipady=2)  # Agregar `sticky="nsew"`
 
             def imprimir_factura(numero):
-                widget = cls.content.nametowidget("central") 
-                widget.destroy()
+                
                 global frame_central
 
-                frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
-                frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+                f1 = tk.Frame(cls.content, bg = "#4B2D2E")
+                f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
+                
+                frame_central = tk.Frame(f1, bg="#701C1A",name="central")
+                frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
+
                 global precio_sus
                 texto=Tiquete.imprimirFactura(cliente,su=precio_sus,p=precio_fun)
                 texto = tk.Label(frame_central,text=texto)
                 texto.place(relx=0.3,rely=0.2)
+
+                fin = tk.Button(frame_central,text="Volver al menu",command=cls.gestionVentas)
+                fin.place(relx=0.42,rely=0.9)
 
 
             
@@ -930,24 +1044,66 @@ class Main:
         for widget in cls.content.winfo_children():
             widget.destroy()
         
-        frame_izq = tk.Frame(cls.content, bg="slategray")
-        frame_izq.place(relx=0, rely=0, relwidth=0.15, relheight=1)  # Se ubica en la izquierda
-
+        frame_izq = tk.Frame(cls.content, bg="#5d2417")
+        frame_izq.place(relx=0, rely=0.1, relwidth=0.1, relheight=0.9)
         # Frame derecho
-        frame_der = tk.Frame(cls.content, bg="slategray")
-        frame_der.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
-
+        frame_der = tk.Frame(cls.content, bg="#5d2417")
+        frame_der.place(relx=0.9, rely=0.1,relwidth=0.1, relheight=0.9)
+        
         top_frame = Frame(cls.content,background="black")
         top_frame.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
 
-        frame_central = tk.Frame(cls.content, bg="slategray1")
-        frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+        
+        
 
-        frame_central = tk.Frame(cls.content, bg="slategray1")
-        frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+        f1 = tk.Frame(cls.content, bg = "#4B2D2E")
+        f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
+        
+        frame_central = tk.Frame(f1, bg="#701C1A",name="central")
+        frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
 
-        top_label = tk.Label(top_frame,text="Venta de tiquetes",font=("Calibri", 25), bg="black",fg="white")
-        top_label.place(relx=0.5, rely=0.1, anchor="n")
+        bottomFrame = tk.Frame(cls.content, bg="#5d2417")
+        bottomFrame.place(relx=0, rely=0.9, relheight=0.1, relwidth=1)
+        
+       
+        Titulo = tk.Frame(cls.content, bg="#070709")
+        Titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1)
+        TituloLabel = tk.Label(Titulo, text="Bienvenido a la venta de tiquetes", font=("Calibri", 14), fg="#FCE6C9", bg="#070709")
+        TituloLabel.pack(fill="both", expand=True)
+        TituloLabel.bind("<Configure>", lambda e: cls.resize(Titulo, TituloLabel, 8, 50, False))
+
+        
+        '''IMAGEN BOTTOM (ASIENTOS)'''
+        # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
+        imagen_bottom = Image.open("src/media/theme/bottom.png")  
+        image = ImageTk.PhotoImage(imagen_bottom)
+
+        # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
+        bottom_label = tk.Label(bottomFrame, image=image)
+        bottom_label.place(relheight=1, relwidth=1)
+
+        # Vincular el evento <Configure> usando lambda para pasar la imagen y el label a la función
+        bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
+        '''IMAGEN RIGHT (CORTINA DER)'''
+        imagen_right = Image.open("src/media/theme/Courtain right.png")  
+        image_der = ImageTk.PhotoImage(imagen_right)
+
+        right_label = tk.Label(frame_der, image=image_der, bg="black")
+        right_label.place(relheight=1, relwidth=1)
+
+        frame_der.bind("<Configure>", lambda event: Main.resize_image(event, imagen_right, right_label))
+
+        '''IMAGEN LEFT (CORTINA IZQ)'''
+
+        imagen_left = Image.open("src/media/theme/Courtain left.png")  
+        image_izq = ImageTk.PhotoImage(imagen_left)
+
+        left_label = tk.Label(frame_izq, image=image_izq, bg="black")
+        left_label.place(relheight=1, relwidth=1)
+
+        frame_izq.bind("<Configure>", lambda event: Main.resize_image(event, imagen_left, left_label))
+
+
 
         """"top_label.bind(
             "<Configure>",
