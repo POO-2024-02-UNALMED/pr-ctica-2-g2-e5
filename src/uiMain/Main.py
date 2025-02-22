@@ -118,7 +118,7 @@ class Main:
             ["src/media/Programadores/Danna1 (9).png", "src/media/Programadores/Danna1 (5).png", "src/media/Programadores/Dannaa.png", "src/media/Programadores/Danna1 (10).png"]),
         ("Programador 3:\nNombre: Oscar David Arango Garcia\n Edad: 17 \nID: 1011591946",
             ["src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png"]),
-        ("Programador 4:\nNombre: Juan Pablo Miras Cañas\n Edad: 19 \nID: 4",
+        ("Programador 4:\nNombre: Juan Pablo Miras Cañas\n Edad: 19 \nID: 1033178679",
             ["src/media/Programadores/pablo1.png", "src/media/Programadores/pablo2.png", "src/media/Programadores/pablo5.png", "src/media/Programadores/pablo4.png"]),
         ("Programador 5:\nNombre: Miguel Velez Bernal\n Edad: 18 \nID: 1023524572",
             ["src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png"])
@@ -751,7 +751,7 @@ class Main:
 
             frame_izq.bind("<Configure>", lambda event: Main.resize_image(event, imagen_left, left_label))
 
-            label = tk.Label(cls.content,text="Desea mejorar su suscripcion?", font=("Calibri", 25), fg="black",bg="slategray2",name="suscripcion")
+            label = tk.Label(cls.content,text="Desea mejorar su suscripcion?", font=("Calibri", 25), fg="black",bg="#701C1A",name="suscripcion")
             label.place(relx=0.5, rely=0.3, anchor="center")
 
             Button_Si = tk.Button(cls.content, text="Si", font=("Calibri", 15),command=adquirir_suscripcion,name="no")
@@ -788,7 +788,7 @@ class Main:
                 
             )
             susc.place(relheight= 1, relwidth= 1)
-            main_label = tk.Label(frame_central,bg = "slategray1",text="BÁSICA $0.00 -------\nPREMIUM \n$11,900.00\n 10% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\nVIP \n$18,900.00\n 25% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\nELITE \n$39,900.00 \nFUNCIONES GRATIS\nILIMITADAS Y\nASIENTO GOLD GRATIS")
+            main_label = tk.Label(frame_central,bg = "#701C1A",text="BÁSICA $0.00 -------\nPREMIUM \n$11,900.00\n 10% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\nVIP \n$18,900.00\n 25% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\nELITE \n$39,900.00 \nFUNCIONES GRATIS\nILIMITADAS Y\nASIENTO GOLD GRATIS")
             main_label.place(relx=0.53, rely=0.4, anchor="center")
             
         def asignar_suscripcion(fieldframe: FieldFrame):
@@ -881,6 +881,14 @@ class Main:
 
             tree = ttk.Treeview(frame_central, columns=("Nombre", "Género", "Duración", "Precio"), show="headings",height=5)
 
+            text_widget = tk.Text(frame_central, height=10, width=40)  # Tamaño en líneas y columnas
+            text_widget.place(relx=0.2,rely=0.3,relwidth=0.7, relheight=0.3)
+
+            fila = f"{"Nombre":<20}{"Genero":<15}{"Duracion":<10}{"Precio":>10}\n"
+            text_widget.insert(tk.END, fila)
+
+            # Insertar texto inicial (opcional)
+            
             # Configurar encabezados
             tree.heading("Nombre", text="Nombre")
             tree.heading("Género", text="Género")
@@ -898,12 +906,15 @@ class Main:
             tree.configure(yscrollcommand=scrollbar.set)
 
             # Ubicar Treeview y Scrollbar en la ventana
-            tree.place(relx=0.2,rely=0.3,relwidth=0.7, relheight=0.3)
-            scrollbar.place(relx=0.90,rely=0.3, relwidth=0.03, relheight=0.3)
+            def formatear_duracion(duracion):
+                string = str(duracion)
+                return string
 
             # Agregar datos al Treeview
             for obra in Teatro.getInstancia().getObras():
                 obra.setPrecio(obra.precioFuncion())
+                fila = f"{obra.getNombre():<20}{obra.getGenero().value:<15}{formatear_duracion(obra.getDuracion()):<10}{f'${obra.getPrecio():,.2f}':>10}\n"
+                text_widget.insert(tk.END, fila)
                 
                 
                 
@@ -943,10 +954,11 @@ class Main:
 
                 lista=[]
                 for funcion in Teatro.getInstancia().getFuncionesCreadas():
+                    
                     if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getObra().getNombre() == suscripcion:
 
                         
-                        lista.append(funcion.getObra().getNombre())
+                        lista.append(funcion.getHorario()[0].time())
                 
                 func = FieldFrame(
                 frame_central,
@@ -955,10 +967,10 @@ class Main:
                 criterios=["Eleccion"],
                 valores= [lista],
                 combobox= True,
-                command=lambda :buscar_sillas(func)
+                command=lambda :verificarSillas(func)
                 
                 )
-                #func.place(relheight= 1, relwidth= 1)
+                func.place(relheight= 1, relwidth= 1)
 
 
                 tree = ttk.Treeview(frame_central, columns=("Fecha", "Horario"), show="headings",height=5)
@@ -972,13 +984,22 @@ class Main:
 
                 scrollbar = ttk.Scrollbar(frame_central, orient="vertical", command=tree.yview)
                 tree.configure(yscrollcommand=scrollbar.set)
+
+                text_widget = tk.Text(frame_central, height=10, width=40)  # Tamaño en líneas y columnas
+                text_widget.place(relx=0.2,rely=0.3,relwidth=0.7, relheight=0.3)
+                fila = f"{"FECHA":<25}{"HORA":<10}\n"
+                text_widget.insert(tk.END, fila)
                 
-                tree.place(relx=0.2,rely=0.3,relwidth=0.7, relheight=0.3)
-                scrollbar.place(relx=0.90,rely=0.3, relwidth=0.03, relheight=0.3)
                 for funcion in Teatro.getInstancia().getFuncionesCreadas():
-                    print(suscripcion)
+                    
                     if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getObra().getNombre() == suscripcion:
-                        print("entro")
+                        fecha = str(funcion.getHorario()[0].date())
+                        hora = funcion.getHorario()[0].time().strftime("%H:%M:%S")
+                        
+                        
+                        fila = f"{fecha:<25}{hora:<10}\n"
+                        text_widget.insert(tk.END, fila)
+                        
                         tree.insert("", "end", values=(funcion.getHorario()[0].date(),funcion.getHorario()[0].time()))
                         lista.append(funcion.getObra().getNombre())
                 
@@ -999,7 +1020,15 @@ class Main:
                 tree.bind("<<TreeviewSelect>>", on_tree_select)
                         
         
-                   
+        def verificarSillas (fieldframe : FieldFrame):
+            
+            try:
+                fieldframe.gatherEntries()
+                fecha = fieldframe.getValue("Eleccion")
+                buscar_sillas(fecha)
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
+                return         
         def buscar_sillas (fecha):
             print(fecha)
             
@@ -1014,7 +1043,7 @@ class Main:
             frame_central = tk.Frame(f1, bg="#701C1A",name="central")
             frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
 
-            frame_botones = tk.Frame((frame_central), bg="slategray2")
+            frame_botones = tk.Frame((frame_central), bg="#701C1A")
             frame_botones.place(relx=0.1, rely=0.1, relwidth=0.80, relheight=0.60)
 
             escenario = tk.Label(frame_botones, bg="slategray",text="ESCENARIO")
@@ -1214,7 +1243,7 @@ class Main:
             lambda e: cls.resize(top_frame,top_label, 60, 100)
         )"""
 
-        label = tk.Label(cls.content,text="Eres un cliente nuevo?", font=("Calibri", 25), fg="black",bg="slategray1")
+        label = tk.Label(cls.content,text="Eres un cliente nuevo?", font=("Calibri", 25), fg="black",bg="#701C1A")
         label.place(relx=0.5, rely=0.3, anchor="center")
 
         Button_Si = tk.Button(cls.content, text="Si", font=("Calibri", 15),command=Usuario_Nuevo)
