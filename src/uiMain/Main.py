@@ -1062,12 +1062,12 @@ class Main:
                     
                     precio_fun=funcion.getObra().getPrecio()
                     
-                    print(fecha)
+                    
                     global sillas
                     global funcion_elegida
                     funcion_elegida = funcion
                     sillas = funcion.getSillas()
-                    print(id(sillas))
+                    
             
 
 
@@ -1076,7 +1076,7 @@ class Main:
                 if pregun :
                     indi = 0
                     try :
-                        print(cliente.get_suscripcion())
+                        
                         cliente.verificarSuscripcion(l[0])
                         for i in funcion_elegida.getSillas():
                         
