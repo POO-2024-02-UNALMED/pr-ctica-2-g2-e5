@@ -1833,13 +1833,13 @@ class Main:
                         if totalFunciones == 0:
                             alerta = tk.Frame(infoSeguridad, bg="#701C1A", bd=2, relief="groove")
                             alerta.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.5, relheight=0.5)
-                            mensaje = tk.Label(alerta ,text="No hay funciones para agregar", font=("Calibri", 18), bg="#701C1A", fg="white")
+                            mensaje = tk.Label(alerta ,text="No hay funciones para agregar", font=("Calibri", 12), bg="#701C1A", fg="white")
                             mensaje.place(relx=0.5, rely=0.5, anchor="center")
                             trabajoAsignadoS = False
                         else:
                             alerta = tk.Frame(infoSeguridad, bg="#701C1A", bd=2, relief="groove")
                             alerta.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.5, relheight=0.5)
-                            mensaje = tk.Label(alerta, text = "No hay trabajadores de Seguridad", font=("Calibri", 18), bg="#701C1A", fg="white")
+                            mensaje = tk.Label(alerta, text = "No hay trabajadores de Seguridad", font=("Calibri", 12), bg="#701C1A", fg="white")
                             mensaje.place(relx=0.5, rely=0.5, anchor="center")
                             trabajoAsignadoS = False
                     if len(funcionesDisponibles) != 0:
@@ -2169,13 +2169,13 @@ class Main:
                         if totalFunciones == 0:
                             alerta = tk.Frame(infoAseador, bg="#701C1A", bd=2, relief="groove")
                             alerta.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.5, relheight=0.5)
-                            mensaje = tk.Label(alerta ,text="No hay funciones para poder Limpiar", font=("Calibri", 18), bg="#701C1A", fg="white")
+                            mensaje = tk.Label(alerta ,text="No hay funciones para poder Limpiar", font=("Calibri", 12), bg="#701C1A", fg="white")
                             mensaje.place(relx=0.5, rely=0.5, anchor="center")
                             trabajoAsignadoA = False
                         else:
                             alerta = tk.Frame(infoAseador, bg="#701C1A", bd=2, relief="groove")
                             alerta.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.5, relheight=0.5)
-                            mensaje = tk.Label(alerta, text = "No hay Aseadores", font=("Calibri", 18),bg="#701C1A", fg="white")
+                            mensaje = tk.Label(alerta, text = "No hay Aseadores", font=("Calibri", 12),bg="#701C1A", fg="white")
                             mensaje.place(relx=0.5, rely=0.5, anchor="center")
                             trabajoAsignadoA = False
                     
@@ -2599,29 +2599,23 @@ class Main:
                 button_no.config(command=lambda: Despidos()) 
 
             f1.after(1000, lambda: continuar())            
-        # Encabezado
-        Titulo = tk.Frame(cls.content, bg="#070709")
-        Titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-        TituloLabel = tk.Label(Titulo, text="Bienvenido a la gestion de empleados", font=("Calibri", 14), fg="#FCE6C9", bg="#070709")
-        TituloLabel.pack(fill="both", expand=True)
-        TituloLabel.bind("<Configure>", lambda e: cls.resize(Titulo, TituloLabel, 8, 50, False))
-
+        
         # --- Partes del contenido --- #
         #f1 es el central
         f1 = tk.Frame(cls.content, bg = "#4B2D2E")
-        f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
+        f1.place(relx=0.175, rely=0.1, relwidth=0.65, relheight=0.8)
         
         #frame izquierdo
         leftFrame = tk.Frame(cls.content, bg="#5d2417")
-        leftFrame.place(relx=0, rely=0.1, relwidth=0.1, relheight=0.9)
+        leftFrame.place(relx=0, rely=0, relwidth=0.175, relheight=0.9)
 
         #frame derecho
         rightFrame = tk.Frame(cls.content, bg="#5d2417")
-        rightFrame.place(relx=0.9, rely=0.1,relwidth=0.1, relheight=0.9)
+        rightFrame.place(relx=0.825, rely=0, relwidth=0.175, relheight=0.9)
         
         #frame inferior
         bottomFrame = tk.Frame(cls.content, bg="#5d2417")
-        bottomFrame.place(relx=0, rely=0.9, relheight=0.1, relwidth=1)
+        bottomFrame.place(relx=0, rely=0.9, relheight=0.2, relwidth=1)
         
         '''IMAGEN BOTTOM (ASIENTOS)'''
         # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
@@ -2654,6 +2648,13 @@ class Main:
 
         leftFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_left, left_label))
 
+        # Encabezado
+        Titulo = tk.Frame(cls.content, bg="#070709")
+        Titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1)
+        TituloLabel = tk.Label(Titulo, text="Bienvenido a la gestion de empleados", font=("Calibri", 14), fg="#FCE6C9", bg="#070709")
+        TituloLabel.pack(fill="both", expand=True)
+        TituloLabel.bind("<Configure>", lambda e: cls.resize(Titulo, TituloLabel, 8, 50, False))
+        
         #Accion principal
         Anuncio = tk.Frame(f1, bg="#701C1A")
         Anuncio.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
