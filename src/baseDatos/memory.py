@@ -16,6 +16,36 @@ def resetMemory():
 
     Cliente(id = 426, tipo= "Empresa")
 
+    sala1 = Sala(numero_sala=1,metros_cuadrados= 100,capacidad= 24)
+    sala2 = Sala(numero_sala=2,metros_cuadrados= 200,capacidad= 48)
+    sala3 = Sala(numero_sala=3,metros_cuadrados= 50,capacidad= 16)
+    sala4 = Sala(numero_sala=4,metros_cuadrados= 150,capacidad= 24)
+    
+    horarioObra1F = [datetime(year = 2024, month = 1, day = 1, hour = 9, minute = 0), datetime(year = 2024, month = 1, day = 1, hour = 12, minute = 30)]
+    horarioObra2F = [datetime(year = 2024, month = 1, day = 1, hour = 15, minute = 0), datetime(year = 2024, month = 1, day = 1, hour = 21, minute = 30)]
+    horarioObra3F = [datetime(year = 2024, month = 1, day = 1, hour = 13, minute = 0), datetime(year = 2024, month = 1, day = 1, hour = 22, minute = 30)]
+    horarioObra4F = [datetime(year = 2024, month = 1, day = 1, hour = 12, minute = 0), datetime(year = 2024, month = 1, day = 1, hour = 22, minute = 30)]
+    horarioObra5F = [datetime(year = 2024, month = 1, day = 1, hour = 16, minute = 0), datetime(year = 2024, month = 1, day = 1, hour = 22, minute = 30)]
+    horarioObra6F = [datetime(year = 2024, month = 1, day = 1, hour = 20, minute = 0), datetime(year = 2024, month = 1, day = 1, hour = 23, minute = 59)]
+    horarioObra7F = [datetime(year = 2024, month = 1, day = 1, hour = 17, minute = 0), datetime(year = 2024, month = 1, day = 1, hour = 23, minute = 30)]
+    horarioObra8F = [datetime(year = 2024, month = 1, day = 1, hour = 10, minute = 0), datetime(year = 2024, month = 1, day = 1, hour = 17, minute = 30)]    
+    obra1F = Funcion(horario = horarioObra1F)
+    obra2F = Funcion(horario = horarioObra2F)
+    obra3F = Funcion(horario=horarioObra3F)
+    obra4F = Funcion(horario=horarioObra4F)
+    obra5F = Funcion(horario=horarioObra5F)
+    obra6F = Funcion(horario=horarioObra6F)
+    obra7F = Funcion(horario=horarioObra7F)
+    obra8F = Funcion(horario=horarioObra8F)
+    obraNFI1 = Obra(nombre = "NOTFORITE", funcionEstelar = obra1F, genero= Genero.EXPERIMENTAL)
+    obraNFI2 = Obra(nombre = "NOTFORITE", funcionEstelar = obra2F, genero= Genero.DRAMA)
+    obraNFI3 = Obra(nombre = "NOTFORITE", funcionEstelar = obra3F, genero= Genero.COMEDIA)
+    obraNFI4 = Obra(nombre = "NOTFORITE", funcionEstelar = obra4F, genero= Genero.MUSICAL)
+    obraNFI5 = Obra(nombre = "NOTFORITE", funcionEstelar = obra5F, genero= Genero.FANTASIA)
+    obraNFI6 = Obra(nombre = "NOTFORITE", funcionEstelar = obra6F, genero= Genero.TERROR)
+    obraNFI7 = Obra(nombre = "NOTFORITE", funcionEstelar = obra7F, genero= Genero.ROMANCE)
+    obraNFI8 = Obra(nombre = "NOTFORITE", funcionEstelar = obra8F, genero= Genero.CIRCO)
+    
     actor1 = Actor("Pedro Pascal", 10292122, 49)
     genres = [Genero.COMEDIA, Genero.CIRCO]
     actor1.setGeneros(genres)
@@ -120,12 +150,6 @@ def resetMemory():
     ActorPrueba.setCalificacionPorAptitud(Aptitud.BAILE, 5.0)
     ActorPrueba.setCalificacionPorAptitud(Aptitud.IMPROVISACION, 5.0)
     ActorPrueba.setCalificacionPorAptitud(Aptitud.DISCURSO, 5.0)
-    sala1=Sala(1)
-    sala2=Sala(2)
-    sala3=Sala(3)
-    sala4=Sala(4)
-    sala5=Sala(5)
-    sala6=Sala(6)
     #funcion3 = Funcion(obra=obra1,horario=(datetime(2025, 2, 19, 14, 30),datetime(2025, 3, 19, 14, 30)),sillas=sala.create_sillas(16), sala = Sala(3))
 
     funcion1 = Funcion(

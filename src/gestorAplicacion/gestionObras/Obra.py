@@ -33,7 +33,8 @@ class Obra:
         self.calcularCalificacion(self.getCalificaciones())
         self.calcAudienciaEsperada(self.getCalificacion())
         self.checkEstadoCritico()
-        Teatro.getInstancia().getObras().append(self)
+        if self.__nombre != "NOTFORITE":
+            Teatro.getInstancia().getObras().append(self)
         Obra.obras.append(self)
         
     def getAudenciaEsperada(self):
