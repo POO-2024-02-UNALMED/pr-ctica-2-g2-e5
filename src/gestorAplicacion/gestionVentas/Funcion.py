@@ -13,7 +13,7 @@ class Funcion:
         self.__obra = obra
         self.__tiquetesVendidos = tiquetesVendidos
         self.__horario = horario
-        self.__sillas  = sillas
+        self.__sillas  = sillas.copy()
         self.__sala = sala
         self.__calificador = calificador
         self.__audienciaEsperada = audienciaEsperada
@@ -22,6 +22,7 @@ class Funcion:
         self.__precio = precio
         Funcion.funcionesCreadas.append(self)
         Teatro.getInstancia().getFuncionesCreadas().append(self)
+        print(id(self.__sillas))
         if len(week)>0:
             self.__horario = self.createHorario(week)
             self.__sala = self.getSala()

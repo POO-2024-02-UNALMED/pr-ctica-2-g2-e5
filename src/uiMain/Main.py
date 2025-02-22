@@ -579,7 +579,8 @@ class Main:
             for widget in cls.content.winfo_children():
                 widget.destroy()
             global cliente
-            cliente=Cliente(id=12)
+            
+            
             
             
             f1 = tk.Frame(cls.content, bg = "#4B2D2E")
@@ -1059,11 +1060,12 @@ class Main:
                     
                     precio_fun=funcion.getObra().getPrecio()
                     
-                    
+                    print(fecha)
                     global sillas
                     global funcion_elegida
                     funcion_elegida = funcion
                     sillas = funcion.getSillas()
+                    print(id(sillas))
             
 
 
@@ -1072,7 +1074,7 @@ class Main:
                 if pregun :
                     indi = 0
                     try :
-                        
+                        print(cliente.get_suscripcion())
                         cliente.verificarSuscripcion(l[0])
                         for i in funcion_elegida.getSillas():
                         
