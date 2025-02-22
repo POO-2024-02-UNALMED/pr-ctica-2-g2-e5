@@ -1371,25 +1371,25 @@ class Main:
                 p12 = tk.Frame(p1, bg="#701C1A")
                 p12.pack(side="bottom", fill="both", pady = 5, padx=5)
                 contratarS = tk.Button(p12, bg= "#AE1918" ,text = "Contratar", font = ("calibri", 12), fg="White")
-                contratarS.pack(side="left", expand=True, fill="x", pady= 5, padx=10, anchor="center")
+                contratarS.pack(side="left", expand=True, fill="x", pady= 5, padx=5, anchor="center")
                 despedirS = tk.Button(p12, bg="#AE1918", text="Despedir", font=("calibri", 12), fg = "white")
-                despedirS.pack(side="left", expand= True, fill= "x", pady=5, padx=10, anchor="center")
+                despedirS.pack(side="left", expand= True, fill= "x", pady=5, padx=5, anchor="center")
 
                 #Aseador
                 p22 = tk.Frame(p2, bg="#701C1A")
                 p22.pack(side="bottom", fill="both", pady = 5, padx=5)
                 contratarA = tk.Button(p22, bg= "#AE1918" ,text = "Contratar", font = ("calibri", 12), fg="White")
-                contratarA.pack(side="left", expand=True, fill="x", pady= 5, padx=10, anchor="center")
+                contratarA.pack(side="left", expand=True, fill="x", pady= 5, padx=5, anchor="center")
                 despedirA = tk.Button(p22, bg="#AE1918", text="Despedir", font=("calibri", 12), fg = "white")
-                despedirA.pack(side="left", expand= True, fill= "x", pady=5, padx=10, anchor="center")
+                despedirA.pack(side="left", expand= True, fill= "x", pady=5, padx=5, anchor="center")
 
                 #Profesor
                 p32 = tk.Frame(p3, bg="#701C1A")
                 p32.pack(side="bottom", fill="both", pady = 5, padx=5)
                 contratarP = tk.Button(p32, bg= "#AE1918" ,text = "Contratar", font = ("calibri", 12), fg="White")
-                contratarP.pack(side="left", expand=True, fill="x", pady= 5, padx=10, anchor="center")
+                contratarP.pack(side="left", expand=True, fill="x", pady= 5, padx=5, anchor="center")
                 despedirP = tk.Button(p32, bg="#AE1918", text="Despedir", font=("calibri", 12), fg = "white")
-                despedirP.pack(side="left", expand= True, fill= "x", pady=5, padx=10, anchor="center")
+                despedirP.pack(side="left", expand= True, fill= "x", pady=5, padx=5, anchor="center")
 
 
                 #Modificar para los empleados de la lista
