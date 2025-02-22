@@ -117,4 +117,4 @@ class Sala:
         return sillas
     
     def __str__(self):
-        return str(self.numero_sala)
+        return str(self.get_numero_sala()) + str(self.get_capacidad())

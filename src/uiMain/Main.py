@@ -3007,7 +3007,109 @@ class Main:
         def step_obra_found(obra):
             for widget in process_frameO.winfo_children():
                 widget.destroy()
+            fieldframe = FieldFrame(process_frameO,
+                                    tituloCriterios = "",
+                                    criterios = ["Número de funciones"],
+                                    valores = [""],
+                                    command = lambda: (fieldframe.gatherEntries(), createFunciones(obra, fieldframe.valores[0])))
+            fieldframe.pack(pady=10, fill="both", expand=True)
             
+        def createFunciones(obra, numero):
+            a = obra.getFuncionesRecomendadas()
+            continuar = False
+            drut = 0
+            rut = int(numero)
+            def getWeek():
+                hoy = datetime.now()
+                dias = []
+                for pio in range(1, 8):
+                    dias.append(hoy + timedelta(days = pio))
+
+            if a + 2 < rut:
+                messagebox.showwarning("ALERTA", "SON DEMASIADAS FUNCIONES SEGUN LA CALIFICACION DE LA OBRA")
+                step_obra_found(obra)
+                continuar = True
+                drut = rut
+            elif a - 2 > rut:
+                messagebox.showwarning("ALERTA", "SON MUY POCAS FUNCIONES SEGUN LA CALIFICACION DE LA OBRA")
+                step_obra_found(obra)
+                continuar = True
+                drut = rut
+            else:
+                continuar = True
+                drut = rut  # Acepta si la cantidad es adecuada
+            cantFunciones = 0
+            for numeroFunciones in range(drut):
+                weekn = getWeek()
+                funcion = Funcion(obra, weekn)
+                obra.addFuncion(funcion)
+                if funcion.getSala() is not None:
+                    for widget in process_frameO.winfo_children():
+                        widget.destroy()
+                    etiqueta = tk.Label(process_frameO, 
+                                        text = f"Funcion creada\nHora:  {funcion.getHorario()}\nSala: {funcion.getSala()}",
+                                        font=("Calibri", 14),
+                                        bg = "#701C1A", fg = "#FCE6C1")
+                    etiqueta.pack()
+                    cantFunciones += 1
+                else:
+                    for widget in process_frameO.winfo_children():
+                        widget.destroy()
+                    etiqueta = tk.Label(process_frameO, 
+                                        text = f"No queda espacio en las salas para esta función :(, creadas con éxito: {cantFunciones}",
+                                        font=("Calibri", 14),
+                                        bg = "#701C1A", fg = "#FCE6C1")
+                    etiqueta.pack()
+                    break
+            
+            horarioToString = ""
+            dias = []
+            hoy = datetime.now()
+            for pio in range(1, 8):
+                dias.append(hoy + timedelta(days = pio))
+
+            # Crear un formato para imprimir fechas y horas
+            formatoFecha = "%d/%m/%Y"
+            formatoHora = "%H:%M"
+
+            for sala in Teatro.getInstancia().getSalas():
+                horarioToString += f"Horario para sala {sala.get_numero_sala()}:\n"
+                
+                # Crear columnas para los 7 días
+                columnasDias = [[] for _ in range(7)]
+
+                # Filtrar y organizar las funciones de esta sala
+                funcionesSala = []
+                for funcion in Teatro.getInstancia().getFuncionesCreadas():
+                    if funcion.getObra() is not None and funcion.getSala() is not None and funcion.getSala() == sala:
+                            funcionesSala.append(funcion)
+
+                # Distribuir funciones en los días correspondientes
+                for funcion in funcionesSala:
+                    for pou in range(len(dias)):
+                        inicioDia = dias[pou]
+                        finDia = inicioDia + timedelta(days = 1)
+
+                        if inicioDia < funcion.getHorario()[0] and funcion.getHorario()[0]<finDia:
+                            columnasDias[pou].append(
+                                f"{funcion.getObra().getNombre()} ({funcion.getHorario()[0].strftime(formatoHora)} - " +
+                                f"{funcion.getHorario()[1].strftime(formatoHora)})"
+                            )
+                            break
+
+                for diaFunciones in columnasDias:
+                    diaFunciones.sort(key=lambda f: datetime.strptime(f[f.index("(") + 1:f.index(" -")], formatoHora))
+
+                # Imprimir el horario en columnas
+                for coo in range(7):
+                    horarioToString += f"Día {dias[coo].strftime(formatoFecha)}:\n"
+                    for detalleFuncion in columnasDias[coo]:
+                        horarioToString += f"   {detalleFuncion}\n"
+                etiqueta = tk.Label(process_frameO, 
+                                    text = horarioToString,
+                                    bg = "#701C1A", fg = "#FCE6C1")
+                etiqueta.pack(side = "left", padx = 1)
+                horarioToString = ""
         step1Obras()
 
 

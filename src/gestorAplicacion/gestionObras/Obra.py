@@ -379,3 +379,5 @@ class Obra:
     
     def getDuracionFormatoS(self):
         return self.getDuracion.total_seconds()
+    def addFuncion(self, funcion):
+        self.getFuncionesSemana().append(funcion)

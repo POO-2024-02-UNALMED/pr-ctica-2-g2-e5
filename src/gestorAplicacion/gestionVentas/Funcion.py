@@ -9,7 +9,7 @@ class Funcion:
     funcionesALaVenta = []  # Lista estática de funciones a la venta
 
     def __init__(self, obra = None, tiquetesVendidos = 0, horario = [], sillas = [], sala = None, calificador = False,
-            audienciaEsperada = 0, trabajador = False, asistentes = [], precio = 0.0):
+            audienciaEsperada = 0, trabajador = False, asistentes = [], precio = 0.0, week = []):
         self.__obra = obra
         self.__tiquetesVendidos = tiquetesVendidos
         self.__horario = horario
@@ -22,7 +22,12 @@ class Funcion:
         self.__precio = precio
         Funcion.funcionesCreadas.append(self)
         Teatro.getInstancia().getFuncionesCreadas().append(self)
-        
+        if len(week)>0:
+            self.__horario = self.createHorario(week)
+            self.__sala = self.getSala()
+            self.__audienciaEsperada = obra.getAudienciaEsperada()
+            if self.__sala != None:
+                self.__sillas = self.__sala.getSillas()        
     def getObra(self):
         return self.__obra
     

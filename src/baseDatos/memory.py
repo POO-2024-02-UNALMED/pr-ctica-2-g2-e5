@@ -82,7 +82,7 @@ def resetMemory():
 
     # Creación del cliente Warner
     warner = Cliente(tipo = "Empresa", id = 246,
-                     cuenta_bancaria= CuentaBancaria(246, 0))
+                    cuenta_bancaria= CuentaBancaria(246, 0))
     warner.getHistorial().append(actor3)
     warner.getCuentaBancaria().ingresar(3_700_000)
 
