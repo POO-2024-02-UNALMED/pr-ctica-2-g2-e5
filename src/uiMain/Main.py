@@ -2580,44 +2580,31 @@ class Main:
         def step_create_obra(name_str):
             for widget in process_frameO.winfo_children():
                 widget.destroy()
-            criteriosObra = ["Nombre", "Tipo de artista"]
-            valoresObra = ["", ""]
+            criteriosObra = ["Nombre", "Actores", "Aptitudes", "Genero", "Director","Costo de producción", "Duración de la obra (HHMMSS)"]
+            valoresObra = [name_str, [], [], None, None, 0, 0]
             ff = FieldFrame(process_frameO,
-                            tituloCriterios="Datos del nuevo artista",
-                            criterios=criterios,
-                            tituloValores="Ingrese valor",
-                            valores=valores,
+                            tituloCriterios="Datos de la nueva obra",
+                            criterios=criteriosObra,
+                            tituloValores="Ingrese su respuesta <3",
+                            valores=valoresObra,
                             combobox=False,
-                            command=lambda: (ff.gatherEntries(), process_new_artist(id_num, ff.valores[0], ff.valores[1])))
+                            command=lambda: (ff.gatherEntries(), process_new_obra(name_str, ff.valoresObra[0], 
+                                                                                ff.valoresObra[1],
+                                                                                ff.valoresObra[2], 
+                                                                                ff.valoresObra[3],
+                                                                                ff.valoresObra[4],
+                                                                                ff.valoresObra[5],
+                                                                                ff.valoresObra[6])))
             ff.pack(pady=10, fill="both", expand=True)
-            tk.Label(process_frame, text="(Si se ingresa 'actor' se pedirá la edad posteriormente)",
-                    font=("Calibri", 12), bg="white").pack(pady=5)
 
-        def process_new_artist(id_num, nombre, tipo):
-            tipo = tipo.lower().strip()
-            if tipo not in ["director", "actor"]:
-                messagebox.showerror("Error", "Tipo de artista no válido. Debe ser 'director' o 'actor'.")
-                return
-            if tipo == "director":
-                # Se crea el director mediante su constructor (se asume que internamente se añade a la lista de directores)
-                # Ejemplo: Director(nombre, id_num)
-                director = Director(nombre, id_num)
-                messagebox.showinfo("Éxito", f"Nuevo director agregado: {nombre} con ID {id_num}.\nLos directores no reciben clases.")
-                for widget in process_frame.winfo_children():
-                    widget.destroy()
-                Main.gestionClases()
-
-            else:
-                for widget in process_frame.winfo_children():
-                    widget.destroy()
-                tk.Label(process_frame, text="Ingrese la edad del nuevo actor (entre 4 y 80):",
-                        font=("Calibri", 14), bg="white").pack(pady=10)
-                entry_age = tk.Entry(process_frame, font=("Calibri", 14))
-                entry_age.pack(pady=5)
-                tk.Button(process_frame, text="Guardar", font=("Calibri", 14),
-                            command=lambda: process_new_actor(id_num, nombre, entry_age.get())).pack(pady=10)
-
-        def process_new_actor(id_num, nombre, age_str):
+        def process_new_obra(name_str, actores, aptitudes, genero, director, costo, duracion):
+            if director == None:
+                fieldframedir = FieldFrame(process_frameO, 
+                                        titulosCriterios = "Datos del nuevo director", 
+                                        )
+            obra = Obra(nombre = name_str, reparto = actores, papeles = aptitudes, director = director,
+                        costoProducción= costo, duracion = duracion)
+        def process_new_director(id_num, nombre, age_str):
             try:
                 edad = int(age_str)
             except ValueError:
