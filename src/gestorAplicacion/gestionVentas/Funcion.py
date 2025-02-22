@@ -22,7 +22,7 @@ class Funcion:
         self.__precio = precio
         Funcion.funcionesCreadas.append(self)
         Teatro.getInstancia().getFuncionesCreadas().append(self)
-        print(id(self.__sillas))
+        
         if len(week)>0:
             self.__horario = self.createHorario(week)
             self.__sala = self.getSala()
