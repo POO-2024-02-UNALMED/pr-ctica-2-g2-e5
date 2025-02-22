@@ -40,8 +40,9 @@ class Tiquete:
 
     @staticmethod
     def imprimirFactura(cliente, b=False, d=10, p=0, su=0):
-        print(type(cliente))
+        precioTotal = p*d
         fecha_actual = datetime.now().strftime("%d/%m/%Y")
+        
 
 
         cliente.getTiquete().setId(Tiquete.idTiquete())
@@ -52,14 +53,14 @@ class Tiquete:
         s += "================================\n"
         s += f"{'Producto':<10}{'Precio':>20}\n"
         s += "--------------------------------\n"
-        s += f"{'Funcion':<10}{'$' + format(p, ',.2f'):>20}\n"
+        s += f"{'Funcion':<10}{'$' + format(precioTotal, ',.2f'):>20}\n"
         if not b and cliente.get_suscripcion().value != "Basica":
             s += f"{'Suscripcion':<10}{'$' + format(su, ',.2f'):>20}\n"
             s += f"{cliente.get_suscripcion().value:<25}\n"
         
         if cliente.get_suscripcion().name != "Basica":
             s += f"\nDescuento por ser {cliente.get_suscripcion().value}"
-            s += f"\n-{format(d, ',.2f')}\n"
+            s += f"\n-{format(p-precioTotal, ',.2f')}\n"
         
 
 

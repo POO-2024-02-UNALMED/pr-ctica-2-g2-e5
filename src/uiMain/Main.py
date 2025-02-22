@@ -582,22 +582,21 @@ class Main:
             cliente=Cliente(id=12)
             
             
+            f1 = tk.Frame(cls.content, bg = "#4B2D2E")
+            f1.place(relx=0.175, rely=0.1, relwidth=0.65, relheight=0.8)
+
             frame_izq = tk.Frame(cls.content, bg="#5d2417")
-            frame_izq.place(relx=0, rely=0.1, relwidth=0.1, relheight=0.9)
+            frame_izq.place(relx=0, rely=0, relwidth=0.175, relheight=0.9)
             # Frame derecho
             frame_der = tk.Frame(cls.content, bg="#5d2417")
-            frame_der.place(relx=0.9, rely=0.1,relwidth=0.1, relheight=0.9)
+            frame_der.place(relx=0.825, rely=0, relwidth=0.175, relheight=0.9)
             
 
-            f1 = tk.Frame(cls.content, bg = "#4B2D2E")
-            f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
-            
-            frame_central = tk.Frame(f1, bg="#701C1A")
-            frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
+            frame_central = tk.Frame(f1, bg="#701C1A",name="central")
+            frame_central.place(relx=0.032, rely=0.05, relwidth=0.937, relheight=0.87)
 
             bottomFrame = tk.Frame(cls.content, bg="#5d2417")
-            bottomFrame.place(relx=0, rely=0.9, relheight=0.1, relwidth=1)
-            
+            bottomFrame.place(relx=0, rely=0.9, relheight=0.2, relwidth=1)
             frame_2 = tk.Frame(frame_central, bg="slategray2", padx=15, pady=20)
             frame_2.place(relx=0.5, rely=0.85,anchor="center")
             
@@ -688,32 +687,27 @@ class Main:
         def Inicio_preguntas():
             global descuento
             descuento = 0
+            descuento = 1-descuento
             for widget in cls.content.winfo_children():
                 widget.destroy()
             global frame_central
             
+            f1 = tk.Frame(cls.content, bg = "#4B2D2E")
+            f1.place(relx=0.175, rely=0.1, relwidth=0.65, relheight=0.8)
+
             frame_izq = tk.Frame(cls.content, bg="#5d2417")
-            frame_izq.place(relx=0, rely=0.1, relwidth=0.1, relheight=0.9)
+            frame_izq.place(relx=0, rely=0, relwidth=0.175, relheight=0.9)
             # Frame derecho
             frame_der = tk.Frame(cls.content, bg="#5d2417")
-            frame_der.place(relx=0.9, rely=0.1,relwidth=0.1, relheight=0.9)
-            
-            top_frame = Frame(cls.content,background="black")
-            top_frame.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
-
-            
+            frame_der.place(relx=0.825, rely=0, relwidth=0.175, relheight=0.9)
             
 
-            f1 = tk.Frame(cls.content, bg = "#4B2D2E")
-            f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
-            
             frame_central = tk.Frame(f1, bg="#701C1A",name="central")
-            frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
+            frame_central.place(relx=0.032, rely=0.05, relwidth=0.937, relheight=0.87)
 
             bottomFrame = tk.Frame(cls.content, bg="#5d2417")
-            bottomFrame.place(relx=0, rely=0.9, relheight=0.1, relwidth=1)
+            bottomFrame.place(relx=0, rely=0.9, relheight=0.2, relwidth=1)
             
-        
             Titulo = tk.Frame(cls.content, bg="#070709")
             Titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1)
             TituloLabel = tk.Label(Titulo, text="Bienvenido a la venta de tiquetes", font=("Calibri", 14), fg="#FCE6C9", bg="#070709")
@@ -751,7 +745,7 @@ class Main:
 
             frame_izq.bind("<Configure>", lambda event: Main.resize_image(event, imagen_left, left_label))
 
-            label = tk.Label(cls.content,text="Desea mejorar su suscripcion?", font=("Calibri", 25), fg="black",bg="#701C1A",name="suscripcion")
+            label = tk.Label(cls.content,text="Desea mejorar su suscripcion?", font=("Calibri", 25), fg="#FCE6C9",bg="#701C1A",name="suscripcion")
             label.place(relx=0.5, rely=0.3, anchor="center")
 
             Button_Si = tk.Button(cls.content, text="Si", font=("Calibri", 15),command=adquirir_suscripcion,name="no")
@@ -788,12 +782,13 @@ class Main:
                 
             )
             susc.place(relheight= 1, relwidth= 1)
-            main_label = tk.Label(frame_central,bg = "#701C1A",text="BÁSICA $0.00 -------\nPREMIUM \n$11,900.00\n 10% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\nVIP \n$18,900.00\n 25% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\nELITE \n$39,900.00 \nFUNCIONES GRATIS\nILIMITADAS Y\nASIENTO GOLD GRATIS")
+            main_label = tk.Label(frame_central,fg="#FCE6C9",bg = "#701C1A",text="BÁSICA $0.00 -------\nPREMIUM \n$11,900.00\n 10% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\nVIP \n$18,900.00\n 25% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\nELITE \n$39,900.00 \nFUNCIONES GRATIS\nILIMITADAS Y\nASIENTO GOLD GRATIS")
             main_label.place(relx=0.53, rely=0.4, anchor="center")
             
         def asignar_suscripcion(fieldframe: FieldFrame):
             global cliente
             global descuento
+            global precio_sus
             descuento = 0
             
             try:
@@ -813,7 +808,6 @@ class Main:
             elif suscripcion == "PREMIUM":
                 cliente.set_suscripcion(Suscripcion.PREMIUM)
                 precio_sus=11900
-                descuento = 0
                 descuento = 0.10
             elif suscripcion == "ELITE":
                 cliente.set_suscripcion(Suscripcion.ELITE)
@@ -823,7 +817,8 @@ class Main:
                 raise ValueError("Suscripción no válida")
             descuento = 1-descuento
             
-            print(cliente.get_suscripcion())
+            
+            
             continuar()
         
    
@@ -835,12 +830,13 @@ class Main:
 
 
         def continuar():
+            
             try:
                 widget = cls.content.nametowidget("central") 
                 widget.destroy()
 
             except KeyError:
-                print("error frame")
+                None
             try:
                 widget = cls.content.nametowidget("central") 
                 widget.destroy()
@@ -851,13 +847,16 @@ class Main:
                 widget = cls.content.nametowidget("suscripcion") 
                 widget.destroy()
             except KeyError:
-                print("error label")
+                None
             f1 = tk.Frame(cls.content, bg = "#4B2D2E")
-            f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
-            
-            frame_central = tk.Frame(f1, bg="#701C1A",name="central")
-            frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
+            f1.place(relx=0.175, rely=0.1, relwidth=0.65, relheight=0.8)
 
+            
+
+            frame_central = tk.Frame(f1, bg="#701C1A",name="central")
+            frame_central.place(relx=0.032, rely=0.05, relwidth=0.937, relheight=0.87)
+
+          
             lista=[]
 
             
@@ -881,8 +880,8 @@ class Main:
 
             tree = ttk.Treeview(frame_central, columns=("Nombre", "Género", "Duración", "Precio"), show="headings",height=5)
 
-            text_widget = tk.Text(frame_central, height=10, width=40)  # Tamaño en líneas y columnas
-            text_widget.place(relx=0.2,rely=0.3,relwidth=0.7, relheight=0.3)
+            text_widget = tk.Text(frame_central, height=10, width=40,bg="#FCE6C9")  # Tamaño en líneas y columnas
+            text_widget.place(relx=0.1,rely=0.3,relwidth=0.8, relheight=0.3)
 
             fila = f"{"Nombre":<20}{"Genero":<15}{"Duracion":<10}{"Precio":>10}\n"
             text_widget.insert(tk.END, fila)
@@ -925,7 +924,7 @@ class Main:
 
         def asignar_obra(fieldframe :FieldFrame):
             global precio_sus
-            precio_sus=0
+            
             
             
 
@@ -939,7 +938,7 @@ class Main:
             global cliente
 
             cliente.obra=suscripcion
-            print(suscripcion)
+            
             if suscripcion=="#!#!###":
                 messagebox.showerror("Error", "seleccione una opcion")
             else:
@@ -947,10 +946,10 @@ class Main:
                 global frame_central
 
                 f1 = tk.Frame(cls.content, bg = "#4B2D2E")
-                f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
-                
+                f1.place(relx=0.175, rely=0.1, relwidth=0.65, relheight=0.8)
+
                 frame_central = tk.Frame(f1, bg="#701C1A",name="central")
-                frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
+                frame_central.place(relx=0.032, rely=0.05, relwidth=0.937, relheight=0.87)
 
                 lista=[]
                 for funcion in Teatro.getInstancia().getFuncionesCreadas():
@@ -959,6 +958,11 @@ class Main:
 
                         
                         lista.append(funcion.getHorario()[0].time())
+                if lista ==[]:
+                    messagebox.showerror("Error", "No hay funciones Disponibles")
+                    continuar()
+
+                    
                 
                 func = FieldFrame(
                 frame_central,
@@ -984,9 +988,9 @@ class Main:
 
                 scrollbar = ttk.Scrollbar(frame_central, orient="vertical", command=tree.yview)
                 tree.configure(yscrollcommand=scrollbar.set)
-
-                text_widget = tk.Text(frame_central, height=10, width=40)  # Tamaño en líneas y columnas
-                text_widget.place(relx=0.2,rely=0.3,relwidth=0.7, relheight=0.3)
+                
+                text_widget = tk.Text(frame_central, height=10, width=40,bg="#FCE6C9")  # Tamaño en líneas y columnas
+                text_widget.place(relx=0.1,rely=0.3,relwidth=0.8, relheight=0.3)
                 fila = f"{"FECHA":<25}{"HORA":<10}\n"
                 text_widget.insert(tk.END, fila)
                 
@@ -1030,18 +1034,18 @@ class Main:
                 messagebox.showerror("Error", errorEntradaNula())
                 return         
         def buscar_sillas (fecha):
-            print(fecha)
-            
+           
             
             
             
             global frame_central
 
             f1 = tk.Frame(cls.content, bg = "#4B2D2E")
-            f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
-                
+            f1.place(relx=0.175, rely=0.1, relwidth=0.65, relheight=0.8)
+  
+            
             frame_central = tk.Frame(f1, bg="#701C1A",name="central")
-            frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
+            frame_central.place(relx=0.032, rely=0.05, relwidth=0.937, relheight=0.87)
 
             frame_botones = tk.Frame((frame_central), bg="#701C1A")
             frame_botones.place(relx=0.1, rely=0.1, relwidth=0.80, relheight=0.60)
@@ -1068,7 +1072,7 @@ class Main:
                 if pregun :
                     indi = 0
                     try :
-                        print(cliente.verificarSuscripcion(l[0]))
+                        
                         cliente.verificarSuscripcion(l[0])
                         for i in funcion_elegida.getSillas():
                         
@@ -1106,21 +1110,25 @@ class Main:
                     btn.grid(row=fila, column=columna, padx=5, pady=5, sticky="nsew", ipady=2)  # Agregar `sticky="nsew"`
 
             def imprimir_factura(numero):
+                
                 global descuento
+
+                
 
                 
                 global frame_central
 
                 f1 = tk.Frame(cls.content, bg = "#4B2D2E")
-                f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
-                
+                f1.place(relx=0.175, rely=0.1, relwidth=0.65, relheight=0.8)
+
                 frame_central = tk.Frame(f1, bg="#701C1A",name="central")
-                frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
+                frame_central.place(relx=0.032, rely=0.05, relwidth=0.937, relheight=0.87)
 
                 global precio_sus
-                texto=Tiquete.imprimirFactura(cliente,su=precio_sus*descuento,p=precio_fun)
-                texto = tk.Label(frame_central,text=texto)
-                texto.place(relx=0.3,rely=0.2)
+               
+                texto=Tiquete.imprimirFactura(cliente,su=precio_sus,p=precio_fun,d=descuento)
+                texto = tk.Label(cls.content,text=texto,bg="#FCE6C9")
+                texto.place(relx=0.3,rely=0.2,relheight=0.4,relwidth=0.4)
 
                 fin = tk.Button(frame_central,text="Volver al menu",command=cls.gestionVentas)
                 fin.place(relx=0.42,rely=0.9)
@@ -1177,34 +1185,26 @@ class Main:
         for widget in cls.content.winfo_children():
             widget.destroy()
         
+        f1 = tk.Frame(cls.content, bg = "#4B2D2E")
+        f1.place(relx=0.175, rely=0.1, relwidth=0.65, relheight=0.8)
+
         frame_izq = tk.Frame(cls.content, bg="#5d2417")
-        frame_izq.place(relx=0, rely=0.1, relwidth=0.1, relheight=0.9)
+        frame_izq.place(relx=0, rely=0, relwidth=0.175, relheight=0.9)
         # Frame derecho
         frame_der = tk.Frame(cls.content, bg="#5d2417")
-        frame_der.place(relx=0.9, rely=0.1,relwidth=0.1, relheight=0.9)
-        
-        top_frame = Frame(cls.content,background="black")
-        top_frame.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
-
-        
+        frame_der.place(relx=0.825, rely=0, relwidth=0.175, relheight=0.9)
         
 
-        f1 = tk.Frame(cls.content, bg = "#4B2D2E")
-        f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
-        
         frame_central = tk.Frame(f1, bg="#701C1A",name="central")
-        frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
+        frame_central.place(relx=0.032, rely=0.05, relwidth=0.937, relheight=0.87)
 
         bottomFrame = tk.Frame(cls.content, bg="#5d2417")
-        bottomFrame.place(relx=0, rely=0.9, relheight=0.1, relwidth=1)
+        bottomFrame.place(relx=0, rely=0.9, relheight=0.2, relwidth=1)
+        global precio_sus
+        precio_sus=0
         
        
-        Titulo = tk.Frame(cls.content, bg="#070709")
-        Titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-        TituloLabel = tk.Label(Titulo, text="Bienvenido a la venta de tiquetes", font=("Calibri", 14), fg="#FCE6C9", bg="#070709")
-        TituloLabel.pack(fill="both", expand=True)
-        TituloLabel.bind("<Configure>", lambda e: cls.resize(Titulo, TituloLabel, 8, 50, False))
-
+        
         
         '''IMAGEN BOTTOM (ASIENTOS)'''
         # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
@@ -1236,6 +1236,12 @@ class Main:
 
         frame_izq.bind("<Configure>", lambda event: Main.resize_image(event, imagen_left, left_label))
 
+        Titulo = tk.Frame(cls.content, bg="#070709")
+        Titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1)
+        TituloLabel = tk.Label(Titulo, text="Bienvenido a la venta de tiquetes", font=("Calibri", 14), fg="#FCE6C9", bg="#070709")
+        TituloLabel.pack(fill="both", expand=True)
+        TituloLabel.bind("<Configure>", lambda e: cls.resize(Titulo, TituloLabel, 8, 50, False))
+
 
 
         """"top_label.bind(
@@ -1243,7 +1249,7 @@ class Main:
             lambda e: cls.resize(top_frame,top_label, 60, 100)
         )"""
 
-        label = tk.Label(cls.content,text="Eres un cliente nuevo?", font=("Calibri", 25), fg="black",bg="#701C1A")
+        label = tk.Label(cls.content,text="Eres un cliente nuevo?", font=("Calibri", 25), fg="#FCE6C9",bg="#701C1A")
         label.place(relx=0.5, rely=0.3, anchor="center")
 
         Button_Si = tk.Button(cls.content, text="Si", font=("Calibri", 15),command=Usuario_Nuevo)
