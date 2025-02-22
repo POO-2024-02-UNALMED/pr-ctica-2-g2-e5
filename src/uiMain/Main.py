@@ -113,23 +113,23 @@ class Main:
 
     programadores = [
         ("Programador 1:\nNombre: Francisco Jose Ceren Porto\n Edad: 17 \nID: 1023631713",
-            ["src/media/Programadores/fran1.png", "src/media/Programadores/fran2.png", "src/media/Programadores/fran3.png", "src/media/Programadores/fran4.png"]),
+            ["src/media/Programadores/Frank/fran1.png", "src/media/Programadores/Frank/fran2.png", "src/media/Programadores/Frank/fran3.png", "src/media/Programadores/Frank/fran4.png"]),
         ("Programador 2:\nNombre: Danna Valeria Perez Niño\n Edad: 17 \nID: 1052839541",
-            ["src/media/Programadores/Danna1 (9).png", "src/media/Programadores/Danna1 (5).png", "src/media/Programadores/Dannaa.png", "src/media/Programadores/Danna1 (10).png"]),
+            ["src/media/Programadores/Danna/Danna1 (9).png", "src/media/Programadores/Danna/Danna1 (5).png", "src/media/Programadores/Danna/Dannaa.png", "src/media/Programadores/Danna/Danna1 (10).png"]),
         ("Programador 3:\nNombre: Oscar David Arango Garcia\n Edad: 17 \nID: 1011591946",
-            ["src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png"]),
+            ["src/media/Programadores/Oscar/ImagenOscar1.png", "src/media/Programadores/Oscar/ImagenOscar2.png", "src/media/Programadores/Oscar/ImagenOscar3.png", "src/media/Programadores/Oscar/ImagenOscar4.png"]),
         ("Programador 4:\nNombre: Juan Pablo Miras Cañas\n Edad: 19 \nID: 4",
-            ["src/media/Programadores/pablo1.png", "src/media/Programadores/pablo2.png", "src/media/Programadores/pablo5.png", "src/media/Programadores/pablo4.png"]),
+            ["src/media/Programadores/Juan Pablo/pablo1.png", "src/media/Programadores/Juan Pablo/pablo2.png", "src/media/Programadores/Juan Pablo/pablo5.png", "src/media/Programadores/Juan Pablo/pablo4.png"]),
         ("Programador 5:\nNombre: Miguel Velez Bernal\n Edad: 18 \nID: 1023524572",
-            ["src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png"])
+            ["src/media/Programadores/Velez/Velez1.png", "src/media/Programadores/Velez/Velez4.png", "src/media/Programadores/Velez/Velez3.png", "src/media/Programadores/Velez/Velez2.png"])
     ]
 
     imagenes = [
-        "src/media/foto1.jpg",
-        "src/media/foto2.jpg",
-        "src/media/foto3.png",
-        "src/media/foto6.jpeg",
-        "src/media/foto5.jpg"        
+        "src/media/Teatro/foto1.jpg",
+        "src/media/Teatro/foto2.jpg",
+        "src/media/Teatro/foto3.png",
+        "src/media/Teatro/foto4.jpeg",
+        "src/media/Teatro/foto5.jpg"        
     ]
 
     indice_imagen = 0 
@@ -144,7 +144,7 @@ class Main:
     def initRoot(cls):
         """Inicializa la ventana raíz, le asigna un ícono, título y frame. Además, inicia la ventana principal"""
         cls.root = Tk() 
-        ico = Image.open("src/media/icon.png")
+        ico = Image.open("src/media/Teatro/icon.png")
         logo = ImageTk.PhotoImage(ico)
         cls.root.wm_iconphoto(False, logo)
         cls.root.geometry("960x540") #16:9
@@ -329,7 +329,7 @@ class Main:
         cls.root.destroy()
 
         cls.new_window = tk.Tk()
-        ico = Image.open("src/media/icon.png")
+        ico = Image.open("src/media/Teatro/icon.png")
         logo = ImageTk.PhotoImage(ico)
         cls.new_window.wm_iconphoto(False, logo)
         cls.new_window.title("Teatro Escuela Carlos Mayolo")
@@ -615,7 +615,7 @@ class Main:
 
             '''IMAGEN BOTTOM (ASIENTOS)'''
             # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
-            imagen_bottom = Image.open("src/media/theme/bottom.png")  
+            imagen_bottom = Image.open("src/media/Theme/bottom.png")  
             image = ImageTk.PhotoImage(imagen_bottom)
 
             # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
@@ -625,7 +625,7 @@ class Main:
             # Vincular el evento <Configure> usando lambda para pasar la imagen y el label a la función
             bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
             '''IMAGEN RIGHT (CORTINA DER)'''
-            imagen_right = Image.open("src/media/theme/Courtain right.png")  
+            imagen_right = Image.open("src/media/Theme/Courtain right.png")  
             image_der = ImageTk.PhotoImage(imagen_right)
 
             right_label = tk.Label(frame_der, image=image_der, bg="black")
@@ -635,7 +635,7 @@ class Main:
 
             '''IMAGEN LEFT (CORTINA IZQ)'''
 
-            imagen_left = Image.open("src/media/theme/Courtain left.png")  
+            imagen_left = Image.open("src/media/Theme/Courtain left.png")  
             image_izq = ImageTk.PhotoImage(imagen_left)
 
             left_label = tk.Label(frame_izq, image=image_izq, bg="black")
@@ -723,7 +723,7 @@ class Main:
             
             '''IMAGEN BOTTOM (ASIENTOS)'''
             # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
-            imagen_bottom = Image.open("src/media/theme/bottom.png")  
+            imagen_bottom = Image.open("src/media/Theme/bottom.png")  
             image = ImageTk.PhotoImage(imagen_bottom)
 
             # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
@@ -733,7 +733,7 @@ class Main:
             # Vincular el evento <Configure> usando lambda para pasar la imagen y el label a la función
             bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
             '''IMAGEN RIGHT (CORTINA DER)'''
-            imagen_right = Image.open("src/media/theme/Courtain right.png")  
+            imagen_right = Image.open("src/media/Theme/Courtain right.png")  
             image_der = ImageTk.PhotoImage(imagen_right)
 
             right_label = tk.Label(frame_der, image=image_der, bg="black")
@@ -743,7 +743,7 @@ class Main:
 
             '''IMAGEN LEFT (CORTINA IZQ)'''
 
-            imagen_left = Image.open("src/media/theme/Courtain left.png")  
+            imagen_left = Image.open("src/media/Theme/Courtain left.png")  
             image_izq = ImageTk.PhotoImage(imagen_left)
 
             left_label = tk.Label(frame_izq, image=image_izq, bg="black")
@@ -1179,7 +1179,7 @@ class Main:
         
         '''IMAGEN BOTTOM (ASIENTOS)'''
         # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
-        imagen_bottom = Image.open("src/media/theme/bottom.png")  
+        imagen_bottom = Image.open("src/media/Theme/bottom.png")  
         image = ImageTk.PhotoImage(imagen_bottom)
 
         # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
@@ -1189,7 +1189,7 @@ class Main:
         # Vincular el evento <Configure> usando lambda para pasar la imagen y el label a la función
         bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
         '''IMAGEN RIGHT (CORTINA DER)'''
-        imagen_right = Image.open("src/media/theme/Courtain right.png")  
+        imagen_right = Image.open("src/media/Theme/Courtain right.png")  
         image_der = ImageTk.PhotoImage(imagen_right)
 
         right_label = tk.Label(frame_der, image=image_der, bg="black")
@@ -1199,7 +1199,7 @@ class Main:
 
         '''IMAGEN LEFT (CORTINA IZQ)'''
 
-        imagen_left = Image.open("src/media/theme/Courtain left.png")  
+        imagen_left = Image.open("src/media/Theme/Courtain left.png")  
         image_izq = ImageTk.PhotoImage(imagen_left)
 
         left_label = tk.Label(frame_izq, image=image_izq, bg="black")
@@ -2697,7 +2697,7 @@ class Main:
         
         '''IMAGEN BOTTOM (ASIENTOS)'''
         # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
-        imagen_bottom = Image.open("src/media/theme/bottom.png")  
+        imagen_bottom = Image.open("src/media/Theme/bottom.png")  
         image = ImageTk.PhotoImage(imagen_bottom)
 
         # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
@@ -2708,7 +2708,7 @@ class Main:
         bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
 
         '''IMAGEN RIGHT (CORTINA DER)'''
-        imagen_right = Image.open("src/media/theme/Courtain right.png")  
+        imagen_right = Image.open("src/media/Theme/Courtain right.png")  
         image_der = ImageTk.PhotoImage(imagen_right)
 
         right_label = tk.Label(rightFrame, image=image_der, bg="black")
@@ -2718,7 +2718,7 @@ class Main:
 
         '''IMAGEN LEFT (CORTINA IZQ)'''
 
-        imagen_left = Image.open("src/media/theme/Courtain left.png")  
+        imagen_left = Image.open("src/media/Theme/Courtain left.png")  
         image_izq = ImageTk.PhotoImage(imagen_left)
 
         left_label = tk.Label(leftFrame, image=image_izq, bg="black")
@@ -2804,7 +2804,7 @@ class Main:
 
         '''IMAGEN BOTTOM (ASIENTOS)'''
         # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
-        imagen_bottom = Image.open("src/media/theme/bottom.png")  
+        imagen_bottom = Image.open("src/media/Theme/bottom.png")  
         image = ImageTk.PhotoImage(imagen_bottom)
 
         # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
@@ -2815,7 +2815,7 @@ class Main:
         bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
 
         '''IMAGEN RIGHT (CORTINA DER)'''
-        imagen_right = Image.open("src/media/theme/Courtain right.png")  
+        imagen_right = Image.open("src/media/Theme/Courtain right.png")  
         image_der = ImageTk.PhotoImage(imagen_right)
 
         right_label = tk.Label(rightFrame, image=image_der, bg="black")
@@ -2825,7 +2825,7 @@ class Main:
 
         '''IMAGEN LEFT (CORTINA IZQ)'''
 
-        imagen_left = Image.open("src/media/theme/Courtain left.png")  
+        imagen_left = Image.open("src/media/Theme/Courtain left.png")  
         image_izq = ImageTk.PhotoImage(imagen_left)
 
         left_label = tk.Label(leftFrame, image=image_izq, bg="black")
@@ -3342,7 +3342,7 @@ class Main:
 
         '''IMAGEN BOTTOM (ASIENTOS)'''
         # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
-        imagen_bottom = Image.open("src/media/theme/bottom.png")  
+        imagen_bottom = Image.open("src/media/Theme/bottom.png")  
         image = ImageTk.PhotoImage(imagen_bottom)
 
         # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
@@ -3353,7 +3353,7 @@ class Main:
         bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
 
         '''IMAGEN RIGHT (CORTINA DER)'''
-        imagen_right = Image.open("src/media/theme/Courtain right.png")  
+        imagen_right = Image.open("src/media/Theme/Courtain right.png")  
         image_der = ImageTk.PhotoImage(imagen_right)
 
         right_label = tk.Label(rightFrame, image=image_der, bg="black")
@@ -3363,7 +3363,7 @@ class Main:
 
         '''IMAGEN LEFT (CORTINA IZQ)'''
 
-        imagen_left = Image.open("src/media/theme/Courtain left.png")  
+        imagen_left = Image.open("src/media/Theme/Courtain left.png")  
         image_izq = ImageTk.PhotoImage(imagen_left)
 
         left_label = tk.Label(leftFrame, image=image_izq, bg="black")
@@ -3931,7 +3931,7 @@ class Main:
 
         '''IMAGEN BOTTOM (ASIENTOS)'''
         # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
-        imagen_bottom = Image.open("src/media/theme/bottom.png")  
+        imagen_bottom = Image.open("src/media/Theme/bottom.png")  
         image = ImageTk.PhotoImage(imagen_bottom)
 
         # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
@@ -3942,7 +3942,7 @@ class Main:
         bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
 
         '''IMAGEN RIGHT (CORTINA DER)'''
-        imagen_right = Image.open("src/media/theme/Courtain right.png")  
+        imagen_right = Image.open("src/media/Theme/Courtain right.png")  
         image_der = ImageTk.PhotoImage(imagen_right)
 
         right_label = tk.Label(rightFrame, image=image_der, bg="black")
@@ -3952,7 +3952,7 @@ class Main:
 
         '''IMAGEN LEFT (CORTINA IZQ)'''
 
-        imagen_left = Image.open("src/media/theme/Courtain left.png")  
+        imagen_left = Image.open("src/media/Theme/Courtain left.png")  
         image_izq = ImageTk.PhotoImage(imagen_left)
 
         left_label = tk.Label(leftFrame, image=image_izq, bg="black")
