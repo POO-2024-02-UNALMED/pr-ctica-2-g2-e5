@@ -1291,14 +1291,14 @@ class Main:
                     Empleado = tk.Label(p, text=tipo, font=("Calibri", 18), bg="#701C1A", fg="white")
                     Empleado.pack()
                     frame_tabla = tk.Frame(p)
-                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=10)
-                    
+                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=5)
+                        
                     #Encabezados
                     encabezados = ["Nombre", "IDs", "Despedir"]
                     for col, texto in enumerate(encabezados):
                         encabezado = tk.Label(frame_tabla, text=texto, font=("Calibri", 12), bg="#d3d3d3", padx=10, pady=1)
                         encabezado.grid(row=0, column=col, sticky="ew")
-                
+                    
                     #Fila de datos
                     for fila, emp in enumerate(listaOcupacion, start=1):
                         nombre = tk.Label(frame_tabla, text=emp.getNombre(), padx=10, pady=1 )
@@ -1309,11 +1309,14 @@ class Main:
 
                         despedir = tk.Button(frame_tabla, text="Despedir", command= lambda i = emp.getId(): Despedir(listaOcupacion, i))
                         despedir.grid(row=fila, column=2, padx= 10, pady=1)
-                    
+                        
+                    boton_volver = tk.Button(p,text="Volver", command=lambda: continuar(), bg="#AE1918", fg="white", font=("Calibri", 12))
+                    boton_volver.pack(pady=2, padx=2, side="right")
+
                     #Ajustar columnas
                     for col in range(2):
                         frame_tabla.grid_columnconfigure(col, weight=1)
-                    
+                        
                     def Despedir(listaOcupacion, id):
                         for emp in listaOcupacion:
                             if emp.getId() == id:
@@ -1328,6 +1331,7 @@ class Main:
                                 cls.ventanaDialogo(mensaje, continuar())
                                 break
                     
+                    
                 despedirS.config(command=lambda: despedirEmpleado("Seguridad",Teatro.getInstancia().getTipoSeguridad()))
                 despedirA.config(command=lambda: despedirEmpleado("Aseador",Teatro.getInstancia().getTipoAseador()))
                 despedirP.config(command=lambda: despedirEmpleado("Profesor",Teatro.getInstancia().getTipoProfesor()))
@@ -1336,7 +1340,7 @@ class Main:
                     cls.clear_frame(f1)
                     p = tk.Frame(f1, bg="#701C1A")
                     p.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.9, relheight=0.9)
-                    seguridad = tk.Label(p, text="Candidatos a Seguridad", font=("Calibri", 18), bg="#701C1A", fg="white")
+                    seguridad = tk.Label(p, text="Candidatos a Seguridad", font=("Calibri", 14), bg="#701C1A", fg="white")
                     seguridad.pack(pady=5) 
 
                     candidatos = []
@@ -1351,7 +1355,7 @@ class Main:
                         n+=1
                     
                     frame_tabla = tk.Frame(p)
-                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=10)
+                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=2)
                     
                     #Encabezados
                     encabezados = ["Nombre", "IDs", "Contratar"]
@@ -1370,6 +1374,9 @@ class Main:
                         contratar = tk.Button(frame_tabla, text="Contratar", command= lambda n=nombre, i=id: contrato(n, i, "Seguridad"))
                         contratar.grid(row=fila, column=2, padx= 10, pady=1)
                     
+                    boton_volver = tk.Button(p,text="Volver", command=lambda: continuar(), bg="#AE1918", fg="white", font=("Calibri", 12))
+                    boton_volver.pack(pady=2, padx=2, side="right")
+                    
                     #Ajustar columnas
                     for col in range(2):
                         frame_tabla.grid_columnconfigure(col, weight=1)
@@ -1378,7 +1385,7 @@ class Main:
                     cls.clear_frame(f1)
                     p = tk.Frame(f1, bg="#701C1A")
                     p.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.9, relheight=0.9)
-                    Aseador = tk.Label(p, text="Candidatos a Aseador", font=("Calibri", 18),  bg="#701C1A", fg="white")
+                    Aseador = tk.Label(p, text="Candidatos a Aseador", font=("Calibri", 14),  bg="#701C1A", fg="white")
                     Aseador.pack(pady=5)
                     
                     candidatos = []
@@ -1393,7 +1400,7 @@ class Main:
                         n+=1
                     
                     frame_tabla = tk.Frame(p)
-                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=10)
+                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=2)
                     
                     #Encabezados
                     encabezados = ["Nombre", "IDs", "Contratar"]
@@ -1411,7 +1418,10 @@ class Main:
 
                         contratar = tk.Button(frame_tabla, text="Contratar", command= lambda n=nombre, i=id: contrato(n, i, "Aseador"))
                         contratar.grid(row=fila, column=2, padx= 10, pady=1)
-                    
+
+                    boton_volver = tk.Button(p,text="Volver", command=lambda: continuar(), bg="#AE1918", fg="white", font=("Calibri", 12))
+                    boton_volver.pack(pady=2, padx=2, side="right")
+
                     #Ajustar columnas
                     for col in range(2):
                         frame_tabla.grid_columnconfigure(col, weight=1)
@@ -1420,7 +1430,7 @@ class Main:
                     cls.clear_frame(f1)
                     p = tk.Frame(f1, bg="#701C1A")
                     p.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.9, relheight=0.9)
-                    Profesor = tk.Label(p, text="candidatos a Profesor", font=("Calibri", 18),  bg="#701C1A", fg="white")
+                    Profesor = tk.Label(p, text="candidatos a Profesor", font=("Calibri", 14),  bg="#701C1A", fg="white")
                     Profesor.pack(pady=5)
                     
                     candidatos = []
@@ -1435,7 +1445,7 @@ class Main:
                         n+=1
                     
                     frame_tabla = tk.Frame(p)
-                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=10)
+                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=2)
                     
                     #Encabezados
                     encabezados = ["Nombre", "IDs", "Contratar"]
@@ -1453,6 +1463,9 @@ class Main:
 
                         contratar = tk.Button(frame_tabla, text="Contratar", command= lambda n=nombre, i=id: contrato(n, i, "Profesor"))
                         contratar.grid(row=fila, column=2, padx= 10, pady=1)
+                    
+                    boton_volver = tk.Button(p,text="Volver", command=lambda: continuar(), bg="#AE1918", fg="white", font=("Calibri", 12))
+                    boton_volver.pack(pady=2, padx=2, side="right")
                     
                     #Ajustar columnas
                     for col in range(2):
@@ -2576,7 +2589,7 @@ class Main:
                         despedidos = tk.Label(righframe, text=msg, font=("Calibri", 14), bg="#701C1A", fg="white")
                         despedidos.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
                     
-                    button_salir = tk.Button(righframe, text="Salir", bg="#571F1C", fg="White", font=("Calibri", 12))
+                    button_salir = tk.Button(righframe, text="Salir", bg="#AE1918" ,fg="White", font=("Calibri", 12))
                     button_salir.place(relx=0.7, rely=0.9, relwidth=0.3, relheight=0.1, anchor="center")
                     button_salir.config(command=lambda: cls.gestionEmpleados())
 

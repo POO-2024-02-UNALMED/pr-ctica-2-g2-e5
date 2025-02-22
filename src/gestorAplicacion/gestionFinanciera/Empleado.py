@@ -19,7 +19,7 @@ class Empleado:
         self.__trabajoCorrecto = []
         self.__trabajos = []
     
-    #Calcular Sueldo
+    #Permite Calcular el sueldo base de cada trabajador dependiendo de su ocupacion
     def calcularSueldo(self):
         if self.__ocupacion == "Seguridad":
             sueldo = self.__trabajoRealizado * self.SALARIOSEGURIDAD
@@ -30,7 +30,7 @@ class Empleado:
         else: #Profesor
             sueldo = self.__trabajoRealizado * self.SALARIOPROFESOR
             return sueldo
-    
+    #Permite verificar si el empleado cumplio con el proposito semanal
     def verificacionMeta(self):
         if self.__trabajoRealizado >= self.__metaSemanal:
             return True

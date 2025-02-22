@@ -8,14 +8,16 @@ class Tesoreria:
         self.__cuenta = CuentaBancaria(1, 10000000)
         self.__total = total
     
+    #Permite verificar si el teatro cumplio con su obejetivo de ingresos
     def verificacionMeta(self):
         return self.__total >= self.__metaSemanal
-    #Transferir dinero de la caja a la cuenta
+    
+    #Permite transferir todo el dinero recaudado en la caja a la cuenta del Teatro
     def transferenciaFondos(self):
         self.__cuenta.ingresar(self.__dineroEnCaja)
         self.__dineroEnCaja = 0
     
-    #pagar el sueldo base
+    #Hace el pago a la cuenta de los empleados solo con su sueldo base
     def pagarSueldoBase(self, cuenta, cantidad):
         self.__cuenta.transferencia(cuenta, cantidad)
     
