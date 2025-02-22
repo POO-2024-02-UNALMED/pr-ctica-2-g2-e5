@@ -53,7 +53,7 @@ class Main:
     debug = True
     root = None
     fieldTest = False
-    reset = True
+    reset = False
     filterDebug = True
     bg = "#701C1A"
 
@@ -564,6 +564,7 @@ class Main:
             
         
         def validar(texto):
+                global cliente
                 
                 value = False
                 try:
@@ -577,6 +578,8 @@ class Main:
                     messagebox.showerror("Error", "Id no existente")
                     
                 else:
+                    cliente = Cliente.buscarPorId(numero)
+                
                     tiquete.setId(numero)
                     cliente.setTiquete(tiquete)
                     messagebox.showinfo("Éxito", "Iniciando sesion")

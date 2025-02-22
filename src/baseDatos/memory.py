@@ -16,7 +16,10 @@ def resetMemory():
 
     Cliente(id = 426, tipo= "Empresa")
 
-    
+    sala1 = Sala(numero_sala=1,metros_cuadrados= 100,capacidad= 24)
+    sala2 = Sala(numero_sala=2,metros_cuadrados= 200,capacidad= 32)
+    sala3 = Sala(numero_sala=3,metros_cuadrados= 50,capacidad= 16)
+    sala4 = Sala(numero_sala=4,metros_cuadrados= 150,capacidad= 24)
     
     horarioObra1F = [datetime(year = 2024, month = 1, day = 1, hour = 9, minute = 0), datetime(year = 2024, month = 1, day = 1, hour = 12, minute = 30)]
     horarioObra2F = [datetime(year = 2024, month = 1, day = 1, hour = 15, minute = 0), datetime(year = 2024, month = 1, day = 1, hour = 21, minute = 30)]

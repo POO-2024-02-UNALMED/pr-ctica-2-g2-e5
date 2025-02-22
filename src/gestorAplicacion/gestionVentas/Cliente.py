@@ -60,10 +60,10 @@ class Cliente(Persona):
         else:
             raise errorSuscripcion()
         
-
+    @staticmethod
     def buscarPorId(id: int) -> Cliente | bool:
         for cliente in Teatro.getInstancia().getClientes():
-            if cliente.id == id:
+            if cliente.getId() == id:
                 return cliente
         return False
     
