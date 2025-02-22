@@ -2920,7 +2920,7 @@ class Main:
             for widget in process_frameO.winfo_children():
                 widget.destroy()
             criteriosObra = ["Nombre", "Actor", "Aptitud", "Genero", "Director","Costo de producción", "Duración de la obra (HHMMSS)"]
-            valoresObra = [f"{name_str}", "", "", "", "", "", ""]
+            valoresObra = ["", "", "", "", "", "", ""]
             ff = FieldFrame(process_frameO,
                             tituloCriterios="Datos de la nueva obra",
                             criterios=criteriosObra,
@@ -2957,24 +2957,27 @@ class Main:
                                         tituloValores = "Ingrese su respuesta <3",  
                                         valores = valoresDir,
                                         combobox=False,
-                                        command = lambda: (fieldframedir.gatherEntries(), Director(fieldframedir.valores[0], fieldframedir.valores[1], fieldframedir.valores[2])))
+                                        command = lambda: (fieldframedir.gatherEntries(), process_director_nuevo(fieldframedir.valores[0], fieldframedir.valores[1], fieldframedir.valores[2])))
                 fieldframedir.pack(pady=10, fill="both", expand=True)
-                step_create_obra(name_str)
-            if actor == None:
+                name_str = ""
+            elif actor == None:
                 messagebox.showerror("Error", "El actor que ingresaste no existe en nuestra base de datos :(")
+                name_str = ""
                 step_create_obra(name_str)
-            obra = Obra(nombre = name_str, reparto = actor, papeles = aptitud, genero  = genero, director = director,
+            else:
+                obra = Obra(nombre = name_str, reparto = actor, papeles = aptitud, genero  = genero, director = director,
                         costoProducción= costo, duracion = duracion)
-            print(obra)
-            print(director)
-            print(type(director))
+                messagebox.showinfo("Completado", "La obra ha sido creada, para añadir funciones corra de nuevo la funcionalidad y selecciónela")
+                name_str = ""
 
+        def process_director_nuevo(name, id, genero):
+            director = Director(name, id, genero)
+            messagebox.showinfo("Completado", "El director ha sido creado, vuelva a ejecutar la funcionalidad para crear la obra")
         # -------------------- PASO 5: Artista encontrado --------------------
         '''Avalada'''
         def step_obra_found(obra):
             for widget in process_frameO.winfo_children():
                 widget.destroy()
-            
             
         step1Obras()
 
