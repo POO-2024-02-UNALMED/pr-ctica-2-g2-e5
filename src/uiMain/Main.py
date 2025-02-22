@@ -1262,7 +1262,7 @@ class Main:
                 cls.resize(p1, seguridad,10, 20,False)
                 #Tabla Seguridad
                 frame_tabla = tk.Frame(p1)
-                frame_tabla.pack(expand=True, fill="both", padx=10, pady=5)
+                frame_tabla.pack(expand=True, fill="both", padx=2, pady=5)
 
                 #Encabezados
                 encabezados = ["Nombre", "IDs"]
@@ -1289,7 +1289,7 @@ class Main:
 
                 #Tabla Aseador
                 frame_tabla = tk.Frame(p2)
-                frame_tabla.pack(expand=True, fill="both", padx=10, pady=5)
+                frame_tabla.pack(expand=True, fill="both", padx=2, pady=5)
 
                 #Encabezados
                 encabezados = ["Nombre", "IDs"]
@@ -1316,7 +1316,7 @@ class Main:
 
                 #Tabla Profesor
                 frame_tabla = tk.Frame(p3)
-                frame_tabla.pack(expand=True, fill="both", padx=10, pady=5)
+                frame_tabla.pack(expand=True, fill="both", padx=2, pady=5)
 
                 #Encabezados
                 encabezados = ["Nombre", "IDs"]
