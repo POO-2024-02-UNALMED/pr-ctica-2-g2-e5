@@ -1,6 +1,7 @@
 from __future__ import annotations
 import random
 from baseDatos.Teatro import Teatro
+from excepciones.errorSuscripcion import errorSuscripcion
 from gestorAplicacion.gestionObras.Actor import Actor
 from gestorAplicacion.herramientas.Persona import Persona
 
@@ -53,9 +54,12 @@ class Cliente(Persona):
             a = 2
         elif self.get_suscripcion().value  == "Elite":
             a = 3
+
+        if  (a >=b):
+            return True
+        else:
+            raise errorSuscripcion()
         
-        # Comparación entre 'a' y 'b'
-        return not (a >=b)
 
     def buscarPorId(id: int) -> Cliente | bool:
         for cliente in Teatro.getInstancia().getClientes():

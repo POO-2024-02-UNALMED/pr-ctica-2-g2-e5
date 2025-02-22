@@ -13,6 +13,9 @@ import random
 
 
 
+
+
+
 #AGREGAR SRC AL PATH
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -39,6 +42,8 @@ from gestorAplicacion.herramientas.FieldFrame import FieldFrame
 
 from excepciones.errorEntradaNula import errorEntradaNula
 from excepciones.errorEntradaNoNumerica import errorEntradaNoNumerica
+from excepciones.errorSuscripcion import errorSuscripcion
+from excepciones.errorFormatoHorario import errorFormatoHorario
 
 
 class Main:
@@ -48,7 +53,11 @@ class Main:
     fieldTest = False
     reset = True
     filterDebug = True
-    bg = "lightsteelblue3"
+    bg = "#701C1A"
+
+    @classmethod
+    def toCop(cls, value):
+        return f"${value:,.2f}"
 
     @classmethod
     def wait(cls) -> None:
@@ -101,15 +110,16 @@ class Main:
 
     # --- NUEVAS VARIABLES PARA PROGRAMADORES ---
     current_programador_index = -1
+
     programadores = [
         ("Programador 1:\nNombre: Francisco Jose Ceren Porto\n Edad: 17 \nID: 1023631713",
-            ["src/media/Programadores/perro.png", "src/media/Programadores/perro.png", "src/media/Programadores/perro.png", "src/media/Programadores/perro.png"]),
+            ["src/media/Programadores/fran1.png", "src/media/Programadores/fran2.png", "src/media/Programadores/fran3.png", "src/media/Programadores/fran4.png"]),
         ("Programador 2:\nNombre: Danna Valeria Perez Niño\n Edad: 17 \nID: 1052839541",
             ["src/media/Programadores/Danna1 (9).png", "src/media/Programadores/Danna1 (5).png", "src/media/Programadores/Dannaa.png", "src/media/Programadores/Danna1 (10).png"]),
         ("Programador 3:\nNombre: Oscar David Arango Garcia\n Edad: 17 \nID: 1011591946",
             ["src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png"]),
-        ("Programador 4:\nNombre: Juan Pablo Miras Cañas\n Edad: 18 \nID: 4",
-            ["src/media/Programadores/Pablo.png", "src/media/Programadores/Pablo.png", "src/media/Programadores/Pablo.png", "src/media/Programadores/Pablo.png"]),
+        ("Programador 4:\nNombre: Juan Pablo Miras Cañas\n Edad: 19 \nID: 4",
+            ["src/media/Programadores/pablo1.png", "src/media/Programadores/pablo2.png", "src/media/Programadores/pablo5.png", "src/media/Programadores/pablo4.png"]),
         ("Programador 5:\nNombre: Miguel Velez Bernal\n Edad: 18 \nID: 1023524572",
             ["src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png"])
     ]
@@ -118,7 +128,7 @@ class Main:
         "src/media/foto1.jpg",
         "src/media/foto2.jpg",
         "src/media/foto3.png",
-        "src/media/foto4.jpg",
+        "src/media/foto6.jpeg",
         "src/media/foto5.jpg"        
     ]
 
@@ -174,7 +184,7 @@ class Main:
         cls.leftFrame.place(relx=0, rely=0, relwidth=0.5, relheight=1)
 
         # DIVIDIR EN 2 SECCIONES(FRAME IZQUIERDO): SUPERIOR E INFERIOR
-        cls.topFrame = Frame(cls.leftFrame, bg="red")
+        cls.topFrame = Frame(cls.leftFrame, bg="#701C1A")
         cls.topFrame.place(relx=0, rely=0, relwidth=1, relheight=0.5)
 
         cls.bottomFrame = Frame(cls.leftFrame, bg="black")
@@ -204,7 +214,9 @@ class Main:
             font=("Calibri", 18),  # Tamaño inicial
             justify="center",
             anchor="center",
-            wraplength=800
+            wraplength=800,
+            bg= "#701C1A",
+            fg = '#FCE6C9'
         )
         cls.titleLabel.place(relx=0.5, rely=0.5, anchor="center")
     
@@ -226,10 +238,10 @@ class Main:
         cls.programadorFrameTop = tk.Frame(cls.rightFrame, bg="skyblue")
         cls.programadorFrameTop.place(relx=0, rely=0, relwidth=1, relheight=0.3)
         
-        cls.programadorFrameBottom = tk.Frame(cls.rightFrame, bg="lightgreen")
+        cls.programadorFrameBottom = tk.Frame(cls.rightFrame, bg="#FCE6C9")
         cls.programadorFrameBottom.place(relx=0, rely=0.3, relwidth=1, relheight=0.7)
         
-        cls.btn_info = tk.Button(cls.programadorFrameTop, text="Programadores", command=cls.update_programador)
+        cls.btn_info = tk.Button(cls.programadorFrameTop, text="Programadores", command=cls.update_programador, bg = "#701C1A", fg="#FCE6C9")
         cls.btn_info.pack(expand=True, fill="both")
         
         # Vincula el evento <Configure> del frame superior para redimensionar la fuente del botón
@@ -343,9 +355,9 @@ class Main:
         cls.new_window.config(menu=cls.menu_bar)
 
         #contenido
-        cls.content = tk.Frame(cls.new_window, bg="black")
+        cls.content = tk.Frame(cls.new_window, bg="#701C1A")
         cls.content.place(relx=0, rely=0, relwidth=1, relheight=1)
-        cls.Label = tk.Label(cls.content, text="Bienvenido al Teatro Escuela Carlos Mayolo", font=("Calibri", 30), wraplength=500)
+        cls.Label = tk.Label(cls.content, text="Bienvenido al Teatro Escuela Carlos Mayolo", font=("Calibri", 30), wraplength=500, bg= "#701C1A", fg = '#FCE6C9')
         cls.Label.place(relx=0.5, rely=0.5, anchor="center")
         
         cls.new_window.focus_force()
@@ -408,6 +420,79 @@ class Main:
             print("Error al cargar la imagen:", e)
             cls.label.config(text="No se pudo cargar la imagen", fg="white", bg="black")
 
+
+    def validar_formatos(day_str: str, start_time_str: str, end_time_str: str):
+        """
+        Valida manualmente que las cadenas 'day_str', 'start_time_str' y 'end_time_str'
+        estén en los formatos requeridos:
+            - day_str: "YYYY-MM-DD"
+            - start_time_str y end_time_str: "HH:MM"
+            
+        Retorna:
+            tuple: (selected_date, start_time, end_time) como objetos date y time.
+        
+        Lanza:
+            errorFormatoHorario: si alguno de los formatos no es correcto.
+        """
+        # Validar formato de fecha "YYYY-MM-DD"
+        if len(day_str) != 10 or day_str[4] != '-' or day_str[7] != '-':
+            raise errorFormatoHorario
+        
+        year_part = day_str[0:4]
+        month_part = day_str[5:7]
+        day_part = day_str[8:10]
+        
+        if not (year_part.isdigit() and month_part.isdigit() and day_part.isdigit()):
+            raise errorFormatoHorario
+        
+        year = int(year_part)
+        month = int(month_part)
+        day = int(day_part)
+        
+        # Verificar que el mes sea válido (1 a 12)
+        if month < 1 or month > 12:
+            raise errorFormatoHorario
+        
+        # Días máximos permitidos por mes
+        dias_por_mes = {1: 31, 2: 28, 3: 31, 4: 30, 5: 31, 6: 30,
+                        7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31}
+        # Ajuste para años bisiestos en febrero
+        if month == 2 and ((year % 4 == 0 and year % 100 != 0) or (year % 400 == 0)):
+            dias_max = 29
+        else:
+            dias_max = dias_por_mes[month]
+        
+        if day < 1 or day > dias_max:
+            raise errorFormatoHorario
+        
+        # Función interna para validar el formato de hora "HH:MM"
+        def validar_hora(time_str):
+            if len(time_str) != 5 or time_str[2] != ':':
+                raise errorFormatoHorario
+            hours_str, minutes_str = time_str.split(':')
+            if not (hours_str.isdigit() and minutes_str.isdigit()):
+                raise errorFormatoHorario
+            hours = int(hours_str)
+            minutes = int(minutes_str)
+            if hours < 0 or hours > 23:
+                raise errorFormatoHorario
+            if minutes < 0 or minutes > 59:
+                raise errorFormatoHorario
+            return hours, minutes
+
+        # Validar y extraer horas y minutos para hora de inicio y fin
+        start_hours, start_minutes = validar_hora(start_time_str)
+        end_hours, end_minutes = validar_hora(end_time_str)
+        
+        # Convertir las partes a objetos date y time
+        from datetime import date, time
+        selected_date = date(year, month, day)
+        start_time_obj = time(start_hours, start_minutes)
+        end_time_obj = time(end_hours, end_minutes)
+    
+        return selected_date, start_time_obj, end_time_obj
+    
+
     @classmethod
     def detectar_mouse(cls, event):
         """Verifica si el mouse está sobre la imagen real o en el fondo negro."""
@@ -463,6 +548,7 @@ class Main:
 
             global cliente
             cliente = Cliente(id = code)
+            cliente.set_suscripcion(Suscripcion.BASICA)
             messagebox.showinfo("Éxito", f"Su nuevo ID es {cliente.getId()}")
             tiquete.setId(code)
             cliente.setTiquete(tiquete)
@@ -488,24 +574,30 @@ class Main:
                     messagebox.showinfo("Éxito", "Iniciando sesion")
                     Inicio_preguntas()
         def Usuario_Antiguo():
+            
+
             for widget in cls.content.winfo_children():
                 widget.destroy()
             global cliente
             cliente=Cliente(id=12)
             
             
-            frame_izq = tk.Frame(cls.content, bg="slategray")
-            frame_izq.place(relx=0, rely=0, relwidth=0.15, relheight=1)  # Se ubica en la izquierda
-
+            frame_izq = tk.Frame(cls.content, bg="#5d2417")
+            frame_izq.place(relx=0, rely=0.1, relwidth=0.1, relheight=0.9)
             # Frame derecho
-            frame_der = tk.Frame(cls.content, bg="slategray")
-            frame_der.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
-
+            frame_der = tk.Frame(cls.content, bg="#5d2417")
+            frame_der.place(relx=0.9, rely=0.1,relwidth=0.1, relheight=0.9)
             
 
-            frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
-            frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+            f1 = tk.Frame(cls.content, bg = "#4B2D2E")
+            f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
+            
+            frame_central = tk.Frame(f1, bg="#701C1A")
+            frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
 
+            bottomFrame = tk.Frame(cls.content, bg="#5d2417")
+            bottomFrame.place(relx=0, rely=0.9, relheight=0.1, relwidth=1)
+            
             frame_2 = tk.Frame(frame_central, bg="slategray2", padx=15, pady=20)
             frame_2.place(relx=0.5, rely=0.85,anchor="center")
             
@@ -515,8 +607,41 @@ class Main:
             top_frame = Frame(cls.content,background="black")
             top_frame.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
 
-            top_label = tk.Label(top_frame,text="Venta de tiquetes",font=("Calibri", 25), bg="black",fg="white")
-            top_label.place(relx=0.5, rely=0.1, anchor="n")
+            Titulo = tk.Frame(cls.content, bg="#070709")
+            Titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1)
+            TituloLabel = tk.Label(Titulo, text="Bienvenido a la venta de tiquetes", font=("Calibri", 14), fg="#FCE6C9", bg="#070709")
+            TituloLabel.pack(fill="both", expand=True)
+            TituloLabel.bind("<Configure>", lambda e: cls.resize(Titulo, TituloLabel, 8, 50, False))
+
+            '''IMAGEN BOTTOM (ASIENTOS)'''
+            # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
+            imagen_bottom = Image.open("src/media/theme/bottom.png")  
+            image = ImageTk.PhotoImage(imagen_bottom)
+
+            # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
+            bottom_label = tk.Label(bottomFrame, image=image)
+            bottom_label.place(relheight=1, relwidth=1)
+
+            # Vincular el evento <Configure> usando lambda para pasar la imagen y el label a la función
+            bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
+            '''IMAGEN RIGHT (CORTINA DER)'''
+            imagen_right = Image.open("src/media/theme/Courtain right.png")  
+            image_der = ImageTk.PhotoImage(imagen_right)
+
+            right_label = tk.Label(frame_der, image=image_der, bg="black")
+            right_label.place(relheight=1, relwidth=1)
+
+            frame_der.bind("<Configure>", lambda event: Main.resize_image(event, imagen_right, right_label))
+
+            '''IMAGEN LEFT (CORTINA IZQ)'''
+
+            imagen_left = Image.open("src/media/theme/Courtain left.png")  
+            image_izq = ImageTk.PhotoImage(imagen_left)
+
+            left_label = tk.Label(frame_izq, image=image_izq, bg="black")
+            left_label.place(relheight=1, relwidth=1)
+
+            frame_izq.bind("<Configure>", lambda event: Main.resize_image(event, imagen_left, left_label))
 
 
 
@@ -547,35 +672,84 @@ class Main:
             )
             id.place(relheight= 1, relwidth= 1)
         def validar_id(fieldframe : FieldFrame):
-            fieldframe.gatherEntries()
-            suscripcion = fieldframe.getValue("ID")
-            validar(suscripcion)
+            try:
+                fieldframe.gatherEntries()
+                suscripcion = fieldframe.getValue("ID")
+                validar(suscripcion)
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
+                return
+            
+            
 
 
 
             
         def Inicio_preguntas():
+            global descuento
+            descuento = 0
             for widget in cls.content.winfo_children():
                 widget.destroy()
             global frame_central
             
-            frame_izq = tk.Frame(cls.content, bg="slategray")
-            frame_izq.place(relx=0, rely=0, relwidth=0.15, relheight=1)  # Se ubica en la izquierda
-
+            frame_izq = tk.Frame(cls.content, bg="#5d2417")
+            frame_izq.place(relx=0, rely=0.1, relwidth=0.1, relheight=0.9)
             # Frame derecho
-            frame_der = tk.Frame(cls.content, bg="slategray")
-            frame_der.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
-
+            frame_der = tk.Frame(cls.content, bg="#5d2417")
+            frame_der.place(relx=0.9, rely=0.1,relwidth=0.1, relheight=0.9)
+            
             top_frame = Frame(cls.content,background="black")
             top_frame.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
 
-            frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
-            frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+            
+            
 
+            f1 = tk.Frame(cls.content, bg = "#4B2D2E")
+            f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
+            
+            frame_central = tk.Frame(f1, bg="#701C1A",name="central")
+            frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
 
+            bottomFrame = tk.Frame(cls.content, bg="#5d2417")
+            bottomFrame.place(relx=0, rely=0.9, relheight=0.1, relwidth=1)
+            
+        
+            Titulo = tk.Frame(cls.content, bg="#070709")
+            Titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1)
+            TituloLabel = tk.Label(Titulo, text="Bienvenido a la venta de tiquetes", font=("Calibri", 14), fg="#FCE6C9", bg="#070709")
+            TituloLabel.pack(fill="both", expand=True)
+            TituloLabel.bind("<Configure>", lambda e: cls.resize(Titulo, TituloLabel, 8, 50, False))
 
-            top_label = tk.Label(top_frame,text="Venta de tiquetes",font=("Calibri", 25), bg="black",fg="white")
-            top_label.place(relx=0.5, rely=0.1, anchor="n")
+            
+            '''IMAGEN BOTTOM (ASIENTOS)'''
+            # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
+            imagen_bottom = Image.open("src/media/theme/bottom.png")  
+            image = ImageTk.PhotoImage(imagen_bottom)
+
+            # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
+            bottom_label = tk.Label(bottomFrame, image=image)
+            bottom_label.place(relheight=1, relwidth=1)
+
+            # Vincular el evento <Configure> usando lambda para pasar la imagen y el label a la función
+            bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
+            '''IMAGEN RIGHT (CORTINA DER)'''
+            imagen_right = Image.open("src/media/theme/Courtain right.png")  
+            image_der = ImageTk.PhotoImage(imagen_right)
+
+            right_label = tk.Label(frame_der, image=image_der, bg="black")
+            right_label.place(relheight=1, relwidth=1)
+
+            frame_der.bind("<Configure>", lambda event: Main.resize_image(event, imagen_right, right_label))
+
+            '''IMAGEN LEFT (CORTINA IZQ)'''
+
+            imagen_left = Image.open("src/media/theme/Courtain left.png")  
+            image_izq = ImageTk.PhotoImage(imagen_left)
+
+            left_label = tk.Label(frame_izq, image=image_izq, bg="black")
+            left_label.place(relheight=1, relwidth=1)
+
+            frame_izq.bind("<Configure>", lambda event: Main.resize_image(event, imagen_left, left_label))
 
             label = tk.Label(cls.content,text="Desea mejorar su suscripcion?", font=("Calibri", 25), fg="black",bg="slategray2",name="suscripcion")
             label.place(relx=0.5, rely=0.3, anchor="center")
@@ -589,6 +763,8 @@ class Main:
             Main.wait()
         
         def adquirir_suscripcion():
+            global descuento
+            descuento = 0
             
             global frame_central
             
@@ -612,30 +788,40 @@ class Main:
                 
             )
             susc.place(relheight= 1, relwidth= 1)
-            main_label = tk.Label(frame_central,bg = "slategray1",text="BÁSICA $0.00 -------\n\nPREMIUM \n$11,900.00\n 10% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\n\nVIP \n$18,900.00\n 25% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\n\nELITE \n$39,900.00 \nFUNCIONES GRATIS\nILIMITADAS Y\nASIENTO GOLD GRATIS")
-            main_label.place(relx=0.53, rely=0.5, anchor="center")
+            main_label = tk.Label(frame_central,bg = "slategray1",text="BÁSICA $0.00 -------\nPREMIUM \n$11,900.00\n 10% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\nVIP \n$18,900.00\n 25% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\nELITE \n$39,900.00 \nFUNCIONES GRATIS\nILIMITADAS Y\nASIENTO GOLD GRATIS")
+            main_label.place(relx=0.53, rely=0.4, anchor="center")
             
         def asignar_suscripcion(fieldframe: FieldFrame):
             global cliente
-            global precio_sus
-            precio_sus=0
+            global descuento
+            descuento = 0
             
-            fieldframe.gatherEntries()
+            try:
+                fieldframe.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
+                return
             suscripcion = fieldframe.getValue("Eleccion")
             if suscripcion == "BASICA":
                 cliente.set_suscripcion(Suscripcion.BASICA)
                 precio_sus=0
+                descuento = 0
             elif suscripcion == "VIP":
                 cliente.set_suscripcion(Suscripcion.VIP)
                 precio_sus=18900
+                descuento = 0.25
             elif suscripcion == "PREMIUM":
                 cliente.set_suscripcion(Suscripcion.PREMIUM)
                 precio_sus=11900
+                descuento = 0
+                descuento = 0.10
             elif suscripcion == "ELITE":
                 cliente.set_suscripcion(Suscripcion.ELITE)
                 precio_sus=39900
+                descuento = 1
             else:
                 raise ValueError("Suscripción no válida")
+            descuento = 1-descuento
             
             print(cliente.get_suscripcion())
             continuar()
@@ -666,8 +852,12 @@ class Main:
                 widget.destroy()
             except KeyError:
                 print("error label")
-            frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
-            frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+            f1 = tk.Frame(cls.content, bg = "#4B2D2E")
+            f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
+            
+            frame_central = tk.Frame(f1, bg="#701C1A",name="central")
+            frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
+
             lista=[]
 
             
@@ -723,22 +913,33 @@ class Main:
 
 
         def asignar_obra(fieldframe :FieldFrame):
-            fieldframe.gatherEntries()
+            global precio_sus
+            precio_sus=0
+            
+            
+
+            try:
+                fieldframe.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
+                return
             suscripcion = fieldframe.getValue("Eleccion")
 
             global cliente
 
             cliente.obra=suscripcion
             print(suscripcion)
-            if suscripcion=="":
+            if suscripcion=="#!#!###":
                 messagebox.showerror("Error", "seleccione una opcion")
             else:
-                widget = cls.content.nametowidget("central") 
-                widget.destroy()
+                
                 global frame_central
 
-                frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
-                frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+                f1 = tk.Frame(cls.content, bg = "#4B2D2E")
+                f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
+                
+                frame_central = tk.Frame(f1, bg="#701C1A",name="central")
+                frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
 
                 lista=[]
                 for funcion in Teatro.getInstancia().getFuncionesCreadas():
@@ -775,8 +976,9 @@ class Main:
                 tree.place(relx=0.2,rely=0.3,relwidth=0.7, relheight=0.3)
                 scrollbar.place(relx=0.90,rely=0.3, relwidth=0.03, relheight=0.3)
                 for funcion in Teatro.getInstancia().getFuncionesCreadas():
-                    print(funcion.getHorario()[0].time())
+                    print(suscripcion)
                     if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getObra().getNombre() == suscripcion:
+                        print("entro")
                         tree.insert("", "end", values=(funcion.getHorario()[0].date(),funcion.getHorario()[0].time()))
                         lista.append(funcion.getObra().getNombre())
                 
@@ -803,15 +1005,17 @@ class Main:
             
             
             
-            widget = cls.content.nametowidget("central") 
-            widget.destroy()
+            
             global frame_central
 
-            frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
-            frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+            f1 = tk.Frame(cls.content, bg = "#4B2D2E")
+            f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
+                
+            frame_central = tk.Frame(f1, bg="#701C1A",name="central")
+            frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
 
             frame_botones = tk.Frame((frame_central), bg="slategray2")
-            frame_botones.place(relx=0.15, rely=0.1, relwidth=0.80, relheight=0.60)
+            frame_botones.place(relx=0.1, rely=0.1, relwidth=0.80, relheight=0.60)
 
             escenario = tk.Label(frame_botones, bg="slategray",text="ESCENARIO")
             escenario.place(relx=0.35, rely=0.8, relwidth=0.30, relheight=0.20)
@@ -827,24 +1031,30 @@ class Main:
                     global funcion_elegida
                     funcion_elegida = funcion
                     sillas = funcion.getSillas()
+            
 
 
             def boton_presionado(numero,l):
                 pregun = messagebox.askyesno("Eleccion",f"seleccionaste las silla  {numero}")
                 if pregun :
                     indi = 0
-                    if cliente.verificarSuscripcion(l[0]):
-                        messagebox.showerror("Error", f"Tu suscripcion no te permite comprar sillas tipo {l}")
-                    else:
-
+                    try :
+                        print(cliente.verificarSuscripcion(l[0]))
+                        cliente.verificarSuscripcion(l[0])
                         for i in funcion_elegida.getSillas():
                         
                             if i.getCodigo()==numero:
                                 funcion_elegida.getSillas()[indi].setCodigo("ocupado")
 
-                            
+                                
                             indi += 1
                         imprimir_factura(numero)
+                        
+                        
+                    except errorSuscripcion:
+                        messagebox.showerror("Error", errorSuscripcion(l))
+
+                    
                             
                     
 
@@ -867,16 +1077,24 @@ class Main:
                     btn.grid(row=fila, column=columna, padx=5, pady=5, sticky="nsew", ipady=2)  # Agregar `sticky="nsew"`
 
             def imprimir_factura(numero):
-                widget = cls.content.nametowidget("central") 
-                widget.destroy()
+                global descuento
+
+                
                 global frame_central
 
-                frame_central = tk.Frame(cls.content, bg="slategray1",name="central")
-                frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+                f1 = tk.Frame(cls.content, bg = "#4B2D2E")
+                f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
+                
+                frame_central = tk.Frame(f1, bg="#701C1A",name="central")
+                frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
+
                 global precio_sus
-                texto=Tiquete.imprimirFactura(cliente,su=precio_sus,p=precio_fun)
+                texto=Tiquete.imprimirFactura(cliente,su=precio_sus*descuento,p=precio_fun)
                 texto = tk.Label(frame_central,text=texto)
                 texto.place(relx=0.3,rely=0.2)
+
+                fin = tk.Button(frame_central,text="Volver al menu",command=cls.gestionVentas)
+                fin.place(relx=0.42,rely=0.9)
 
 
             
@@ -930,24 +1148,66 @@ class Main:
         for widget in cls.content.winfo_children():
             widget.destroy()
         
-        frame_izq = tk.Frame(cls.content, bg="slategray")
-        frame_izq.place(relx=0, rely=0, relwidth=0.15, relheight=1)  # Se ubica en la izquierda
-
+        frame_izq = tk.Frame(cls.content, bg="#5d2417")
+        frame_izq.place(relx=0, rely=0.1, relwidth=0.1, relheight=0.9)
         # Frame derecho
-        frame_der = tk.Frame(cls.content, bg="slategray")
-        frame_der.place(relx=0.85, rely=0,relwidth=0.15, relheight=1)
-
+        frame_der = tk.Frame(cls.content, bg="#5d2417")
+        frame_der.place(relx=0.9, rely=0.1,relwidth=0.1, relheight=0.9)
+        
         top_frame = Frame(cls.content,background="black")
         top_frame.place(relx=0, rely=0, relwidth= 1, relheight= 0.1)
 
-        frame_central = tk.Frame(cls.content, bg="slategray1")
-        frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+        
+        
 
-        frame_central = tk.Frame(cls.content, bg="slategray1")
-        frame_central.place(relx=0.15, rely=0.1, relwidth=0.70, relheight=0.80)
+        f1 = tk.Frame(cls.content, bg = "#4B2D2E")
+        f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
+        
+        frame_central = tk.Frame(f1, bg="#701C1A",name="central")
+        frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
 
-        top_label = tk.Label(top_frame,text="Venta de tiquetes",font=("Calibri", 25), bg="black",fg="white")
-        top_label.place(relx=0.5, rely=0.1, anchor="n")
+        bottomFrame = tk.Frame(cls.content, bg="#5d2417")
+        bottomFrame.place(relx=0, rely=0.9, relheight=0.1, relwidth=1)
+        
+       
+        Titulo = tk.Frame(cls.content, bg="#070709")
+        Titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1)
+        TituloLabel = tk.Label(Titulo, text="Bienvenido a la venta de tiquetes", font=("Calibri", 14), fg="#FCE6C9", bg="#070709")
+        TituloLabel.pack(fill="both", expand=True)
+        TituloLabel.bind("<Configure>", lambda e: cls.resize(Titulo, TituloLabel, 8, 50, False))
+
+        
+        '''IMAGEN BOTTOM (ASIENTOS)'''
+        # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
+        imagen_bottom = Image.open("src/media/theme/bottom.png")  
+        image = ImageTk.PhotoImage(imagen_bottom)
+
+        # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
+        bottom_label = tk.Label(bottomFrame, image=image)
+        bottom_label.place(relheight=1, relwidth=1)
+
+        # Vincular el evento <Configure> usando lambda para pasar la imagen y el label a la función
+        bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
+        '''IMAGEN RIGHT (CORTINA DER)'''
+        imagen_right = Image.open("src/media/theme/Courtain right.png")  
+        image_der = ImageTk.PhotoImage(imagen_right)
+
+        right_label = tk.Label(frame_der, image=image_der, bg="black")
+        right_label.place(relheight=1, relwidth=1)
+
+        frame_der.bind("<Configure>", lambda event: Main.resize_image(event, imagen_right, right_label))
+
+        '''IMAGEN LEFT (CORTINA IZQ)'''
+
+        imagen_left = Image.open("src/media/theme/Courtain left.png")  
+        image_izq = ImageTk.PhotoImage(imagen_left)
+
+        left_label = tk.Label(frame_izq, image=image_izq, bg="black")
+        left_label.place(relheight=1, relwidth=1)
+
+        frame_izq.bind("<Configure>", lambda event: Main.resize_image(event, imagen_left, left_label))
+
+
 
         """"top_label.bind(
             "<Configure>",
@@ -973,15 +1233,13 @@ class Main:
         for widget in cls.content.winfo_children():
             widget.destroy()
         
-        def run():
+        def run2():
             cls.clear_frame(f1)
 
             NOMBRES = ["Juan", "Pedro", "Maria", "Ana", "Luis", "Carlos", "Jose", "Andres", "Sofia", "Laura", "Miguel", "Danna", "Oscar", "Frank", "Pablo"]
             APELLIDOS = ["Gomez", "Perez", "Rodriguez", "Gonzalez", "Martinez", "Hernandez", "Lopez", "Torres", "Ramirez", "Diaz", "Sanchez", "Cruz", "Jimenez", "Rojas", "Vargas", "Velez"]
             
             def continuar():
-                cls.wait()
-                cls.clear_frame(f1)
                 frameSuperior = tk.Frame(f1, bg="#701C1A")
                 frameSuperior.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.85)
                 frameInferior = tk.Frame(f1, bg="#701C1A")
@@ -997,7 +1255,7 @@ class Main:
                 botonContinuar.pack(fill="both", padx=10, pady=5)
                 botonContinuar.config(command=lambda: continuar2())
 
-                #Organizar tabla de empleados
+                #Organizar las tablas de los empleados
                 #Estilo tablas
                 #Seguridad
                 seguridad = tk.Label(p1, text="Seguridad", font=("Calibri", 18), bg="#701C1A", fg="white")
@@ -1113,14 +1371,14 @@ class Main:
                     Empleado = tk.Label(p, text=tipo, font=("Calibri", 18), bg="#701C1A", fg="white")
                     Empleado.pack()
                     frame_tabla = tk.Frame(p)
-                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=10)
-                    
+                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=5)
+                        
                     #Encabezados
                     encabezados = ["Nombre", "IDs", "Despedir"]
                     for col, texto in enumerate(encabezados):
                         encabezado = tk.Label(frame_tabla, text=texto, font=("Calibri", 12), bg="#d3d3d3", padx=10, pady=1)
                         encabezado.grid(row=0, column=col, sticky="ew")
-                
+                    
                     #Fila de datos
                     for fila, emp in enumerate(listaOcupacion, start=1):
                         nombre = tk.Label(frame_tabla, text=emp.getNombre(), padx=10, pady=1 )
@@ -1131,11 +1389,14 @@ class Main:
 
                         despedir = tk.Button(frame_tabla, text="Despedir", command= lambda i = emp.getId(): Despedir(listaOcupacion, i))
                         despedir.grid(row=fila, column=2, padx= 10, pady=1)
-                    
+                        
+                    boton_volver = tk.Button(p,text="Volver", command=lambda: continuar(), bg="#AE1918", fg="white", font=("Calibri", 12))
+                    boton_volver.pack(pady=2, padx=2, side="right")
+
                     #Ajustar columnas
                     for col in range(2):
                         frame_tabla.grid_columnconfigure(col, weight=1)
-                    
+                        
                     def Despedir(listaOcupacion, id):
                         for emp in listaOcupacion:
                             if emp.getId() == id:
@@ -1150,6 +1411,7 @@ class Main:
                                 cls.ventanaDialogo(mensaje, continuar())
                                 break
                     
+                    
                 despedirS.config(command=lambda: despedirEmpleado("Seguridad",Teatro.getInstancia().getTipoSeguridad()))
                 despedirA.config(command=lambda: despedirEmpleado("Aseador",Teatro.getInstancia().getTipoAseador()))
                 despedirP.config(command=lambda: despedirEmpleado("Profesor",Teatro.getInstancia().getTipoProfesor()))
@@ -1158,7 +1420,7 @@ class Main:
                     cls.clear_frame(f1)
                     p = tk.Frame(f1, bg="#701C1A")
                     p.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.9, relheight=0.9)
-                    seguridad = tk.Label(p, text="Candidatos a Seguridad", font=("Calibri", 18), bg="#701C1A", fg="white")
+                    seguridad = tk.Label(p, text="Candidatos a Seguridad", font=("Calibri", 14), bg="#701C1A", fg="white")
                     seguridad.pack(pady=5) 
 
                     candidatos = []
@@ -1173,7 +1435,7 @@ class Main:
                         n+=1
                     
                     frame_tabla = tk.Frame(p)
-                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=10)
+                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=2)
                     
                     #Encabezados
                     encabezados = ["Nombre", "IDs", "Contratar"]
@@ -1192,6 +1454,9 @@ class Main:
                         contratar = tk.Button(frame_tabla, text="Contratar", command= lambda n=nombre, i=id: contrato(n, i, "Seguridad"))
                         contratar.grid(row=fila, column=2, padx= 10, pady=1)
                     
+                    boton_volver = tk.Button(p,text="Volver", command=lambda: continuar(), bg="#AE1918", fg="white", font=("Calibri", 12))
+                    boton_volver.pack(pady=2, padx=2, side="right")
+                    
                     #Ajustar columnas
                     for col in range(2):
                         frame_tabla.grid_columnconfigure(col, weight=1)
@@ -1200,7 +1465,7 @@ class Main:
                     cls.clear_frame(f1)
                     p = tk.Frame(f1, bg="#701C1A")
                     p.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.9, relheight=0.9)
-                    Aseador = tk.Label(p, text="Candidatos a Aseador", font=("Calibri", 18),  bg="#701C1A", fg="white")
+                    Aseador = tk.Label(p, text="Candidatos a Aseador", font=("Calibri", 14),  bg="#701C1A", fg="white")
                     Aseador.pack(pady=5)
                     
                     candidatos = []
@@ -1215,7 +1480,7 @@ class Main:
                         n+=1
                     
                     frame_tabla = tk.Frame(p)
-                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=10)
+                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=2)
                     
                     #Encabezados
                     encabezados = ["Nombre", "IDs", "Contratar"]
@@ -1233,7 +1498,10 @@ class Main:
 
                         contratar = tk.Button(frame_tabla, text="Contratar", command= lambda n=nombre, i=id: contrato(n, i, "Aseador"))
                         contratar.grid(row=fila, column=2, padx= 10, pady=1)
-                    
+
+                    boton_volver = tk.Button(p,text="Volver", command=lambda: continuar(), bg="#AE1918", fg="white", font=("Calibri", 12))
+                    boton_volver.pack(pady=2, padx=2, side="right")
+
                     #Ajustar columnas
                     for col in range(2):
                         frame_tabla.grid_columnconfigure(col, weight=1)
@@ -1242,7 +1510,7 @@ class Main:
                     cls.clear_frame(f1)
                     p = tk.Frame(f1, bg="#701C1A")
                     p.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.9, relheight=0.9)
-                    Profesor = tk.Label(p, text="candidatos a Profesor", font=("Calibri", 18),  bg="#701C1A", fg="white")
+                    Profesor = tk.Label(p, text="candidatos a Profesor", font=("Calibri", 14),  bg="#701C1A", fg="white")
                     Profesor.pack(pady=5)
                     
                     candidatos = []
@@ -1257,7 +1525,7 @@ class Main:
                         n+=1
                     
                     frame_tabla = tk.Frame(p)
-                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=10)
+                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=2)
                     
                     #Encabezados
                     encabezados = ["Nombre", "IDs", "Contratar"]
@@ -1275,6 +1543,9 @@ class Main:
 
                         contratar = tk.Button(frame_tabla, text="Contratar", command= lambda n=nombre, i=id: contrato(n, i, "Profesor"))
                         contratar.grid(row=fila, column=2, padx= 10, pady=1)
+                    
+                    boton_volver = tk.Button(p,text="Volver", command=lambda: continuar(), bg="#AE1918", fg="white", font=("Calibri", 12))
+                    boton_volver.pack(pady=2, padx=2, side="right")
                     
                     #Ajustar columnas
                     for col in range(2):
@@ -1640,13 +1911,13 @@ class Main:
                         if totalFunciones == 0:
                             alerta = tk.Frame(infoSeguridad, bg="#701C1A", bd=2, relief="groove")
                             alerta.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.5, relheight=0.5)
-                            mensaje = tk.Label(alerta ,text="No hay funciones para agregar", font=("Calibri", 18), bg="#701C1A", fg="white")
+                            mensaje = tk.Label(alerta ,text="No hay funciones para agregar", font=("Calibri", 12), bg="#701C1A", fg="white")
                             mensaje.place(relx=0.5, rely=0.5, anchor="center")
                             trabajoAsignadoS = False
                         else:
                             alerta = tk.Frame(infoSeguridad, bg="#701C1A", bd=2, relief="groove")
                             alerta.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.5, relheight=0.5)
-                            mensaje = tk.Label(alerta, text = "No hay trabajadores de Seguridad", font=("Calibri", 18), bg="#701C1A", fg="white")
+                            mensaje = tk.Label(alerta, text = "No hay trabajadores de Seguridad", font=("Calibri", 12), bg="#701C1A", fg="white")
                             mensaje.place(relx=0.5, rely=0.5, anchor="center")
                             trabajoAsignadoS = False
                     if len(funcionesDisponibles) != 0:
@@ -1976,13 +2247,13 @@ class Main:
                         if totalFunciones == 0:
                             alerta = tk.Frame(infoAseador, bg="#701C1A", bd=2, relief="groove")
                             alerta.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.5, relheight=0.5)
-                            mensaje = tk.Label(alerta ,text="No hay funciones para poder Limpiar", font=("Calibri", 18), bg="#701C1A", fg="white")
+                            mensaje = tk.Label(alerta ,text="No hay funciones para poder Limpiar", font=("Calibri", 12), bg="#701C1A", fg="white")
                             mensaje.place(relx=0.5, rely=0.5, anchor="center")
                             trabajoAsignadoA = False
                         else:
                             alerta = tk.Frame(infoAseador, bg="#701C1A", bd=2, relief="groove")
                             alerta.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.5, relheight=0.5)
-                            mensaje = tk.Label(alerta, text = "No hay Aseadores", font=("Calibri", 18),bg="#701C1A", fg="white")
+                            mensaje = tk.Label(alerta, text = "No hay Aseadores", font=("Calibri", 12),bg="#701C1A", fg="white")
                             mensaje.place(relx=0.5, rely=0.5, anchor="center")
                             trabajoAsignadoA = False
                     
@@ -2117,7 +2388,7 @@ class Main:
                 
             def continuar3():
                 def actualizarSaldo():
-                    nuevo_saldo = "El saldo de tesoreria es: " + str(Teatro.getInstancia().getTesoreria().getCuenta().getSaldo())
+                    nuevo_saldo = "El saldo de tesoreria es: " + cls.toCop(Teatro.getInstancia().getTesoreria().getCuenta().getSaldo())
                     saldo.config(text=nuevo_saldo)
                 
                 cls.clear_frame(f1)
@@ -2125,7 +2396,7 @@ class Main:
                 p.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.9, relheight=0.9)
                 Fsaldo = tk.Frame(p, bg="#4B2D2E")
                 Fsaldo.place(relx=0, rely=0, relwidth=1, relheight=0.1, anchor="nw") 
-                Msaldo = "El saldo de tesoreria es: " + str(Teatro.getInstancia().getTesoreria().getCuenta().getSaldo())
+                Msaldo = "El saldo de tesoreria es: " + cls.toCop(Teatro.getInstancia().getTesoreria().getCuenta().getSaldo())
                 saldo = tk.Label(Fsaldo, text=Msaldo, font=("Calibri", 14), bg="#4B2D2E", fg="#FCE6C9")
                 saldo.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
                 contenido = tk.Frame(p, bg="#701C1A")
@@ -2398,37 +2669,31 @@ class Main:
                         despedidos = tk.Label(righframe, text=msg, font=("Calibri", 14), bg="#701C1A", fg="white")
                         despedidos.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
                     
-                    button_salir = tk.Button(righframe, text="Salir", bg="#571F1C", fg="White", font=("Calibri", 12))
+                    button_salir = tk.Button(righframe, text="Salir", bg="#AE1918" ,fg="White", font=("Calibri", 12))
                     button_salir.place(relx=0.7, rely=0.9, relwidth=0.3, relheight=0.1, anchor="center")
                     button_salir.config(command=lambda: cls.gestionEmpleados())
 
                 button_yes.config(command=lambda: yes()) 
                 button_no.config(command=lambda: Despidos()) 
 
-            f1.after(1000, lambda: continuar())            
-        # Encabezado
-        Titulo = tk.Frame(cls.content, bg="#070709")
-        Titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-        TituloLabel = tk.Label(Titulo, text="Bienvenido a la gestion de empleados", font=("Calibri", 14), fg="#FCE6C9", bg="#070709")
-        TituloLabel.pack(fill="both", expand=True)
-        TituloLabel.bind("<Configure>", lambda e: cls.resize(Titulo, TituloLabel, 8, 50, False))
-
+            f1.after(0, lambda: continuar())            
+        
         # --- Partes del contenido --- #
         #f1 es el central
         f1 = tk.Frame(cls.content, bg = "#4B2D2E")
-        f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
+        f1.place(relx=0.175, rely=0.1, relwidth=0.65, relheight=0.8)
         
         #frame izquierdo
         leftFrame = tk.Frame(cls.content, bg="#5d2417")
-        leftFrame.place(relx=0, rely=0.1, relwidth=0.1, relheight=0.9)
+        leftFrame.place(relx=0, rely=0, relwidth=0.175, relheight=0.9)
 
         #frame derecho
         rightFrame = tk.Frame(cls.content, bg="#5d2417")
-        rightFrame.place(relx=0.9, rely=0.1,relwidth=0.1, relheight=0.9)
+        rightFrame.place(relx=0.825, rely=0, relwidth=0.175, relheight=0.9)
         
         #frame inferior
         bottomFrame = tk.Frame(cls.content, bg="#5d2417")
-        bottomFrame.place(relx=0, rely=0.9, relheight=0.1, relwidth=1)
+        bottomFrame.place(relx=0, rely=0.9, relheight=0.2, relwidth=1)
         
         '''IMAGEN BOTTOM (ASIENTOS)'''
         # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
@@ -2461,6 +2726,13 @@ class Main:
 
         leftFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_left, left_label))
 
+        # Encabezado
+        Titulo = tk.Frame(cls.content, bg="#070709")
+        Titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1)
+        TituloLabel = tk.Label(Titulo, text="Bienvenido a la gestion de empleados", font=("Calibri", 14), fg="#FCE6C9", bg="#070709")
+        TituloLabel.pack(fill="both", expand=True)
+        TituloLabel.bind("<Configure>", lambda e: cls.resize(Titulo, TituloLabel, 8, 50, False))
+        
         #Accion principal
         Anuncio = tk.Frame(f1, bg="#701C1A")
         Anuncio.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
@@ -2480,14 +2752,13 @@ class Main:
                         Deudas = Deudas + "Se realizo el pago a: " + Persona.getNombre() + " por un valor de: " + str(Persona.getDeuda()) + "\n"
                         Persona.setDeuda(0)
     
-        Saldo = Teatro.getInstancia().getTesoreria().getCuenta().getSaldo()
+        Saldo = cls.toCop(Teatro.getInstancia().getTesoreria().getCuenta().getSaldo())
 
         def mostrarSaldo():
-            cls.wait()
             cls.clear_frame(Anuncio)
-            texto = tk.Label(Anuncio, text= Deudas + "El saldo actual de la tesoreria es: " + str(Saldo), font=("Calibri", 18), bg="#ffb48a", bd = 10, relief="raised")
-            texto.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.5, anchor="center")
-            Anuncio.after(2000, run())
+            textoSaldo = tk.Label(Anuncio, text= Deudas + "El saldo actual de la tesoreria es: " + Saldo, font=("Calibri", 14), bg="#701C1A", fg="white", bd = 10, relief="raised")
+            textoSaldo.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.5, anchor="center")
+            f1.after(1500, lambda: run2())
         
         f1.after(1500, lambda: mostrarSaldo())
 
@@ -2785,9 +3056,6 @@ class Main:
         left_label.place(relheight=1, relwidth=1)
 
         leftFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_left, left_label))
-
-        def toCop(value: float):
-            return "$" + "".join([val + "," if (i+1)%3 == 0 and (i+1) != len(str(value).split(".")[0]) else val for i, val in enumerate(str(value).split(".")[0][::-1])])[::-1] + "." + str(value).split(".")[1]
         
         #PREGUNTA NO. 1
         criteriosTipoEmpresa = ["Tipo de Empresa"]
@@ -2868,7 +3136,7 @@ class Main:
                     id = actorEscogido.getId()
 
                     contratar = messagebox.askyesno("Contratación de actores", 
-                                        f"Actor seleccionado:\n\nNombre: {actorEscogido}\nEdad: {edad}\nCalificación: {calificacion}\nPrecio de contratación: {toCop(precio)}\n\n¿Desea contratarlo?")
+                                        f"Actor seleccionado:\n\nNombre: {actorEscogido}\nEdad: {edad}\nCalificación: {calificacion}\nPrecio de contratación: {Main.toCop(precio)}\n\n¿Desea contratarlo?")
                     if contratar:
                         actor = Artista.buscarPorId(id)
                         empresa.pagarContratoActor(actor, float(precio))
@@ -2879,7 +3147,7 @@ class Main:
                         if cls.filterDebug:
                             print("horario nuevo", actor.getHorario())
 
-                        messagebox.showinfo("Operación exitosa", f"¡Actor contratado!\n\nEl actor escogido fue {actorEscogido} por un precio de {toCop(precio)}")
+                        messagebox.showinfo("Operación exitosa", f"¡Actor contratado!\n\nEl actor escogido fue {actorEscogido} por un precio de {Main.toCop(precio)}")
                         Main.contratarActores()
                 
 
@@ -2892,7 +3160,7 @@ class Main:
             minActorPrecio = min(actorsForRental, key= lambda actor: actor.getPrecioContrato(duration)).getPrecioContrato(duration)
             maxActorPrecio = max(actorsForRental, key= lambda actor: actor.getPrecioContrato(duration)).getPrecioContrato(duration)
 
-            messagebox.showinfo("Información", "Antes de elegir el presupuesto de contratación, tenga en cuenta que el rango de los precios es de " + toCop(minActorPrecio) + " a " + toCop(maxActorPrecio))
+            messagebox.showinfo("Información", "Antes de elegir el presupuesto de contratación, tenga en cuenta que el rango de los precios es de " + Main.toCop(minActorPrecio) + " a " + Main.toCop(maxActorPrecio))
 
             presupuesto = FieldFrame(
                 topFrame,
@@ -3514,14 +3782,21 @@ class Main:
                             valores=valores,
                             habilitado= ["Nombre", "Tipo de artista"],
                             combobox=False,
-                            command=lambda: (ff.gatherEntries(), process_new_artist(id_num, ff.valores[1], ff.valores[2])))
+                            command=lambda: (process_new_artist(id_num, ff)))
             ff.pack(pady=10, fill="both", expand=True)
             tk.Label(process_frame,
                     text="(Si se ingresa 'actor' se pedirá la edad posteriormente)",
                     font=("Calibri", 12),
                     bg="#701C1A", fg="#FCE6C1").pack(pady=5, fill="x")
 
-        def process_new_artist(id_num, nombre, tipo):
+        def process_new_artist(id_num, ff):
+            try:
+                ff.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
+
+            nombre = ff.valores[1]
+            tipo = ff.valores[2]
             tipo = tipo.lower().strip()
             if tipo not in ["director", "actor"]:
                 messagebox.showerror("Error", "Tipo de artista no válido. Debe ser 'director' o 'actor'.")
@@ -3703,13 +3978,8 @@ class Main:
                             combobox=False,
                             tituloGuardar="Programar",
                             command=lambda: (
-                        ff.gatherEntries(),
-                        process_schedule(actor, areaSeleccionada, nivelClase,
-                                        ff.valores[0],  # Día seleccionado (string "YYYY-MM-DD")
-                                        ff.valores[1],  # Hora de inicio (string "HH:MM")
-                                        ff.valores[2]   # Hora de fin (string "HH:MM")
-                                        )
-                    ))
+                        process_schedule(actor, areaSeleccionada, nivelClase, ff))
+                    )
             ff.pack(pady=10, fill="x")
             
             # Por defecto, FieldFrame crea entradas (Entry) para todos los campos.
@@ -3720,20 +3990,25 @@ class Main:
 
         # -------------------- PASO 9: Procesar horario y asignar sala y profesor --------------------
         '''AVALADA'''
-        def process_schedule(actor, areaSeleccionada, nivelClase, day_str, start_time_str, end_time_str):
+        def process_schedule(actor, areaSeleccionada, nivelClase, ff):
             try:
-                # Convertir el día seleccionado a objeto date
-                selected_date = datetime.strptime(day_str, "%Y-%m-%d").date()
-                # Convertir las horas a objeto time (formato HH:MM)
-                start_time = datetime.strptime(start_time_str, "%H:%M").time()
-                end_time = datetime.strptime(end_time_str, "%H:%M").time()
-            except ValueError:
-                messagebox.showerror("Error", "Formato incorrecto en día o en hora. Use YYYY-MM-DD para el día y HH:MM para la hora.")
+                ff.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
+
+            day_str=ff.valores[0]
+            start_time_str=ff.valores[1]
+            end_time_str=ff.valores[2]
+
+            try:
+                horarios = Main.validar_formatos(day_str,start_time_str,end_time_str)
+            except errorFormatoHorario:
+                messagebox.showerror("Error", errorFormatoHorario())
                 return
 
             # Combinar la fecha con las horas para obtener datetime completos
-            inicio = datetime.combine(selected_date, start_time)
-            fin = datetime.combine(selected_date, end_time)
+            inicio = datetime.combine(horarios[0], horarios[1])
+            fin = datetime.combine(horarios[0], horarios[2])
 
             if fin <= inicio:
                 messagebox.showerror("Error", "El fin debe ser después del inicio.")
@@ -3789,7 +4064,7 @@ class Main:
                 costoClase = 75000
             else:
                 costoClase = 90000
-            tk.Label(process_frame, text=f"El costo de la clase es: ${costoClase}",
+            tk.Label(process_frame, text=f"El costo de la clase es: {Main.toCop(costoClase)}",
                     font=("Calibri", 14), bg="#701C1A", fg="#FCE6C1").pack(pady=10)
             tk.Button(process_frame, text="Procesar Pago", font=("Calibri", 14),
                     bg="#701C1A", fg="#FCE6C1",
@@ -3868,12 +4143,8 @@ class Main:
                             combobox=False,
                             tituloGuardar="Programar",
                             command=lambda: (
-                                ff.gatherEntries(),
                                 process_reprogramar(actor, areaSeleccionada,
-                                                    ff.valores[0],  # Día seleccionado (string "YYYY-MM-DD")
-                                                    ff.valores[1],  # Hora de inicio (string "HH:MM")
-                                                    ff.valores[2],  # Hora de fin (string "HH:MM")
-                                                    nivelClase, profesorEvaluador, fin)
+                                                    nivelClase, profesorEvaluador, fin, ff)
                             ))
             ff.pack(pady=10, fill="x")
             # Convertir la entrada del primer campo ("Día") en un Combobox
@@ -3882,18 +4153,24 @@ class Main:
             ff.values[1].grid(row=1, column=2)
 
 
-        def process_reprogramar(actor, areaSeleccionada, day_str, start_time_str, end_time_str, nivelClase, profesorEvaluador, fin):
-            from datetime import datetime
+        def process_reprogramar(actor, areaSeleccionada, nivelClase, profesorEvaluador, fin, ff):
             try:
-                selected_date = datetime.strptime(day_str, "%Y-%m-%d").date()
-                start_time = datetime.strptime(start_time_str, "%H:%M").time()
-                end_time = datetime.strptime(end_time_str, "%H:%M").time()
-            except ValueError:
-                messagebox.showerror("Error", "Formato incorrecto. Use 'YYYY-MM-DD' para el día y 'HH:MM' para la hora.")
+                ff.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
+
+            day_str=ff.valores[0]
+            start_time_str=ff.valores[1]
+            end_time_str=ff.valores[2]
+
+            try:
+                horarios = Main.validar_formatos(day_str,start_time_str,end_time_str)
+            except errorFormatoHorario:
+                messagebox.showerror("Error", errorFormatoHorario())
                 return
 
-            nuevo_inicio = datetime.combine(selected_date, start_time)
-            nuevo_fin = datetime.combine(selected_date, end_time)
+            nuevo_inicio = datetime.combine(horarios[0], horarios[1])
+            nuevo_fin = datetime.combine(horarios[0], horarios[2])
             
             if nuevo_fin <= nuevo_inicio:
                 messagebox.showerror("Error", "El fin debe ser después del inicio.")
