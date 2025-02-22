@@ -51,7 +51,7 @@ class Main:
     fieldTest = False
     reset = True
     filterDebug = True
-    bg = "lightsteelblue3"
+    bg = "#701C1A"
 
     @classmethod
     def wait(cls) -> None:
@@ -177,7 +177,7 @@ class Main:
         cls.leftFrame.place(relx=0, rely=0, relwidth=0.5, relheight=1)
 
         # DIVIDIR EN 2 SECCIONES(FRAME IZQUIERDO): SUPERIOR E INFERIOR
-        cls.topFrame = Frame(cls.leftFrame, bg="red")
+        cls.topFrame = Frame(cls.leftFrame, bg="#701C1A")
         cls.topFrame.place(relx=0, rely=0, relwidth=1, relheight=0.5)
 
         cls.bottomFrame = Frame(cls.leftFrame, bg="black")
@@ -207,7 +207,9 @@ class Main:
             font=("Calibri", 18),  # Tamaño inicial
             justify="center",
             anchor="center",
-            wraplength=800
+            wraplength=800,
+            bg= "#701C1A",
+            fg = '#FCE6C9'
         )
         cls.titleLabel.place(relx=0.5, rely=0.5, anchor="center")
     
@@ -229,10 +231,10 @@ class Main:
         cls.programadorFrameTop = tk.Frame(cls.rightFrame, bg="skyblue")
         cls.programadorFrameTop.place(relx=0, rely=0, relwidth=1, relheight=0.3)
         
-        cls.programadorFrameBottom = tk.Frame(cls.rightFrame, bg="lightgreen")
+        cls.programadorFrameBottom = tk.Frame(cls.rightFrame, bg="#FCE6C9")
         cls.programadorFrameBottom.place(relx=0, rely=0.3, relwidth=1, relheight=0.7)
         
-        cls.btn_info = tk.Button(cls.programadorFrameTop, text="Programadores", command=cls.update_programador)
+        cls.btn_info = tk.Button(cls.programadorFrameTop, text="Programadores", command=cls.update_programador, bg = "#701C1A", fg="#FCE6C9")
         cls.btn_info.pack(expand=True, fill="both")
         
         # Vincula el evento <Configure> del frame superior para redimensionar la fuente del botón
@@ -346,9 +348,9 @@ class Main:
         cls.new_window.config(menu=cls.menu_bar)
 
         #contenido
-        cls.content = tk.Frame(cls.new_window, bg="black")
+        cls.content = tk.Frame(cls.new_window, bg="#701C1A")
         cls.content.place(relx=0, rely=0, relwidth=1, relheight=1)
-        cls.Label = tk.Label(cls.content, text="Bienvenido al Teatro Escuela Carlos Mayolo", font=("Calibri", 30), wraplength=500)
+        cls.Label = tk.Label(cls.content, text="Bienvenido al Teatro Escuela Carlos Mayolo", font=("Calibri", 30), wraplength=500, bg= "#701C1A", fg = '#FCE6C9')
         cls.Label.place(relx=0.5, rely=0.5, anchor="center")
         
         cls.new_window.focus_force()
