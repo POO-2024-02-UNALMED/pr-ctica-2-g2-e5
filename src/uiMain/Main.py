@@ -1157,15 +1157,13 @@ class Main:
         for widget in cls.content.winfo_children():
             widget.destroy()
         
-        def run():
+        def run2():
             cls.clear_frame(f1)
 
             NOMBRES = ["Juan", "Pedro", "Maria", "Ana", "Luis", "Carlos", "Jose", "Andres", "Sofia", "Laura", "Miguel", "Danna", "Oscar", "Frank", "Pablo"]
             APELLIDOS = ["Gomez", "Perez", "Rodriguez", "Gonzalez", "Martinez", "Hernandez", "Lopez", "Torres", "Ramirez", "Diaz", "Sanchez", "Cruz", "Jimenez", "Rojas", "Vargas", "Velez"]
             
             def continuar():
-                cls.wait()
-                cls.clear_frame(f1)
                 frameSuperior = tk.Frame(f1, bg="#701C1A")
                 frameSuperior.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.85)
                 frameInferior = tk.Frame(f1, bg="#701C1A")
@@ -2314,7 +2312,7 @@ class Main:
                 
             def continuar3():
                 def actualizarSaldo():
-                    nuevo_saldo = "El saldo de tesoreria es: " + str(Teatro.getInstancia().getTesoreria().getCuenta().getSaldo())
+                    nuevo_saldo = "El saldo de tesoreria es: " + cls.toCop(Teatro.getInstancia().getTesoreria().getCuenta().getSaldo())
                     saldo.config(text=nuevo_saldo)
                 
                 cls.clear_frame(f1)
@@ -2322,7 +2320,7 @@ class Main:
                 p.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.9, relheight=0.9)
                 Fsaldo = tk.Frame(p, bg="#4B2D2E")
                 Fsaldo.place(relx=0, rely=0, relwidth=1, relheight=0.1, anchor="nw") 
-                Msaldo = "El saldo de tesoreria es: " + str(Teatro.getInstancia().getTesoreria().getCuenta().getSaldo())
+                Msaldo = "El saldo de tesoreria es: " + cls.toCop(Teatro.getInstancia().getTesoreria().getCuenta().getSaldo())
                 saldo = tk.Label(Fsaldo, text=Msaldo, font=("Calibri", 14), bg="#4B2D2E", fg="#FCE6C9")
                 saldo.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
                 contenido = tk.Frame(p, bg="#701C1A")
@@ -2602,7 +2600,7 @@ class Main:
                 button_yes.config(command=lambda: yes()) 
                 button_no.config(command=lambda: Despidos()) 
 
-            f1.after(1000, lambda: continuar())            
+            f1.after(0, lambda: continuar())            
         
         # --- Partes del contenido --- #
         #f1 es el central
@@ -2678,14 +2676,13 @@ class Main:
                         Deudas = Deudas + "Se realizo el pago a: " + Persona.getNombre() + " por un valor de: " + str(Persona.getDeuda()) + "\n"
                         Persona.setDeuda(0)
     
-        Saldo = Teatro.getInstancia().getTesoreria().getCuenta().getSaldo()
+        Saldo = cls.toCop(Teatro.getInstancia().getTesoreria().getCuenta().getSaldo())
 
         def mostrarSaldo():
-            cls.wait()
             cls.clear_frame(Anuncio)
-            texto = tk.Label(Anuncio, text= Deudas + "El saldo actual de la tesoreria es: " + str(Saldo), font=("Calibri", 18), bg="#ffb48a", bd = 10, relief="raised")
-            texto.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.5, anchor="center")
-            Anuncio.after(2000, run())
+            textoSaldo = tk.Label(Anuncio, text= Deudas + "El saldo actual de la tesoreria es: " + Saldo, font=("Calibri", 14), bg="#701C1A", fg="white", bd = 10, relief="raised")
+            textoSaldo.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.5, anchor="center")
+            f1.after(1500, lambda: run2())
         
         f1.after(1500, lambda: mostrarSaldo())
 
