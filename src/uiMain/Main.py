@@ -3291,15 +3291,12 @@ class Main:
             
             horaInicio = fieldframe.values[1].get()
             horaFin = fieldframe.values[2].get()
-            
-            try:
-                horaInicio = datetime.strptime(horaInicio, "%H:%M").time()
-                horaFin = datetime.strptime(horaFin, "%H:%M").time()
-            except Exception:
-                messagebox.showerror("Error", "Los horarios deben estar en formato 24 horas")
-                return
 
-            fecha = datetime.strptime(fecha, "%Y-%m-%d").date()
+            try:
+                fecha, horaInicio, horaFin = Main.validar_formatos(fecha, horaInicio, horaFin)
+            except errorFormatoHorario:
+                messagebox.showerror("Error", errorFormatoHorario())
+                return
 
             fechaInicio = datetime.combine(fecha, horaInicio)
             fechaFin = datetime.combine(fecha, horaFin)
