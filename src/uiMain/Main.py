@@ -54,6 +54,10 @@ class Main:
     bg = "#701C1A"
 
     @classmethod
+    def toCop(cls, value):
+        return f"${value:,.2f}"
+
+    @classmethod
     def wait(cls) -> None:
         """Genera un periodo de espera de 2 segundos si Main.debug es False"""
         if cls.debug:
@@ -3292,9 +3296,6 @@ class Main:
         left_label.place(relheight=1, relwidth=1)
 
         leftFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_left, left_label))
-
-        def toCop(value: float):
-            return "$" + "".join([val + "," if (i+1)%3 == 0 and (i+1) != len(str(value).split(".")[0]) else val for i, val in enumerate(str(value).split(".")[0][::-1])])[::-1] + "." + str(value).split(".")[1]
         
         #PREGUNTA NO. 1
         criteriosTipoEmpresa = ["Tipo de Empresa"]
@@ -3375,7 +3376,7 @@ class Main:
                     id = actorEscogido.getId()
 
                     contratar = messagebox.askyesno("Contratación de actores", 
-                                        f"Actor seleccionado:\n\nNombre: {actorEscogido}\nEdad: {edad}\nCalificación: {calificacion}\nPrecio de contratación: {toCop(precio)}\n\n¿Desea contratarlo?")
+                                        f"Actor seleccionado:\n\nNombre: {actorEscogido}\nEdad: {edad}\nCalificación: {calificacion}\nPrecio de contratación: {Main.toCop(precio)}\n\n¿Desea contratarlo?")
                     if contratar:
                         actor = Artista.buscarPorId(id)
                         empresa.pagarContratoActor(actor, float(precio))
@@ -3386,7 +3387,7 @@ class Main:
                         if cls.filterDebug:
                             print("horario nuevo", actor.getHorario())
 
-                        messagebox.showinfo("Operación exitosa", f"¡Actor contratado!\n\nEl actor escogido fue {actorEscogido} por un precio de {toCop(precio)}")
+                        messagebox.showinfo("Operación exitosa", f"¡Actor contratado!\n\nEl actor escogido fue {actorEscogido} por un precio de {Main.toCop(precio)}")
                         Main.contratarActores()
                 
 
@@ -3399,7 +3400,7 @@ class Main:
             minActorPrecio = min(actorsForRental, key= lambda actor: actor.getPrecioContrato(duration)).getPrecioContrato(duration)
             maxActorPrecio = max(actorsForRental, key= lambda actor: actor.getPrecioContrato(duration)).getPrecioContrato(duration)
 
-            messagebox.showinfo("Información", "Antes de elegir el presupuesto de contratación, tenga en cuenta que el rango de los precios es de " + toCop(minActorPrecio) + " a " + toCop(maxActorPrecio))
+            messagebox.showinfo("Información", "Antes de elegir el presupuesto de contratación, tenga en cuenta que el rango de los precios es de " + Main.toCop(minActorPrecio) + " a " + Main.toCop(maxActorPrecio))
 
             presupuesto = FieldFrame(
                 topFrame,
