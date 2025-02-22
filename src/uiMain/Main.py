@@ -15,6 +15,7 @@ import random
 
 
 
+
 #AGREGAR SRC AL PATH
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -42,6 +43,7 @@ from gestorAplicacion.herramientas.FieldFrame import FieldFrame
 from excepciones.errorEntradaNula import errorEntradaNula
 from excepciones.errorEntradaNoNumerica import errorEntradaNoNumerica
 from excepciones.errorSuscripcion import errorSuscripcion
+from excepciones.errorFormatoHorario import errorFormatoHorario
 
 
 class Main:
@@ -416,6 +418,79 @@ class Main:
         except Exception as e:
             print("Error al cargar la imagen:", e)
             cls.label.config(text="No se pudo cargar la imagen", fg="white", bg="black")
+
+
+    def validar_formatos(day_str: str, start_time_str: str, end_time_str: str):
+        """
+        Valida manualmente que las cadenas 'day_str', 'start_time_str' y 'end_time_str'
+        estén en los formatos requeridos:
+            - day_str: "YYYY-MM-DD"
+            - start_time_str y end_time_str: "HH:MM"
+            
+        Retorna:
+            tuple: (selected_date, start_time, end_time) como objetos date y time.
+        
+        Lanza:
+            errorFormatoHorario: si alguno de los formatos no es correcto.
+        """
+        # Validar formato de fecha "YYYY-MM-DD"
+        if len(day_str) != 10 or day_str[4] != '-' or day_str[7] != '-':
+            raise errorFormatoHorario
+        
+        year_part = day_str[0:4]
+        month_part = day_str[5:7]
+        day_part = day_str[8:10]
+        
+        if not (year_part.isdigit() and month_part.isdigit() and day_part.isdigit()):
+            raise errorFormatoHorario
+        
+        year = int(year_part)
+        month = int(month_part)
+        day = int(day_part)
+        
+        # Verificar que el mes sea válido (1 a 12)
+        if month < 1 or month > 12:
+            raise errorFormatoHorario
+        
+        # Días máximos permitidos por mes
+        dias_por_mes = {1: 31, 2: 28, 3: 31, 4: 30, 5: 31, 6: 30,
+                        7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31}
+        # Ajuste para años bisiestos en febrero
+        if month == 2 and ((year % 4 == 0 and year % 100 != 0) or (year % 400 == 0)):
+            dias_max = 29
+        else:
+            dias_max = dias_por_mes[month]
+        
+        if day < 1 or day > dias_max:
+            raise errorFormatoHorario
+        
+        # Función interna para validar el formato de hora "HH:MM"
+        def validar_hora(time_str):
+            if len(time_str) != 5 or time_str[2] != ':':
+                raise errorFormatoHorario
+            hours_str, minutes_str = time_str.split(':')
+            if not (hours_str.isdigit() and minutes_str.isdigit()):
+                raise errorFormatoHorario
+            hours = int(hours_str)
+            minutes = int(minutes_str)
+            if hours < 0 or hours > 23:
+                raise errorFormatoHorario
+            if minutes < 0 or minutes > 59:
+                raise errorFormatoHorario
+            return hours, minutes
+
+        # Validar y extraer horas y minutos para hora de inicio y fin
+        start_hours, start_minutes = validar_hora(start_time_str)
+        end_hours, end_minutes = validar_hora(end_time_str)
+        
+        # Convertir las partes a objetos date y time
+        from datetime import date, time
+        selected_date = date(year, month, day)
+        start_time_obj = time(start_hours, start_minutes)
+        end_time_obj = time(end_hours, end_minutes)
+    
+        return selected_date, start_time_obj, end_time_obj
+    
 
     @classmethod
     def detectar_mouse(cls, event):
@@ -4022,14 +4097,21 @@ class Main:
                             valores=valores,
                             habilitado= ["Nombre", "Tipo de artista"],
                             combobox=False,
-                            command=lambda: (ff.gatherEntries(), process_new_artist(id_num, ff.valores[1], ff.valores[2])))
+                            command=lambda: (process_new_artist(id_num, ff)))
             ff.pack(pady=10, fill="both", expand=True)
             tk.Label(process_frame,
                     text="(Si se ingresa 'actor' se pedirá la edad posteriormente)",
                     font=("Calibri", 12),
                     bg="#701C1A", fg="#FCE6C1").pack(pady=5, fill="x")
 
-        def process_new_artist(id_num, nombre, tipo):
+        def process_new_artist(id_num, ff):
+            try:
+                ff.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
+
+            nombre = ff.valores[1]
+            tipo = ff.valores[2]
             tipo = tipo.lower().strip()
             if tipo not in ["director", "actor"]:
                 messagebox.showerror("Error", "Tipo de artista no válido. Debe ser 'director' o 'actor'.")
@@ -4211,13 +4293,8 @@ class Main:
                             combobox=False,
                             tituloGuardar="Programar",
                             command=lambda: (
-                        ff.gatherEntries(),
-                        process_schedule(actor, areaSeleccionada, nivelClase,
-                                        ff.valores[0],  # Día seleccionado (string "YYYY-MM-DD")
-                                        ff.valores[1],  # Hora de inicio (string "HH:MM")
-                                        ff.valores[2]   # Hora de fin (string "HH:MM")
-                                        )
-                    ))
+                        process_schedule(actor, areaSeleccionada, nivelClase, ff))
+                    )
             ff.pack(pady=10, fill="x")
             
             # Por defecto, FieldFrame crea entradas (Entry) para todos los campos.
@@ -4228,20 +4305,25 @@ class Main:
 
         # -------------------- PASO 9: Procesar horario y asignar sala y profesor --------------------
         '''AVALADA'''
-        def process_schedule(actor, areaSeleccionada, nivelClase, day_str, start_time_str, end_time_str):
+        def process_schedule(actor, areaSeleccionada, nivelClase, ff):
             try:
-                # Convertir el día seleccionado a objeto date
-                selected_date = datetime.strptime(day_str, "%Y-%m-%d").date()
-                # Convertir las horas a objeto time (formato HH:MM)
-                start_time = datetime.strptime(start_time_str, "%H:%M").time()
-                end_time = datetime.strptime(end_time_str, "%H:%M").time()
-            except ValueError:
-                messagebox.showerror("Error", "Formato incorrecto en día o en hora. Use YYYY-MM-DD para el día y HH:MM para la hora.")
+                ff.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
+
+            day_str=ff.valores[0]
+            start_time_str=ff.valores[1]
+            end_time_str=ff.valores[2]
+
+            try:
+                horarios = Main.validar_formatos(day_str,start_time_str,end_time_str)
+            except errorFormatoHorario:
+                messagebox.showerror("Error", errorFormatoHorario())
                 return
 
             # Combinar la fecha con las horas para obtener datetime completos
-            inicio = datetime.combine(selected_date, start_time)
-            fin = datetime.combine(selected_date, end_time)
+            inicio = datetime.combine(horarios[0], horarios[1])
+            fin = datetime.combine(horarios[0], horarios[2])
 
             if fin <= inicio:
                 messagebox.showerror("Error", "El fin debe ser después del inicio.")
@@ -4376,12 +4458,8 @@ class Main:
                             combobox=False,
                             tituloGuardar="Programar",
                             command=lambda: (
-                                ff.gatherEntries(),
                                 process_reprogramar(actor, areaSeleccionada,
-                                                    ff.valores[0],  # Día seleccionado (string "YYYY-MM-DD")
-                                                    ff.valores[1],  # Hora de inicio (string "HH:MM")
-                                                    ff.valores[2],  # Hora de fin (string "HH:MM")
-                                                    nivelClase, profesorEvaluador, fin)
+                                                    nivelClase, profesorEvaluador, fin, ff)
                             ))
             ff.pack(pady=10, fill="x")
             # Convertir la entrada del primer campo ("Día") en un Combobox
@@ -4390,18 +4468,24 @@ class Main:
             ff.values[1].grid(row=1, column=2)
 
 
-        def process_reprogramar(actor, areaSeleccionada, day_str, start_time_str, end_time_str, nivelClase, profesorEvaluador, fin):
-            from datetime import datetime
+        def process_reprogramar(actor, areaSeleccionada, nivelClase, profesorEvaluador, fin, ff):
             try:
-                selected_date = datetime.strptime(day_str, "%Y-%m-%d").date()
-                start_time = datetime.strptime(start_time_str, "%H:%M").time()
-                end_time = datetime.strptime(end_time_str, "%H:%M").time()
-            except ValueError:
-                messagebox.showerror("Error", "Formato incorrecto. Use 'YYYY-MM-DD' para el día y 'HH:MM' para la hora.")
+                ff.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
+
+            day_str=ff.valores[0]
+            start_time_str=ff.valores[1]
+            end_time_str=ff.valores[2]
+
+            try:
+                horarios = Main.validar_formatos(day_str,start_time_str,end_time_str)
+            except errorFormatoHorario:
+                messagebox.showerror("Error", errorFormatoHorario())
                 return
 
-            nuevo_inicio = datetime.combine(selected_date, start_time)
-            nuevo_fin = datetime.combine(selected_date, end_time)
+            nuevo_inicio = datetime.combine(horarios[0], horarios[1])
+            nuevo_fin = datetime.combine(horarios[0], horarios[2])
             
             if nuevo_fin <= nuevo_inicio:
                 messagebox.showerror("Error", "El fin debe ser después del inicio.")
