@@ -113,23 +113,23 @@ class Main:
 
     programadores = [
         ("Programador 1:\nNombre: Francisco Jose Ceren Porto\n Edad: 17 \nID: 1023631713",
-            ["src/media/Programadores/fran1.png", "src/media/Programadores/fran2.png", "src/media/Programadores/fran3.png", "src/media/Programadores/fran4.png"]),
+            ["src/media/Programadores/Frank/fran1.png", "src/media/Programadores/Frank/fran2.png", "src/media/Programadores/Frank/fran3.png", "src/media/Programadores/Frank/fran4.png"]),
         ("Programador 2:\nNombre: Danna Valeria Perez Niño\n Edad: 17 \nID: 1052839541",
-            ["src/media/Programadores/Danna1 (9).png", "src/media/Programadores/Danna1 (5).png", "src/media/Programadores/Dannaa.png", "src/media/Programadores/Danna1 (10).png"]),
+            ["src/media/Programadores/Danna/Danna1 (9).png", "src/media/Programadores/Danna/Danna1 (5).png", "src/media/Programadores/Danna/Dannaa.png", "src/media/Programadores/Danna/Danna1 (10).png"]),
         ("Programador 3:\nNombre: Oscar David Arango Garcia\n Edad: 17 \nID: 1011591946",
-            ["src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png"]),
-        ("Programador 4:\nNombre: Juan Pablo Miras Cañas\n Edad: 19 \nID: 4",
-            ["src/media/Programadores/pablo1.png", "src/media/Programadores/pablo2.png", "src/media/Programadores/pablo5.png", "src/media/Programadores/pablo4.png"]),
+            ["src/media/Programadores/Oscar/ImagenOscar1.png", "src/media/Programadores/Oscar/ImagenOscar2.png", "src/media/Programadores/Oscar/ImagenOscar3.png", "src/media/Programadores/Oscar/ImagenOscar4.png"]),
+        ("Programador 4:\nNombre: Juan Pablo Miras Cañas\n Edad: 19 \nID: 1033178679",
+            ["src/media/Programadores/Juan Pablo/pablo1.png", "src/media/Programadores/Juan Pablo/pablo2.png", "src/media/Programadores/Juan Pablo/pablo5.png", "src/media/Programadores/Juan Pablo/pablo4.png"]),
         ("Programador 5:\nNombre: Miguel Velez Bernal\n Edad: 18 \nID: 1023524572",
-            ["src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png"])
+            ["src/media/Programadores/Velez/Velez1.png", "src/media/Programadores/Velez/Velez4.png", "src/media/Programadores/Velez/Velez3.png", "src/media/Programadores/Velez/Velez2.png"])
     ]
 
     imagenes = [
-        "src/media/foto1.jpg",
-        "src/media/foto2.jpg",
-        "src/media/foto3.png",
-        "src/media/foto6.jpeg",
-        "src/media/foto5.jpg"        
+        "src/media/Teatro/foto1.jpg",
+        "src/media/Teatro/foto2.jpg",
+        "src/media/Teatro/foto3.png",
+        "src/media/Teatro/foto4.jpeg",
+        "src/media/Teatro/foto5.jpg"        
     ]
 
     indice_imagen = 0 
@@ -144,7 +144,7 @@ class Main:
     def initRoot(cls):
         """Inicializa la ventana raíz, le asigna un ícono, título y frame. Además, inicia la ventana principal"""
         cls.root = Tk() 
-        ico = Image.open("src/media/icon.png")
+        ico = Image.open("src/media/Teatro/icon.png")
         logo = ImageTk.PhotoImage(ico)
         cls.root.wm_iconphoto(False, logo)
         cls.root.geometry("960x540") #16:9
@@ -329,7 +329,7 @@ class Main:
         cls.root.destroy()
 
         cls.new_window = tk.Tk()
-        ico = Image.open("src/media/icon.png")
+        ico = Image.open("src/media/Teatro/icon.png")
         logo = ImageTk.PhotoImage(ico)
         cls.new_window.wm_iconphoto(False, logo)
         cls.new_window.title("Teatro Escuela Carlos Mayolo")
@@ -615,7 +615,7 @@ class Main:
 
             '''IMAGEN BOTTOM (ASIENTOS)'''
             # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
-            imagen_bottom = Image.open("src/media/theme/bottom.png")  
+            imagen_bottom = Image.open("src/media/Theme/bottom.png")  
             image = ImageTk.PhotoImage(imagen_bottom)
 
             # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
@@ -625,7 +625,7 @@ class Main:
             # Vincular el evento <Configure> usando lambda para pasar la imagen y el label a la función
             bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
             '''IMAGEN RIGHT (CORTINA DER)'''
-            imagen_right = Image.open("src/media/theme/Courtain right.png")  
+            imagen_right = Image.open("src/media/Theme/Courtain right.png")  
             image_der = ImageTk.PhotoImage(imagen_right)
 
             right_label = tk.Label(frame_der, image=image_der, bg="black")
@@ -635,7 +635,7 @@ class Main:
 
             '''IMAGEN LEFT (CORTINA IZQ)'''
 
-            imagen_left = Image.open("src/media/theme/Courtain left.png")  
+            imagen_left = Image.open("src/media/Theme/Courtain left.png")  
             image_izq = ImageTk.PhotoImage(imagen_left)
 
             left_label = tk.Label(frame_izq, image=image_izq, bg="black")
@@ -723,7 +723,7 @@ class Main:
             
             '''IMAGEN BOTTOM (ASIENTOS)'''
             # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
-            imagen_bottom = Image.open("src/media/theme/bottom.png")  
+            imagen_bottom = Image.open("src/media/Theme/bottom.png")  
             image = ImageTk.PhotoImage(imagen_bottom)
 
             # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
@@ -733,7 +733,7 @@ class Main:
             # Vincular el evento <Configure> usando lambda para pasar la imagen y el label a la función
             bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
             '''IMAGEN RIGHT (CORTINA DER)'''
-            imagen_right = Image.open("src/media/theme/Courtain right.png")  
+            imagen_right = Image.open("src/media/Theme/Courtain right.png")  
             image_der = ImageTk.PhotoImage(imagen_right)
 
             right_label = tk.Label(frame_der, image=image_der, bg="black")
@@ -743,7 +743,7 @@ class Main:
 
             '''IMAGEN LEFT (CORTINA IZQ)'''
 
-            imagen_left = Image.open("src/media/theme/Courtain left.png")  
+            imagen_left = Image.open("src/media/Theme/Courtain left.png")  
             image_izq = ImageTk.PhotoImage(imagen_left)
 
             left_label = tk.Label(frame_izq, image=image_izq, bg="black")
@@ -751,7 +751,7 @@ class Main:
 
             frame_izq.bind("<Configure>", lambda event: Main.resize_image(event, imagen_left, left_label))
 
-            label = tk.Label(cls.content,text="Desea mejorar su suscripcion?", font=("Calibri", 25), fg="black",bg="slategray2",name="suscripcion")
+            label = tk.Label(cls.content,text="Desea mejorar su suscripcion?", font=("Calibri", 25), fg="black",bg="#701C1A",name="suscripcion")
             label.place(relx=0.5, rely=0.3, anchor="center")
 
             Button_Si = tk.Button(cls.content, text="Si", font=("Calibri", 15),command=adquirir_suscripcion,name="no")
@@ -788,7 +788,7 @@ class Main:
                 
             )
             susc.place(relheight= 1, relwidth= 1)
-            main_label = tk.Label(frame_central,bg = "slategray1",text="BÁSICA $0.00 -------\nPREMIUM \n$11,900.00\n 10% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\nVIP \n$18,900.00\n 25% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\nELITE \n$39,900.00 \nFUNCIONES GRATIS\nILIMITADAS Y\nASIENTO GOLD GRATIS")
+            main_label = tk.Label(frame_central,bg = "#701C1A",text="BÁSICA $0.00 -------\nPREMIUM \n$11,900.00\n 10% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\nVIP \n$18,900.00\n 25% de Descuento\nEN TODAS LAS FUNCIONES\nY ASIENTOS\nELITE \n$39,900.00 \nFUNCIONES GRATIS\nILIMITADAS Y\nASIENTO GOLD GRATIS")
             main_label.place(relx=0.53, rely=0.4, anchor="center")
             
         def asignar_suscripcion(fieldframe: FieldFrame):
@@ -881,6 +881,14 @@ class Main:
 
             tree = ttk.Treeview(frame_central, columns=("Nombre", "Género", "Duración", "Precio"), show="headings",height=5)
 
+            text_widget = tk.Text(frame_central, height=10, width=40)  # Tamaño en líneas y columnas
+            text_widget.place(relx=0.2,rely=0.3,relwidth=0.7, relheight=0.3)
+
+            fila = f"{"Nombre":<20}{"Genero":<15}{"Duracion":<10}{"Precio":>10}\n"
+            text_widget.insert(tk.END, fila)
+
+            # Insertar texto inicial (opcional)
+            
             # Configurar encabezados
             tree.heading("Nombre", text="Nombre")
             tree.heading("Género", text="Género")
@@ -898,12 +906,15 @@ class Main:
             tree.configure(yscrollcommand=scrollbar.set)
 
             # Ubicar Treeview y Scrollbar en la ventana
-            tree.place(relx=0.2,rely=0.3,relwidth=0.7, relheight=0.3)
-            scrollbar.place(relx=0.90,rely=0.3, relwidth=0.03, relheight=0.3)
+            def formatear_duracion(duracion):
+                string = str(duracion)
+                return string
 
             # Agregar datos al Treeview
             for obra in Teatro.getInstancia().getObras():
                 obra.setPrecio(obra.precioFuncion())
+                fila = f"{obra.getNombre():<20}{obra.getGenero().value:<15}{formatear_duracion(obra.getDuracion()):<10}{f'${obra.getPrecio():,.2f}':>10}\n"
+                text_widget.insert(tk.END, fila)
                 
                 
                 
@@ -943,10 +954,11 @@ class Main:
 
                 lista=[]
                 for funcion in Teatro.getInstancia().getFuncionesCreadas():
+                    
                     if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getObra().getNombre() == suscripcion:
 
                         
-                        lista.append(funcion.getObra().getNombre())
+                        lista.append(funcion.getHorario()[0].time())
                 
                 func = FieldFrame(
                 frame_central,
@@ -955,10 +967,10 @@ class Main:
                 criterios=["Eleccion"],
                 valores= [lista],
                 combobox= True,
-                command=lambda :buscar_sillas(func)
+                command=lambda :verificarSillas(func)
                 
                 )
-                #func.place(relheight= 1, relwidth= 1)
+                func.place(relheight= 1, relwidth= 1)
 
 
                 tree = ttk.Treeview(frame_central, columns=("Fecha", "Horario"), show="headings",height=5)
@@ -972,13 +984,22 @@ class Main:
 
                 scrollbar = ttk.Scrollbar(frame_central, orient="vertical", command=tree.yview)
                 tree.configure(yscrollcommand=scrollbar.set)
+
+                text_widget = tk.Text(frame_central, height=10, width=40)  # Tamaño en líneas y columnas
+                text_widget.place(relx=0.2,rely=0.3,relwidth=0.7, relheight=0.3)
+                fila = f"{"FECHA":<25}{"HORA":<10}\n"
+                text_widget.insert(tk.END, fila)
                 
-                tree.place(relx=0.2,rely=0.3,relwidth=0.7, relheight=0.3)
-                scrollbar.place(relx=0.90,rely=0.3, relwidth=0.03, relheight=0.3)
                 for funcion in Teatro.getInstancia().getFuncionesCreadas():
-                    print(suscripcion)
+                    
                     if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getObra().getNombre() == suscripcion:
-                        print("entro")
+                        fecha = str(funcion.getHorario()[0].date())
+                        hora = funcion.getHorario()[0].time().strftime("%H:%M:%S")
+                        
+                        
+                        fila = f"{fecha:<25}{hora:<10}\n"
+                        text_widget.insert(tk.END, fila)
+                        
                         tree.insert("", "end", values=(funcion.getHorario()[0].date(),funcion.getHorario()[0].time()))
                         lista.append(funcion.getObra().getNombre())
                 
@@ -999,7 +1020,15 @@ class Main:
                 tree.bind("<<TreeviewSelect>>", on_tree_select)
                         
         
-                   
+        def verificarSillas (fieldframe : FieldFrame):
+            
+            try:
+                fieldframe.gatherEntries()
+                fecha = fieldframe.getValue("Eleccion")
+                buscar_sillas(fecha)
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
+                return         
         def buscar_sillas (fecha):
             print(fecha)
             
@@ -1014,7 +1043,7 @@ class Main:
             frame_central = tk.Frame(f1, bg="#701C1A",name="central")
             frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
 
-            frame_botones = tk.Frame((frame_central), bg="slategray2")
+            frame_botones = tk.Frame((frame_central), bg="#701C1A")
             frame_botones.place(relx=0.1, rely=0.1, relwidth=0.80, relheight=0.60)
 
             escenario = tk.Label(frame_botones, bg="slategray",text="ESCENARIO")
@@ -1179,7 +1208,7 @@ class Main:
         
         '''IMAGEN BOTTOM (ASIENTOS)'''
         # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
-        imagen_bottom = Image.open("src/media/theme/bottom.png")  
+        imagen_bottom = Image.open("src/media/Theme/bottom.png")  
         image = ImageTk.PhotoImage(imagen_bottom)
 
         # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
@@ -1189,7 +1218,7 @@ class Main:
         # Vincular el evento <Configure> usando lambda para pasar la imagen y el label a la función
         bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
         '''IMAGEN RIGHT (CORTINA DER)'''
-        imagen_right = Image.open("src/media/theme/Courtain right.png")  
+        imagen_right = Image.open("src/media/Theme/Courtain right.png")  
         image_der = ImageTk.PhotoImage(imagen_right)
 
         right_label = tk.Label(frame_der, image=image_der, bg="black")
@@ -1199,7 +1228,7 @@ class Main:
 
         '''IMAGEN LEFT (CORTINA IZQ)'''
 
-        imagen_left = Image.open("src/media/theme/Courtain left.png")  
+        imagen_left = Image.open("src/media/Theme/Courtain left.png")  
         image_izq = ImageTk.PhotoImage(imagen_left)
 
         left_label = tk.Label(frame_izq, image=image_izq, bg="black")
@@ -1214,7 +1243,7 @@ class Main:
             lambda e: cls.resize(top_frame,top_label, 60, 100)
         )"""
 
-        label = tk.Label(cls.content,text="Eres un cliente nuevo?", font=("Calibri", 25), fg="black",bg="slategray1")
+        label = tk.Label(cls.content,text="Eres un cliente nuevo?", font=("Calibri", 25), fg="black",bg="#701C1A")
         label.place(relx=0.5, rely=0.3, anchor="center")
 
         Button_Si = tk.Button(cls.content, text="Si", font=("Calibri", 15),command=Usuario_Nuevo)
@@ -1263,7 +1292,7 @@ class Main:
                 cls.resize(p1, seguridad,10, 20,False)
                 #Tabla Seguridad
                 frame_tabla = tk.Frame(p1)
-                frame_tabla.pack(expand=True, fill="both", padx=10, pady=5)
+                frame_tabla.pack(expand=True, fill="both", padx=2, pady=5)
 
                 #Encabezados
                 encabezados = ["Nombre", "IDs"]
@@ -1290,7 +1319,7 @@ class Main:
 
                 #Tabla Aseador
                 frame_tabla = tk.Frame(p2)
-                frame_tabla.pack(expand=True, fill="both", padx=10, pady=5)
+                frame_tabla.pack(expand=True, fill="both", padx=2, pady=5)
 
                 #Encabezados
                 encabezados = ["Nombre", "IDs"]
@@ -1317,7 +1346,7 @@ class Main:
 
                 #Tabla Profesor
                 frame_tabla = tk.Frame(p3)
-                frame_tabla.pack(expand=True, fill="both", padx=10, pady=5)
+                frame_tabla.pack(expand=True, fill="both", padx=2, pady=5)
 
                 #Encabezados
                 encabezados = ["Nombre", "IDs"]
@@ -1342,25 +1371,25 @@ class Main:
                 p12 = tk.Frame(p1, bg="#701C1A")
                 p12.pack(side="bottom", fill="both", pady = 5, padx=5)
                 contratarS = tk.Button(p12, bg= "#AE1918" ,text = "Contratar", font = ("calibri", 12), fg="White")
-                contratarS.pack(side="left", expand=True, fill="x", pady= 5, padx=10, anchor="center")
+                contratarS.pack(side="left", expand=True, fill="x", pady= 5, padx=5, anchor="center")
                 despedirS = tk.Button(p12, bg="#AE1918", text="Despedir", font=("calibri", 12), fg = "white")
-                despedirS.pack(side="left", expand= True, fill= "x", pady=5, padx=10, anchor="center")
+                despedirS.pack(side="left", expand= True, fill= "x", pady=5, padx=5, anchor="center")
 
                 #Aseador
                 p22 = tk.Frame(p2, bg="#701C1A")
                 p22.pack(side="bottom", fill="both", pady = 5, padx=5)
                 contratarA = tk.Button(p22, bg= "#AE1918" ,text = "Contratar", font = ("calibri", 12), fg="White")
-                contratarA.pack(side="left", expand=True, fill="x", pady= 5, padx=10, anchor="center")
+                contratarA.pack(side="left", expand=True, fill="x", pady= 5, padx=5, anchor="center")
                 despedirA = tk.Button(p22, bg="#AE1918", text="Despedir", font=("calibri", 12), fg = "white")
-                despedirA.pack(side="left", expand= True, fill= "x", pady=5, padx=10, anchor="center")
+                despedirA.pack(side="left", expand= True, fill= "x", pady=5, padx=5, anchor="center")
 
                 #Profesor
                 p32 = tk.Frame(p3, bg="#701C1A")
                 p32.pack(side="bottom", fill="both", pady = 5, padx=5)
                 contratarP = tk.Button(p32, bg= "#AE1918" ,text = "Contratar", font = ("calibri", 12), fg="White")
-                contratarP.pack(side="left", expand=True, fill="x", pady= 5, padx=10, anchor="center")
+                contratarP.pack(side="left", expand=True, fill="x", pady= 5, padx=5, anchor="center")
                 despedirP = tk.Button(p32, bg="#AE1918", text="Despedir", font=("calibri", 12), fg = "white")
-                despedirP.pack(side="left", expand= True, fill= "x", pady=5, padx=10, anchor="center")
+                despedirP.pack(side="left", expand= True, fill= "x", pady=5, padx=5, anchor="center")
 
 
                 #Modificar para los empleados de la lista
@@ -2697,7 +2726,7 @@ class Main:
         
         '''IMAGEN BOTTOM (ASIENTOS)'''
         # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
-        imagen_bottom = Image.open("src/media/theme/bottom.png")  
+        imagen_bottom = Image.open("src/media/Theme/bottom.png")  
         image = ImageTk.PhotoImage(imagen_bottom)
 
         # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
@@ -2708,7 +2737,7 @@ class Main:
         bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
 
         '''IMAGEN RIGHT (CORTINA DER)'''
-        imagen_right = Image.open("src/media/theme/Courtain right.png")  
+        imagen_right = Image.open("src/media/Theme/Courtain right.png")  
         image_der = ImageTk.PhotoImage(imagen_right)
 
         right_label = tk.Label(rightFrame, image=image_der, bg="black")
@@ -2718,7 +2747,7 @@ class Main:
 
         '''IMAGEN LEFT (CORTINA IZQ)'''
 
-        imagen_left = Image.open("src/media/theme/Courtain left.png")  
+        imagen_left = Image.open("src/media/Theme/Courtain left.png")  
         image_izq = ImageTk.PhotoImage(imagen_left)
 
         left_label = tk.Label(leftFrame, image=image_izq, bg="black")
@@ -2804,7 +2833,7 @@ class Main:
 
         '''IMAGEN BOTTOM (ASIENTOS)'''
         # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
-        imagen_bottom = Image.open("src/media/theme/bottom.png")  
+        imagen_bottom = Image.open("src/media/Theme/bottom.png")  
         image = ImageTk.PhotoImage(imagen_bottom)
 
         # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
@@ -2815,7 +2844,7 @@ class Main:
         bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
 
         '''IMAGEN RIGHT (CORTINA DER)'''
-        imagen_right = Image.open("src/media/theme/Courtain right.png")  
+        imagen_right = Image.open("src/media/Theme/Courtain right.png")  
         image_der = ImageTk.PhotoImage(imagen_right)
 
         right_label = tk.Label(rightFrame, image=image_der, bg="black")
@@ -2825,7 +2854,7 @@ class Main:
 
         '''IMAGEN LEFT (CORTINA IZQ)'''
 
-        imagen_left = Image.open("src/media/theme/Courtain left.png")  
+        imagen_left = Image.open("src/media/Theme/Courtain left.png")  
         image_izq = ImageTk.PhotoImage(imagen_left)
 
         left_label = tk.Label(leftFrame, image=image_izq, bg="black")
@@ -3031,7 +3060,7 @@ class Main:
 
         '''IMAGEN BOTTOM (ASIENTOS)'''
         # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
-        imagen_bottom = Image.open("src/media/theme/bottom.png")  
+        imagen_bottom = Image.open("src/media/Theme/bottom.png")  
         image = ImageTk.PhotoImage(imagen_bottom)
 
         # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
@@ -3042,7 +3071,7 @@ class Main:
         bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
 
         '''IMAGEN RIGHT (CORTINA DER)'''
-        imagen_right = Image.open("src/media/theme/Courtain right.png")  
+        imagen_right = Image.open("src/media/Theme/Courtain right.png")  
         image_der = ImageTk.PhotoImage(imagen_right)
 
         right_label = tk.Label(rightFrame, image=image_der, bg="black")
@@ -3052,7 +3081,7 @@ class Main:
 
         '''IMAGEN LEFT (CORTINA IZQ)'''
 
-        imagen_left = Image.open("src/media/theme/Courtain left.png")  
+        imagen_left = Image.open("src/media/Theme/Courtain left.png")  
         image_izq = ImageTk.PhotoImage(imagen_left)
 
         left_label = tk.Label(leftFrame, image=image_izq, bg="black")
@@ -3294,15 +3323,12 @@ class Main:
             
             horaInicio = fieldframe.values[1].get()
             horaFin = fieldframe.values[2].get()
-            
-            try:
-                horaInicio = datetime.strptime(horaInicio, "%H:%M").time()
-                horaFin = datetime.strptime(horaFin, "%H:%M").time()
-            except Exception:
-                messagebox.showerror("Error", "Los horarios deben estar en formato 24 horas")
-                return
 
-            fecha = datetime.strptime(fecha, "%Y-%m-%d").date()
+            try:
+                fecha, horaInicio, horaFin = Main.validar_formatos(fecha, horaInicio, horaFin)
+            except errorFormatoHorario:
+                messagebox.showerror("Error", errorFormatoHorario())
+                return
 
             fechaInicio = datetime.combine(fecha, horaInicio)
             fechaFin = datetime.combine(fecha, horaFin)
@@ -3620,7 +3646,7 @@ class Main:
 
         '''IMAGEN BOTTOM (ASIENTOS)'''
         # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
-        imagen_bottom = Image.open("src/media/theme/bottom.png")  
+        imagen_bottom = Image.open("src/media/Theme/bottom.png")  
         image = ImageTk.PhotoImage(imagen_bottom)
 
         # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
@@ -3631,7 +3657,7 @@ class Main:
         bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
 
         '''IMAGEN RIGHT (CORTINA DER)'''
-        imagen_right = Image.open("src/media/theme/Courtain right.png")  
+        imagen_right = Image.open("src/media/Theme/Courtain right.png")  
         image_der = ImageTk.PhotoImage(imagen_right)
 
         right_label = tk.Label(rightFrame, image=image_der, bg="black")
@@ -3641,7 +3667,7 @@ class Main:
 
         '''IMAGEN LEFT (CORTINA IZQ)'''
 
-        imagen_left = Image.open("src/media/theme/Courtain left.png")  
+        imagen_left = Image.open("src/media/Theme/Courtain left.png")  
         image_izq = ImageTk.PhotoImage(imagen_left)
 
         left_label = tk.Label(leftFrame, image=image_izq, bg="black")
