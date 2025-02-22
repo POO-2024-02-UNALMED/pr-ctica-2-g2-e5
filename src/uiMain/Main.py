@@ -4379,7 +4379,7 @@ class Main:
                 costoClase = 75000
             else:
                 costoClase = 90000
-            tk.Label(process_frame, text=f"El costo de la clase es: ${costoClase}",
+            tk.Label(process_frame, text=f"El costo de la clase es: {Main.toCop(costoClase)}",
                     font=("Calibri", 14), bg="#701C1A", fg="#FCE6C1").pack(pady=10)
             tk.Button(process_frame, text="Procesar Pago", font=("Calibri", 14),
                     bg="#701C1A", fg="#FCE6C1",
