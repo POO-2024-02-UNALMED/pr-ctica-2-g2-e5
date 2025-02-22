@@ -9,7 +9,7 @@ class Director(Artista):
         Teatro.getInstancia().getDirectors().append(self)
         Teatro.getInstancia().getArtistas().append(self)
         Director.directors.append(self)
-       # genero.anadirDirector(self) Comentado por razones de prueba
+        # genero.anadirDirector(self) Comentado por razones de prueba
     
     def str(self):
         return "Nombre: " + self.nombre + "\n" + "Identificación: " + self.id + "\n" + "Género: " + self.genero
