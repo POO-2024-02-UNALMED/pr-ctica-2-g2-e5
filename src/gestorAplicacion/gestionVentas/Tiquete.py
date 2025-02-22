@@ -32,7 +32,7 @@ class Tiquete:
             if not Tiquete.verificar(codigo):
                 return codigo
     def verificar(elemento):
-        for i in Tiquete.tiquetes:
+        for i in Teatro.getInstancia().getTiquetes():
             if i.getId==elemento:
                 return True
         return False

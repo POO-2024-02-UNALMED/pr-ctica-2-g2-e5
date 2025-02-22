@@ -525,6 +525,12 @@ class Main:
     def runApp(cls):
         """Método padre que inicializa todo el programa"""
         Teatro.deserializar()
+
+        if len(Teatro.getInstancia().getSalas())==0:
+            sala1 = Sala(numero_sala=1,metros_cuadrados= 100,capacidad= 24)
+            sala2 = Sala(numero_sala=2,metros_cuadrados= 200,capacidad= 32)
+            sala3 = Sala(numero_sala=3,metros_cuadrados= 50,capacidad= 16)
+            sala4 = Sala(numero_sala=4,metros_cuadrados= 150,capacidad= 24)
         
         if cls.reset:
             resetMemory()
