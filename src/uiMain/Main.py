@@ -2987,7 +2987,6 @@ class Main:
             if director == None:
                 for widget in process_frameO.winfo_children():
                     widget.destroy()
-                print("entre")
                 criteriosDir = ["Nombre", "ID", "Genero"]
                 valoresDir = ["", 0, genero]
                 fieldframedir = FieldFrame(process_frameO, 
