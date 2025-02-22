@@ -11,7 +11,7 @@ class Sala:
 
     def __init__(self, numero_sala: int, metros_cuadrados: float = 50.0, aseado: bool = True,
             ocupado: bool = False, capacidad: int = 100):
-        self.__sillas = self.create_sillas
+        self.__sillas = self.create_sillas(capacidad)
         self.__numero_sala = numero_sala
         self.__metros_cuadrados = metros_cuadrados
         self.__aseado = aseado

@@ -835,9 +835,12 @@ class Main:
         def continuar():
             
             try:
-                widget = cls.content.nametowidget("central") 
+                widget = cls.content.nametowidget("suscripcion") 
                 widget.destroy()
 
+                widget = cls.content.nametowidget("central") 
+                widget.destroy()
+                
             except KeyError:
                 None
             try:
@@ -1053,8 +1056,8 @@ class Main:
             frame_botones = tk.Frame((frame_central), bg="#701C1A")
             frame_botones.place(relx=0.1, rely=0.1, relwidth=0.80, relheight=0.60)
 
-            escenario = tk.Label(frame_botones, bg="slategray",text="ESCENARIO")
-            escenario.place(relx=0.35, rely=0.9, relwidth=0.30, relheight=0.20)
+            escenario = tk.Label(frame_central, bg="slategray",text="ESCENARIO")
+            escenario.place(relx=0.35, rely=0.8, relwidth=0.30, relheight=0.15)
 
             for funcion in Teatro.getInstancia().getFuncionesCreadas():
                 
