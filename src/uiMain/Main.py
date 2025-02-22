@@ -37,6 +37,8 @@ from gestorAplicacion.gestionVentas.Tiquete import Tiquete
 
 from gestorAplicacion.herramientas.FieldFrame import FieldFrame
 
+from excepciones.errorEntradaNula import errorEntradaNula
+from excepciones.errorEntradaNoNumerica import errorEntradaNoNumerica
 
 
 class Main:
@@ -64,6 +66,8 @@ class Main:
     @classmethod
     def update_font(cls, event, frame, text, tamano, reescalamiento, aplicar):
         """Actualiza el tamaño de la fuente del título al cambiar el tamaño de la ventana."""
+        if not text.winfo_exists():
+            return
         # new_size = max(tamano, event.width // reescalamiento)
         if aplicar:
             if event.height < 140 or event.width < 350:
@@ -853,7 +857,7 @@ class Main:
             for i in range(len(sillas)):
                 fila = i // 8  # Calcula en qué fila va
                 columna = i % 8  # Calcula en qué columna va
-                if sillas[i].getCodigo() == "----":
+                if sillas[i].getCodigo() == "ocupado":
                     btn = tk.Button(frame_botones, text=f"{sillas[i].getCodigo()}", state=tk.DISABLED,height=1)
                     btn.grid(row=fila, column=columna, padx=5, pady=5, sticky="nsew", ipady=2)  # Agregar `sticky="nsew"`
                 else:
@@ -978,25 +982,25 @@ class Main:
             def continuar():
                 cls.wait()
                 cls.clear_frame(f1)
-                frameSuperior = tk.Frame(f1, bg="#ffb48a")
-                frameSuperior.place(relx=0, rely=0, relwidth=1, relheight=0.9, anchor="nw")
-                frameInferior = tk.Frame(f1, bg="#ffb48a")
-                frameInferior.place(relx=0, rely=0.9, relheight= 0.1, relwidth=1, anchor="nw")
-                p1 = tk.Frame(frameSuperior, bg="#ffb48a")
+                frameSuperior = tk.Frame(f1, bg="#701C1A")
+                frameSuperior.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.85)
+                frameInferior = tk.Frame(f1, bg="#701C1A")
+                frameInferior.place(relx=0.02, rely=0.87, relheight= 0.1, relwidth=0.96)
+                p1 = tk.Frame(frameSuperior, bg="#701C1A")
                 p1.pack(side= "left", fill="both", expand= True, padx=5, pady=1)
-                p2 = tk.Frame(frameSuperior, bg="#ffb48a")
+                p2 = tk.Frame(frameSuperior, bg="#701C1A")
                 p2.pack(side= "left", fill="both", expand= True, padx=5, pady=1)
-                p3 = tk.Frame(frameSuperior, bg="#ffb48a")
+                p3 = tk.Frame(frameSuperior, bg="#701C1A")
                 p3.pack(side= "left", fill="both", expand= True, padx=5, pady=1)
                 
-                botonContinuar = tk.Button(frameInferior, text="Continuar", font=("Calibri", 14) ,bg= "#571F1C", fg="white")
+                botonContinuar = tk.Button(frameInferior, text="Continuar", font=("Calibri", 14) ,bg="#AE1918", fg="white")
                 botonContinuar.pack(fill="both", padx=10, pady=5)
                 botonContinuar.config(command=lambda: continuar2())
 
                 #Organizar tabla de empleados
                 #Estilo tablas
                 #Seguridad
-                seguridad = tk.Label(p1, text="Seguridad", font=("Calibri", 18), bg="#ffb48a")
+                seguridad = tk.Label(p1, text="Seguridad", font=("Calibri", 18), bg="#701C1A", fg="white")
                 seguridad.pack()
                 cls.resize(p1, seguridad,10, 20,False)
                 #Tabla Seguridad
@@ -1006,127 +1010,127 @@ class Main:
                 #Encabezados
                 encabezados = ["Nombre", "IDs"]
                 for col, texto in enumerate(encabezados):
-                    encabezado = tk.Label(frame_tabla, text=texto, font=("Calibri", 14, "bold"), bg="#d3d3d3", padx=10, pady=5)
+                    encabezado = tk.Label(frame_tabla, text=texto, font=("Calibri", 12), bg="#d3d3d3", padx=10, pady=1)
                     encabezado.grid(row=0, column=col, sticky="ew")
                 
                 #Fila de datos
                 for fila, emp in enumerate(Teatro.getInstancia().getTipoSeguridad(), start=1):
-                    nombre = tk.Label(frame_tabla, text=emp.getNombre(), padx=10, pady=5 )
+                    nombre = tk.Label(frame_tabla, text=emp.getNombre(), padx=10, pady=1 )
                     nombre.grid(row=fila, column=0, sticky="ew")
 
-                    id = tk.Label(frame_tabla, text=emp.getId(), padx=10, pady=5)
+                    id = tk.Label(frame_tabla, text=emp.getId(), padx=10, pady=1)
                     id.grid(row=fila, column=1, sticky="ew")
                 
                 #Ajustar columnas
                 for col in range(2):
                     frame_tabla.grid_columnconfigure(col, weight=1)
-                # datos = [
-                #     ("Juan", 25),
-                #     ("Ana", 30),
-                #     ("Luis", 22)
-                # ]
-                # tablaS = ttk.Treeview(p1, columns=("Nombre", "IDs"), show="headings", style= "Treeview")
-                # tablaS.heading("Nombre", text="Nombre")
-                # tablaS.heading("IDs", text="IDs")
-                # tablaS.column("Nombre", width=100, anchor="center")
-                # tablaS.column("IDs", width=50, anchor="center")
-                # #Agregar los empleados
-                # #caso prueba
-                # # for emp in datos:
-                # #     tablaS.insert("", "end", values = emp)
-                # for emp in Teatro.getInstancia().getTipoSeguridad():
-                #     tablaS.insert("", "end", values=(emp.getNombre(), emp.getId()))
-                # tablaS.pack(expand=True, fill="both", padx=10, pady=5)
-
+                
                 #Aseador
-                Aseador = tk.Label(p2, text="Aseador", font=("Calibri", 18), bg="#ffb48a")
+                Aseador = tk.Label(p2, text="Aseador", font=("Calibri", 18), bg="#701C1A", fg="white")
                 Aseador.pack()
                 cls.resize(p2, Aseador,10, 20,False)
 
                 #Tabla Aseador
-                tablaA = ttk.Treeview(p2, columns=("Nombre", "IDs"), show="headings", style= "Treeview")
-                tablaA.heading("Nombre", text="Nombre")
-                tablaA.heading("IDs", text="IDs")
-                tablaA.column("Nombre", width=100, anchor="center")
-                tablaA.column("IDs", width=50, anchor="center")
-                #Agregar los empleados
-                #caso prueba
-                # for emp in datos:
-                    # tablaA.insert("", "end", values = emp)
-                for emp in Teatro.getInstancia().getTipoAseador():
-                    tablaA.insert("", "end", values=(emp.getNombre(), emp.getId()))
-                tablaA.pack(expand=True, fill="both", padx=10, pady=5)
+                frame_tabla = tk.Frame(p2)
+                frame_tabla.pack(expand=True, fill="both", padx=10, pady=5)
+
+                #Encabezados
+                encabezados = ["Nombre", "IDs"]
+                for col, texto in enumerate(encabezados):
+                    encabezado = tk.Label(frame_tabla, text=texto, font=("Calibri", 12,), bg="#d3d3d3", padx=10, pady=1)
+                    encabezado.grid(row=0, column=col, sticky="ew")
+                
+                #Fila de datos
+                for fila, emp in enumerate(Teatro.getInstancia().getTipoAseador(), start=1):
+                    nombre = tk.Label(frame_tabla, text=emp.getNombre(), padx=10, pady=1 )
+                    nombre.grid(row=fila, column=0, sticky="ew")
+
+                    id = tk.Label(frame_tabla, text=emp.getId(), padx=10, pady=1)
+                    id.grid(row=fila, column=1, sticky="ew")
+                
+                #Ajustar columnas
+                for col in range(2):
+                    frame_tabla.grid_columnconfigure(col, weight=1)
 
                 #Profesor
-                Profesor = tk.Label(p3, text="Profesor", font=("Calibri", 18), bg="#ffb48a")
+                Profesor = tk.Label(p3, text="Profesor", font=("Calibri", 18), bg="#701C1A", fg="white")
                 Profesor.pack()
                 cls.resize(p3, Profesor,10, 20,False)
 
                 #Tabla Profesor
-                tablaP = ttk.Treeview(p3, columns=("Nombre", "IDs"), show="headings", style= "Treeview")
-                tablaP.heading("Nombre", text="Nombre")
-                tablaP.heading("IDs", text="IDs")
-                tablaP.column("Nombre", width=100, anchor="center")
-                tablaP.column("IDs", width=50, anchor="center")
-                #Agregar los empleados
-                #caso prueba
-                # for emp in datos:
-                    # tablaP.insert("", "end", values = emp)
-                for emp in Teatro.getInstancia().getTipoProfesor():
-                    tablaP.insert("", "end", values=(emp.getNombre(), emp.getId()))
-                tablaP.pack(expand=True, fill="both", padx=10, pady=5)
+                frame_tabla = tk.Frame(p3)
+                frame_tabla.pack(expand=True, fill="both", padx=10, pady=5)
+
+                #Encabezados
+                encabezados = ["Nombre", "IDs"]
+                for col, texto in enumerate(encabezados):
+                    encabezado = tk.Label(frame_tabla, text=texto, font=("Calibri", 12), bg="#d3d3d3", padx=10, pady=1)
+                    encabezado.grid(row=0, column=col, sticky="ew")
+                
+                #Fila de datos
+                for fila, emp in enumerate(Teatro.getInstancia().getTipoProfesor(), start=1):
+                    nombre = tk.Label(frame_tabla, text=emp.getNombre(), padx=10, pady=1 )
+                    nombre.grid(row=fila, column=0, sticky="ew")
+
+                    id = tk.Label(frame_tabla, text=emp.getId(), padx=10, pady=1)
+                    id.grid(row=fila, column=1, sticky="ew")
+                
+                #Ajustar columnas
+                for col in range(2):
+                    frame_tabla.grid_columnconfigure(col, weight=1)
 
                 #Botones de acciones para cada tipo de empleado
                 #Seguridad
-                p12 = tk.Frame(p1, bg="#ffb48a")
+                p12 = tk.Frame(p1, bg="#701C1A")
                 p12.pack(side="bottom", fill="both", pady = 5, padx=5)
-                contratarS = tk.Button(p12, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 12), fg="White")
+                contratarS = tk.Button(p12, bg= "#AE1918" ,text = "Contratar", font = ("calibri", 12), fg="White")
                 contratarS.pack(side="left", expand=True, fill="x", pady= 5, padx=10, anchor="center")
-                despedirS = tk.Button(p12, bg="#571F1C", text="Despedir", font=("calibri", 12), fg = "white")
+                despedirS = tk.Button(p12, bg="#AE1918", text="Despedir", font=("calibri", 12), fg = "white")
                 despedirS.pack(side="left", expand= True, fill= "x", pady=5, padx=10, anchor="center")
 
                 #Aseador
-                p22 = tk.Frame(p2, bg="#ffb48a")
+                p22 = tk.Frame(p2, bg="#701C1A")
                 p22.pack(side="bottom", fill="both", pady = 5, padx=5)
-                contratarA = tk.Button(p22, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 12), fg="White")
+                contratarA = tk.Button(p22, bg= "#AE1918" ,text = "Contratar", font = ("calibri", 12), fg="White")
                 contratarA.pack(side="left", expand=True, fill="x", pady= 5, padx=10, anchor="center")
-                despedirA = tk.Button(p22, bg="#571F1C", text="Despedir", font=("calibri", 12), fg = "white")
+                despedirA = tk.Button(p22, bg="#AE1918", text="Despedir", font=("calibri", 12), fg = "white")
                 despedirA.pack(side="left", expand= True, fill= "x", pady=5, padx=10, anchor="center")
 
                 #Profesor
-                p32 = tk.Frame(p3, bg="#ffb48a")
+                p32 = tk.Frame(p3, bg="#701C1A")
                 p32.pack(side="bottom", fill="both", pady = 5, padx=5)
-                contratarP = tk.Button(p32, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 12), fg="White")
+                contratarP = tk.Button(p32, bg= "#AE1918" ,text = "Contratar", font = ("calibri", 12), fg="White")
                 contratarP.pack(side="left", expand=True, fill="x", pady= 5, padx=10, anchor="center")
-                despedirP = tk.Button(p32, bg="#571F1C", text="Despedir", font=("calibri", 12), fg = "white")
+                despedirP = tk.Button(p32, bg="#AE1918", text="Despedir", font=("calibri", 12), fg = "white")
                 despedirP.pack(side="left", expand= True, fill= "x", pady=5, padx=10, anchor="center")
 
 
                 #Modificar para los empleados de la lista
-                def despedirEmpleado(listaOcupacion):
+                def despedirEmpleado(tipo, listaOcupacion):
                     cls.clear_frame(f1)
-                    seguridad = tk.Label(f1, text="Seguridad", font=("Calibri", 18), bg="#ffb48a")
-                    seguridad.pack()
-                    frame_tabla = tk.Frame(f1)
-                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=5)
+                    p = tk.Frame(f1, bg="#701C1A")
+                    p.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.9, relheight=0.9)
+                    Empleado = tk.Label(p, text=tipo, font=("Calibri", 18), bg="#701C1A", fg="white")
+                    Empleado.pack()
+                    frame_tabla = tk.Frame(p)
+                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=10)
                     
-
                     #Encabezados
                     encabezados = ["Nombre", "IDs", "Despedir"]
                     for col, texto in enumerate(encabezados):
-                        encabezado = tk.Label(frame_tabla, text=texto, font=("Calibri", 14, "bold"), bg="#d3d3d3", padx=10, pady=5)
+                        encabezado = tk.Label(frame_tabla, text=texto, font=("Calibri", 12), bg="#d3d3d3", padx=10, pady=1)
                         encabezado.grid(row=0, column=col, sticky="ew")
                 
                     #Fila de datos
                     for fila, emp in enumerate(listaOcupacion, start=1):
-                        nombre = tk.Label(frame_tabla, text=emp.getNombre(), padx=10, pady=5 )
+                        nombre = tk.Label(frame_tabla, text=emp.getNombre(), padx=10, pady=1 )
                         nombre.grid(row=fila, column=0, sticky="ew")
 
-                        id = tk.Label(frame_tabla, text=emp.getId(), padx=10, pady=5)
+                        id = tk.Label(frame_tabla, text=emp.getId(), padx=10, pady=1)
                         id.grid(row=fila, column=1, sticky="ew")
 
                         despedir = tk.Button(frame_tabla, text="Despedir", command= lambda i = emp.getId(): Despedir(listaOcupacion, i))
-                        despedir.grid(row=fila, column=2, padx= 10, pady=5)
+                        despedir.grid(row=fila, column=2, padx= 10, pady=1)
                     
                     #Ajustar columnas
                     for col in range(2):
@@ -1146,38 +1150,18 @@ class Main:
                                 cls.ventanaDialogo(mensaje, continuar())
                                 break
                     
-                        
-                #     selected_item = tabla.selection()  # Obtiene la fila seleccionada
-                #     if selected_item:
-                #         valores = tabla.item(selected_item, "values")
-                #         id = valores[1]
-                #         for emp in listaOcupacion:
-                #             if emp.getId() == id:
-                #                 listaOcupacion.remove(emp)
-                #                 break
-                #         for emp in Teatro.getInstancia().getEmpleadosPorRendimiento():
-                #             if emp.getId() == id:
-                #                 Teatro.getInstancia().getEmpleadosPorRendimiento().remove(emp)
-                #                 liquidacion = (emp.calcularSueldo()*1.2) + emp.getDeuda()
-                #                 Teatro.getInstancia().getTesoreria().getCuenta().transferencia(emp.getCuenta(), liquidacion)
-                #                 mensaje = "Se despidio a " + emp.getNombre() + " y se le pago su respectiva liquidacion"
-                #                 cls.ventanaDialogo(mensaje)
-                #                 break
-                #         tabla.delete(selected_item)
-
-                # # Modificar cada botón de "Despedir"
-                despedirS.config(command=lambda: despedirEmpleado(Teatro.getInstancia().getTipoSeguridad()))
-                despedirA.config(command=lambda: despedirEmpleado(Teatro.getInstancia().getTipoAseador()))
-                despedirP.config(command=lambda: despedirEmpleado(Teatro.getInstancia().getTipoProfesor()))
+                despedirS.config(command=lambda: despedirEmpleado("Seguridad",Teatro.getInstancia().getTipoSeguridad()))
+                despedirA.config(command=lambda: despedirEmpleado("Aseador",Teatro.getInstancia().getTipoAseador()))
+                despedirP.config(command=lambda: despedirEmpleado("Profesor",Teatro.getInstancia().getTipoProfesor()))
 
                 def contratarSeguridad():
                     cls.clear_frame(f1)
-                    seguridad = tk.Label(f1, text="Candidatos a Seguridad", font=("Calibri", 18), bg="#ffb48a")
-                    seguridad.pack(pady=5)
-                    # cls.resize(f1, seguridad,18, 40,False)
-                    #Tabla Seguridad
+                    p = tk.Frame(f1, bg="#701C1A")
+                    p.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.9, relheight=0.9)
+                    seguridad = tk.Label(p, text="Candidatos a Seguridad", font=("Calibri", 18), bg="#701C1A", fg="white")
+                    seguridad.pack(pady=5) 
+
                     candidatos = []
-                    idS = []
 
                     n = 0
                     while n<10:
@@ -1185,36 +1169,41 @@ class Main:
                         apellido = random.choice(APELLIDOS)
                         id = random.randint(100, 1000000)
                         Nombre = f"{nombre} {apellido}"
-                        candidatos.append(Nombre)
-                        idS.append(id)
+                        candidatos.append((Nombre, id))
                         n+=1
                     
-                    tabla = ttk.Treeview(f1, columns=("Nombre", "IDs"), show="headings", style= "Treeview")
-                    tabla.heading("Nombre", text="Nombre")
-                    tabla.heading("IDs", text="IDs")
-                    tabla.column("Nombre", width=100, anchor="center")
-                    tabla.column("IDs", width=50, anchor="center")
-                    #Agregar los empleados
-                    #caso prueba
-                    for j in range(0, len(candidatos)):
-                        tabla.insert("", "end", values=(candidatos[j], idS[j]))
-                    tabla.pack(expand=True, fill="both", padx=30, pady=10)
+                    frame_tabla = tk.Frame(p)
+                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=10)
+                    
+                    #Encabezados
+                    encabezados = ["Nombre", "IDs", "Contratar"]
+                    for col, texto in enumerate(encabezados):
+                        encabezado = tk.Label(frame_tabla, text=texto, font=("Calibri", 12), bg="#d3d3d3", padx=10, pady=1)
+                        encabezado.grid(row=0, column=col, sticky="ew")
+                
+                    #Fila de datos
+                    for fila, (nombre, id) in enumerate(candidatos, start=1):
+                        Nombre = tk.Label(frame_tabla, text=nombre, padx=10, pady=1 )
+                        Nombre.grid(row=fila, column=0, sticky="ew")
 
-                    p1 = tk.Frame(f1, bg="#ffb48a")
-                    p1.pack(side="bottom", fill="both", pady = 5, padx=5)
-                    contratar = tk.Button(p1, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 14), fg="White")
-                    contratar.pack(side="left", expand=True, fill="x", pady= 10, padx=25, anchor="center")
+                        ID = tk.Label(frame_tabla, text=id, padx=10, pady=1)
+                        ID.grid(row=fila, column=1, sticky="ew")
 
-                    contratar.config(command=lambda: contrato(tabla, "Seguridad"))
+                        contratar = tk.Button(frame_tabla, text="Contratar", command= lambda n=nombre, i=id: contrato(n, i, "Seguridad"))
+                        contratar.grid(row=fila, column=2, padx= 10, pady=1)
+                    
+                    #Ajustar columnas
+                    for col in range(2):
+                        frame_tabla.grid_columnconfigure(col, weight=1)
 
                 def contratarAseador():
                     cls.clear_frame(f1)
-                    Aseador = tk.Label(f1, text="Candidatos a Aseador", font=("Calibri", 18), bg="#ffb48a")
+                    p = tk.Frame(f1, bg="#701C1A")
+                    p.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.9, relheight=0.9)
+                    Aseador = tk.Label(p, text="Candidatos a Aseador", font=("Calibri", 18),  bg="#701C1A", fg="white")
                     Aseador.pack(pady=5)
-                    # cls.resize(f1, Aseador,10, 45,False)
-                    #Tabla Seguridad
+                    
                     candidatos = []
-                    idS = []
 
                     n = 0
                     while n<10:
@@ -1222,36 +1211,41 @@ class Main:
                         apellido = random.choice(APELLIDOS)
                         id = random.randint(100, 1000000)
                         Nombre = f"{nombre} {apellido}"
-                        candidatos.append(Nombre)
-                        idS.append(id)
+                        candidatos.append((Nombre, id))
                         n+=1
                     
-                    tabla = ttk.Treeview(f1, columns=("Nombre", "IDs"), show="headings", style= "Treeview")
-                    tabla.heading("Nombre", text="Nombre")
-                    tabla.heading("IDs", text="IDs")
-                    tabla.column("Nombre", width=100, anchor="center")
-                    tabla.column("IDs", width=50, anchor="center")
-                    #Agregar los empleados
-                    #caso prueba
-                    for j in range(0, len(candidatos)):
-                        tabla.insert("", "end", values=(candidatos[j], idS[j]))
-                    tabla.pack(expand=True, fill="both", padx=30, pady=10)
+                    frame_tabla = tk.Frame(p)
+                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=10)
+                    
+                    #Encabezados
+                    encabezados = ["Nombre", "IDs", "Contratar"]
+                    for col, texto in enumerate(encabezados):
+                        encabezado = tk.Label(frame_tabla, text=texto, font=("Calibri", 12), bg="#d3d3d3", padx=10, pady=1)
+                        encabezado.grid(row=0, column=col, sticky="ew")
+                
+                    #Fila de datos
+                    for fila, (nombre, id) in enumerate(candidatos, start=1):
+                        Nombre = tk.Label(frame_tabla, text=nombre, padx=10, pady=1 )
+                        Nombre.grid(row=fila, column=0, sticky="ew")
 
-                    p1 = tk.Frame(f1, bg="#ffb48a")
-                    p1.pack(side="bottom", fill="both", pady = 5, padx=5)
-                    contratar = tk.Button(p1, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 14), fg="White")
-                    contratar.pack(side="left", expand=True, fill="x", pady= 10, padx=25, anchor="center")
+                        ID = tk.Label(frame_tabla, text=id, padx=10, pady=1)
+                        ID.grid(row=fila, column=1, sticky="ew")
 
-                    contratar.config(command=lambda: contrato(tabla, "Aseador"))
+                        contratar = tk.Button(frame_tabla, text="Contratar", command= lambda n=nombre, i=id: contrato(n, i, "Aseador"))
+                        contratar.grid(row=fila, column=2, padx= 10, pady=1)
+                    
+                    #Ajustar columnas
+                    for col in range(2):
+                        frame_tabla.grid_columnconfigure(col, weight=1)
 
                 def contratarProfesor():
                     cls.clear_frame(f1)
-                    Profesor = tk.Label(f1, text="candidatos a Profesor", font=("Calibri", 18), bg="#ffb48a")
+                    p = tk.Frame(f1, bg="#701C1A")
+                    p.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.9, relheight=0.9)
+                    Profesor = tk.Label(p, text="candidatos a Profesor", font=("Calibri", 18),  bg="#701C1A", fg="white")
                     Profesor.pack(pady=5)
-                    # cls.resize(f1, Profesor,10, 45,False)
-                    #Tabla Profesor
+                    
                     candidatos = []
-                    idS = []
 
                     n = 0
                     while n<10:
@@ -1259,88 +1253,90 @@ class Main:
                         apellido = random.choice(APELLIDOS)
                         id = random.randint(100, 1000000)
                         Nombre = f"{nombre} {apellido}"
-                        candidatos.append(Nombre)
-                        idS.append(id)
+                        candidatos.append((Nombre, id))
                         n+=1
                     
-                    tabla = ttk.Treeview(f1, columns=("Nombre", "IDs"), show="headings", style= "Treeview")
-                    tabla.heading("Nombre", text="Nombre")
-                    tabla.heading("IDs", text="IDs")
-                    tabla.column("Nombre", width=100, anchor="center")
-                    tabla.column("IDs", width=50, anchor="center")
-                    #Agregar los empleados
-                    #caso prueba
-                    for j in range(0, len(candidatos)):
-                        tabla.insert("", "end", values=(candidatos[j], idS[j]))
+                    frame_tabla = tk.Frame(p)
+                    frame_tabla.pack(expand=True, fill="both", padx=10, pady=10)
+                    
+                    #Encabezados
+                    encabezados = ["Nombre", "IDs", "Contratar"]
+                    for col, texto in enumerate(encabezados):
+                        encabezado = tk.Label(frame_tabla, text=texto, font=("Calibri", 12), bg="#d3d3d3", padx=10, pady=1)
+                        encabezado.grid(row=0, column=col, sticky="ew")
+                
+                    #Fila de datos
+                    for fila, (nombre, id) in enumerate(candidatos, start=1):
+                        Nombre = tk.Label(frame_tabla, text=nombre, padx=10, pady=1 )
+                        Nombre.grid(row=fila, column=0, sticky="ew")
 
-                    tabla.pack(expand=True, fill="both", padx=30, pady=10)
+                        ID = tk.Label(frame_tabla, text=id, padx=10, pady=1)
+                        ID.grid(row=fila, column=1, sticky="ew")
 
-                    p1 = tk.Frame(f1, bg="#ffb48a")
-                    p1.pack(side="bottom", fill="both", pady = 5, padx=5)
-                    contratar = tk.Button(p1, bg= "#571F1C" ,text = "Contratar", font = ("calibri", 14), fg="White")
-                    contratar.pack(side="left", expand=True, fill="x", pady= 10, padx=25, anchor="center")
-
-                    contratar.config(command=lambda: contrato(tabla, "Profesor"))
+                        contratar = tk.Button(frame_tabla, text="Contratar", command= lambda n=nombre, i=id: contrato(n, i, "Profesor"))
+                        contratar.grid(row=fila, column=2, padx= 10, pady=1)
+                    
+                    #Ajustar columnas
+                    for col in range(2):
+                        frame_tabla.grid_columnconfigure(col, weight=1)
                 
                 contratarS.config(command=lambda: contratarSeguridad())
                 contratarA.config(command=lambda: contratarAseador())
                 contratarP.config(command=lambda: contratarProfesor())
 
-            def contrato(tabla, ocupacion):
-                selected = tabla.selection()
-                #Exepcion de no seleccionar la casilla
-                if selected:
-                    valores = tabla.item(selected, "values")
-                    if ocupacion != "Seguridad":
-                        if ocupacion != "Aseador":
-                            newprofesor = Profesor(valores[0], valores[1])
-                            profesores = Teatro.getInstancia().getTipoProfesor()
-                            profesores.append(newprofesor)
-                            Teatro.getInstancia().setTipoProfesor(profesores)
-                            general = Teatro.getInstancia().getEmpleadosPorRendimiento()
-                            general.append(newprofesor)
-                            Teatro.getInstancia().setEmpleadosPorRendimiento(general)
-                        else:
-                            newAseador = Empleado(valores[0], valores[1], "Aseador")
-                            Aseadores = Teatro.getInstancia().getTipoAseador()
-                            Aseadores.append(newAseador)
-                            Teatro.getInstancia().setTipoAseador(Aseadores)
-                            general = Teatro.getInstancia().getEmpleadosPorRendimiento()
-                            general.append(newAseador)
-                            Teatro.getInstancia().setEmpleadosPorRendimiento(general)
-                    else:
-                        newSeguridad = Empleado(valores[0], valores[1], "Seguridad")
-                        seguridad = Teatro.getInstancia().getTipoSeguridad()
-                        seguridad.append(newSeguridad)
-                        Teatro.getInstancia().setTipoSeguridad(seguridad)
+            def contrato(nombre, id, ocupacion):
+                if ocupacion != "Seguridad":
+                    if ocupacion != "Aseador":
+                        newprofesor = Profesor(nombre, id)
+                        profesores = Teatro.getInstancia().getTipoProfesor()
+                        profesores.append(newprofesor)
+                        Teatro.getInstancia().setTipoProfesor(profesores)
                         general = Teatro.getInstancia().getEmpleadosPorRendimiento()
-                        general.append(newSeguridad)
+                        general.append(newprofesor)
                         Teatro.getInstancia().setEmpleadosPorRendimiento(general)
+                    else:
+                        newAseador = Empleado(nombre, id, "Aseador")
+                        Aseadores = Teatro.getInstancia().getTipoAseador()
+                        Aseadores.append(newAseador)
+                        Teatro.getInstancia().setTipoAseador(Aseadores)
+                        general = Teatro.getInstancia().getEmpleadosPorRendimiento()
+                        general.append(newAseador)
+                        Teatro.getInstancia().setEmpleadosPorRendimiento(general)
+                else:
+                    newSeguridad = Empleado(nombre, id, "Seguridad")
+                    seguridad = Teatro.getInstancia().getTipoSeguridad()
+                    seguridad.append(newSeguridad)
+                    Teatro.getInstancia().setTipoSeguridad(seguridad)
+                    general = Teatro.getInstancia().getEmpleadosPorRendimiento()
+                    general.append(newSeguridad)
+                    Teatro.getInstancia().setEmpleadosPorRendimiento(general)
                     
-                    cls.ventanaDialogo("se contrato a:" + valores[0], continuar())
+                cls.ventanaDialogo("se contrato a:" + nombre, continuar())
 
             def continuar2():
                 cls.clear_frame(f1)
+                p = tk.Frame(f1, bg="#701C1A")
+                p.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.9, relheight=0.9)
                 #Tres frames
                 # 1 Asignando Trabajadores
-                infoTrabajadores = tk.Frame(f1, bg="#ffb48a")
+                infoTrabajadores = tk.Frame(p, bg="#701C1A")
                 infoTrabajadores.place(relx=0, rely=0, relwidth=1, relheight=0.1, anchor="nw")
-                info = tk.Label(infoTrabajadores, text="Asignando Trabajos, por favor espere...", font=("Calibri", 14), bg="#ffb48a")
+                info = tk.Label(infoTrabajadores, text="Asignando Trabajos, por favor espere...", font=("Calibri", 14), bg="#701C1A", fg="white")
                 info.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
                 # 2 informacion de los de seguridad
-                infoSeguridad = tk.Frame(f1, bg="#ffb48a")
+                infoSeguridad = tk.Frame(p, bg="#701C1A")
                 infoSeguridad.place(relx = 0, rely=0.1, relwidth=1, relheight=0.45, anchor="nw")
-                info2 = tk.Frame(infoSeguridad, bg="#5d2417")
+                info2 = tk.Frame(infoSeguridad, bg = "#4B2D2E")
                 info2.place(relx=0, rely=0, relwidth=1, relheight=0.15)
-                infoS = tk.Label(info2, text="Asignacion para Seguridad", font=("Calibri", 12), bg="#5d2417", fg="white")
+                infoS = tk.Label(info2, text="Asignacion para Seguridad", font=("Calibri", 12), bg = "#4B2D2E", fg="white")
                 infoS.place(relx=0.5, rely=0.5, anchor="center")
 
                 # 3 informacion de los Aseadores
-                infoAseador = tk.Frame(f1, bg="#ffb48a")
+                infoAseador = tk.Frame(p, bg="#701C1A")
                 infoAseador.place(relx=0, rely=0.55, relwidth=1, relheight=0.45, anchor="nw")
-                info3 = tk.Frame(infoAseador, bg="#5d2417")
+                info3 = tk.Frame(infoAseador, bg = "#4B2D2E")
                 info3.place(relx=0, rely=0, relwidth=1, relheight=0.15)
-                infoA = tk.Label(info3, text="Asignacion para Aseador", font=("Calibri", 12), bg="#5d2417", fg="white")
+                infoA = tk.Label(info3, text="Asignacion para Aseador", font=("Calibri", 12), bg = "#4B2D2E", fg="white")
                 infoA.place(relx=0.5, rely=0.5, anchor="center")
 
                 #ordenar listas
@@ -1435,12 +1431,12 @@ class Main:
                             if funcionesSinHorario == 1:
                                 horarios = tk.Frame(infoSeguridad, bg="red")
                                 horarios.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-                                horarioLabel = tk.Label(horarios, text="Hay una funcion sin horarios", font=("Calibri", 12), bg="red")
+                                horarioLabel = tk.Label(horarios, text="Hay una funcion sin horarios", font=("Calibri", 12), bg="red", fg="white")
                                 horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
                             elif funcionesSinHorario > 1:
                                 horarios = tk.Frame(infoSeguridad, bg="red")
                                 horarios.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-                                horarioLabel = tk.Label(horarios, text="Hay " + str(funcionesSinHorario) + " Funciones sin horarios", font=("Calibri", 12), bg="red")
+                                horarioLabel = tk.Label(horarios, text="Hay " + str(funcionesSinHorario) + " Funciones sin horarios", font=("Calibri", 12), bg="red", fg="white")
                                 horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
 
                             #Evaluacion de Salas sin trabajador
@@ -1501,7 +1497,7 @@ class Main:
                                     msg = msg + Persona.getNombre() + " Cuidará: 1 Funcion\n"
                                 elif len(Persona.getHorario()) > 1 or len(Persona.getHorario()) == 0:
                                     msg = msg + Persona.getNombre() + " Cuidará: " + str(len(Persona.getHorario())) + " Funciones\n"
-                            mensaje = tk.Label(infoSeguridad, text=msg, font=("Calibri", 12), bg="#ffb48a")
+                            mensaje = tk.Label(infoSeguridad, text=msg, font=("Calibri", 12), bg="#701C1A", fg="white")
                             mensaje.place(relx = 0.5, rely=0.5, relwidth= 0.8,relheight=0.7, anchor="center")
                         #No todos son principiantes
                         else:
@@ -1571,12 +1567,12 @@ class Main:
                             if funcionesSinHorario == 1:
                                 horarios = tk.Frame(infoSeguridad, bg="red")
                                 horarios.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-                                horarioLabel = tk.Label(horarios, text="Hay una funcion sin horarios", font=("Calibri", 12), bg="red")
+                                horarioLabel = tk.Label(horarios, text="Hay una funcion sin horarios", font=("Calibri", 12), bg="red", fg="white")
                                 horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
                             elif funcionesSinHorario > 1:
                                 horarios = tk.Frame(infoSeguridad, bg="red")
                                 horarios.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-                                horarioLabel = tk.Label(horarios, text="Hay " + str(funcionesSinHorario) + " Funciones sin horarios", font=("Calibri", 12), bg="red")
+                                horarioLabel = tk.Label(horarios, text="Hay " + str(funcionesSinHorario) + " Funciones sin horarios", font=("Calibri", 12), bg="red", fg="white")
                                 horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
                         
                             #Evaluacion de salas sin trabajador
@@ -1638,19 +1634,19 @@ class Main:
                                     msg = msg + Persona.getNombre() + " Cuidará: 1 Funcion\n"
                                 elif len(Persona.getHorario()) > 1 or len(Persona.getHorario()) == 0:
                                     msg = msg + Persona.getNombre() + " Cuidará: " + str(len(Persona.getHorario())) + " Funciones\n"
-                            mensaje = tk.Label(infoSeguridad, text=msg, font=("Calibri", 12), bg="#ffb48a")
+                            mensaje = tk.Label(infoSeguridad, text=msg, font=("Calibri", 12), bg="#701C1A", fg="white")
                             mensaje.place(relx = 0.5, rely=0.5, relwidth= 0.8,relheight=0.7, anchor="center")
                     else:
                         if totalFunciones == 0:
-                            alerta = tk.Frame(infoSeguridad, bg="#ffb48a", bd=2, relief="groove")
+                            alerta = tk.Frame(infoSeguridad, bg="#701C1A", bd=2, relief="groove")
                             alerta.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.5, relheight=0.5)
-                            mensaje = tk.Label(alerta ,text="No hay funciones para agregar", font=("Calibri", 18), bg="#ffb48a")
+                            mensaje = tk.Label(alerta ,text="No hay funciones para agregar", font=("Calibri", 18), bg="#701C1A", fg="white")
                             mensaje.place(relx=0.5, rely=0.5, anchor="center")
                             trabajoAsignadoS = False
                         else:
-                            alerta = tk.Frame(infoSeguridad, bg="#ffb48a", bd=2, relief="groove")
+                            alerta = tk.Frame(infoSeguridad, bg="#701C1A", bd=2, relief="groove")
                             alerta.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.5, relheight=0.5)
-                            mensaje = tk.Label(alerta, text = "No hay trabajadores de Seguridad", font=("Calibri", 18), bg="#ffb48a")
+                            mensaje = tk.Label(alerta, text = "No hay trabajadores de Seguridad", font=("Calibri", 18), bg="#701C1A", fg="white")
                             mensaje.place(relx=0.5, rely=0.5, anchor="center")
                             trabajoAsignadoS = False
                     if len(funcionesDisponibles) != 0:
@@ -1764,12 +1760,12 @@ class Main:
                             if funcionesSinHorario == 1:
                                 horarios = tk.Frame(infoAseador, bg="red")
                                 horarios.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-                                horarioLabel = tk.Label(horarios, text="Hay una funcion sin horarios", font=("Calibri", 12))
+                                horarioLabel = tk.Label(horarios, text="Hay una funcion sin horarios", font=("Calibri", 12), bg="red", fg="white")
                                 horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
                             elif funcionesSinHorario > 1:
                                 horarios = tk.Frame(infoAseador, bg="red")
                                 horarios.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-                                horarioLabel = tk.Label(horarios, text="Hay " + str(funcionesSinHorario) + " Funciones sin horarios", font=("Calibri", 12))
+                                horarioLabel = tk.Label(horarios, text="Hay " + str(funcionesSinHorario) + " Funciones sin horarios", font=("Calibri", 12), bg="red", fg="white")
                                 horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
 
                             if len(funcionesLimpiadas) != 0:
@@ -1826,7 +1822,7 @@ class Main:
                                     msg = msg + Persona.getNombre() + " Limpiará: 1 vez\n"
                                 else:
                                     msg = msg + Persona.getNombre() + " Limpiará: " + str(len(Persona.getHorario())) + " veces\n"
-                            mensaje = tk.Label(infoAseador, text=msg, font=("Calibri", 12), bg="#ffb48a")
+                            mensaje = tk.Label(infoAseador, text=msg, font=("Calibri", 12), bg="#701C1A", fg="white")
                             mensaje.place(relx = 0.5, rely=0.5, relwidth= 0.8,relheight=0.7, anchor="center")
                         else:
                             funcionesPorMetros = list(Teatro.getInstancia().getFuncionesCreadas())
@@ -1913,12 +1909,12 @@ class Main:
                             if funcionesSinHorario == 1:
                                 horarios = tk.Frame(infoAseador, bg="red")
                                 horarios.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-                                horarioLabel = tk.Label(horarios, text="Hay una funcion sin horarios", font=("Calibri", 12))
+                                horarioLabel = tk.Label(horarios, text="Hay una funcion sin horarios", font=("Calibri", 12), bg="red", fg="white")
                                 horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
                             elif funcionesSinHorario > 1:
                                 horarios = tk.Frame(infoAseador, bg="red")
                                 horarios.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-                                horarioLabel = tk.Label(horarios, text="Hay " + str(funcionesSinHorario) + " Funciones sin horarios", font=("Calibri", 12))
+                                horarioLabel = tk.Label(horarios, text="Hay " + str(funcionesSinHorario) + " Funciones sin horarios", font=("Calibri", 12), bg="red", fg="white")
                                 horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
                             
                             if len(funcionesLimpiadas) != 0:
@@ -1974,19 +1970,19 @@ class Main:
                                     msg = msg + Persona.getNombre() + " Limpiará: 1 vez\n"
                                 else:
                                     msg = msg + Persona.getNombre() + " Limpiará: " + str(len(Persona.getHorario())) + " veces\n"
-                            mensaje = tk.Label(infoAseador, text=msg, font=("Calibri", 12), bg="#ffb48a")
+                            mensaje = tk.Label(infoAseador, text=msg, font=("Calibri", 12), bg="#701C1A", fg="white")
                             mensaje.place(relx = 0.5, rely=0.5, relwidth= 0.8,relheight=0.7, anchor="center")
                     else:
                         if totalFunciones == 0:
-                            alerta = tk.Frame(infoAseador, bg="#ffb48a", bd=2, relief="groove")
+                            alerta = tk.Frame(infoAseador, bg="#701C1A", bd=2, relief="groove")
                             alerta.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.5, relheight=0.5)
-                            mensaje = tk.Label(alerta ,text="No hay funciones para poder Limpiar", font=("Calibri", 18), bg="#ffb48a")
+                            mensaje = tk.Label(alerta ,text="No hay funciones para poder Limpiar", font=("Calibri", 18), bg="#701C1A", fg="white")
                             mensaje.place(relx=0.5, rely=0.5, anchor="center")
                             trabajoAsignadoA = False
                         else:
-                            alerta = tk.Frame(infoAseador, bg="#ffb48a", bd=2, relief="groove")
+                            alerta = tk.Frame(infoAseador, bg="#701C1A", bd=2, relief="groove")
                             alerta.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.5, relheight=0.5)
-                            mensaje = tk.Label(alerta, text = "No hay Aseadores", font=("Calibri", 18), bg="#ffb48a")
+                            mensaje = tk.Label(alerta, text = "No hay Aseadores", font=("Calibri", 18),bg="#701C1A", fg="white")
                             mensaje.place(relx=0.5, rely=0.5, anchor="center")
                             trabajoAsignadoA = False
                     
@@ -2007,16 +2003,16 @@ class Main:
                 def verificarTrabajo(trabajoS, trabajoA):
                     if trabajoS or trabajoA:
                         cls.clear_frame(f1)
-                        p1 = tk.Frame(f1, bg = "#ffb48a")
+                        p1 = tk.Frame(f1, bg = "#701C1A")
                         p1.place(relx=0, rely=0, relwidth= 1, relheight=0.5)
-                        info = tk.Label(p1, text="trabajos Asignados....\nDesplegando trabajadores", bg= "#ffb48a", font=("Calibri", 16))
+                        info = tk.Label(p1, text="trabajos Asignados....\nDesplegando trabajadores", bg= "#701C1A", fg="white", font=("Calibri", 16))
                         info.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
 
-                        p2 = tk.Frame(f1, bg="#ffb48a")
+                        p2 = tk.Frame(f1, bg="#701C1A")
                         p2.place(relx = 0, rely=0.5, relwidth=1, relheight=0.25)
-                        info2 = tk.Label(p2, text="Verificando los trabajos...", font=("Calibri", 16), bg="#ffb48a")
+                        info2 = tk.Label(p2, text="Verificando los trabajos...", font=("Calibri", 16), bg="#701C1A", fg="white")
                         info2.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
-                        p3 = tk.Frame(f1, bg="#ffb48a")
+                        p3 = tk.Frame(f1, bg="#701C1A")
                         p3.place(relx = 0, rely=0.75, relwidth=1, relheight=0.25)
 
                         def verificar():
@@ -2105,14 +2101,14 @@ class Main:
                                             else:
                                                 Persona.getTrabajoCorrecto().append(False)
 
-                            info3 = tk.Label(p3, text="Verificacion finalizada", font=("Calibri", 16), bg="#ffb48a")
+                            info3 = tk.Label(p3, text="Verificacion finalizada", font=("Calibri", 16),  bg="#701C1A", fg="white")
                             info3.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
                         
                         f1.after(1000, lambda: verificar())
                     else:
                         cls.clear_frame(f1)
                         mensaje = "No hay trabajos para asignar\n No se puede verificar los trabajos"
-                        info = tk.Label(f1, text=mensaje, bg= "#ffb48a", font=("Calibri", 18))
+                        info = tk.Label(f1, text=mensaje,  bg="#701C1A", fg="white", font=("Calibri", 18))
                         info.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
                     
                     f1.after(2000, lambda: continuar3())
@@ -2125,16 +2121,18 @@ class Main:
                     saldo.config(text=nuevo_saldo)
                 
                 cls.clear_frame(f1)
-                Fsaldo = tk.Frame(f1, bg="gray")
+                p = tk.Frame(f1, bg="#701C1A")
+                p.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.9, relheight=0.9)
+                Fsaldo = tk.Frame(p, bg="#4B2D2E")
                 Fsaldo.place(relx=0, rely=0, relwidth=1, relheight=0.1, anchor="nw") 
                 Msaldo = "El saldo de tesoreria es: " + str(Teatro.getInstancia().getTesoreria().getCuenta().getSaldo())
-                saldo = tk.Label(Fsaldo, text=Msaldo, font=("Calibri", 14), bg= "gray")
+                saldo = tk.Label(Fsaldo, text=Msaldo, font=("Calibri", 14), bg="#4B2D2E", fg="#FCE6C9")
                 saldo.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
-                contenido = tk.Frame(f1, bg= "#ffb48a")
+                contenido = tk.Frame(p, bg="#701C1A")
                 contenido.place(relx=0, rely=0.1, relwidth=1, relheight=0.9, anchor="nw")
-                leftframe = tk.Frame(contenido, bg="#ffb48a")
-                leftframe.place(relx=0, rely=0, relwidth=0.5, relheight=1)
-                righframe = tk.Frame(contenido, bg = "#ffb48a")
+                leftframeC = tk.Frame(contenido, bg="#701C1A")
+                leftframeC.place(relx=0, rely=0, relwidth=0.5, relheight=1)
+                righframe = tk.Frame(contenido, bg="#701C1A")
                 righframe.place(relx=0.5, rely=0, relwidth=0.5, relheight=1)
 
                 #leftFrame = Ranking
@@ -2142,36 +2140,44 @@ class Main:
                 Ranking = [E for E in Ranking if E.getMetaSemanal() >=0]
                 Ranking.sort(key=lambda E: E.getMetaSemanal(), reverse=True)
                 
-                RankingE = tk.Frame(leftframe, bg="#ffb48a")
-                RankingE.pack(side="top", fill="x", expand=True, padx=10)
-                Empleados = tk.Label(RankingE, text="Ranking Empleados", font=("Calibri", 14), bg="#ffb48a")
+                RankingE = tk.Frame(leftframeC, bg="#701C1A")
+                RankingE.pack(side="top", fill="x", anchor="n", padx=10)
+                Empleados = tk.Label(RankingE, text="Ranking Empleados", font=("Calibri", 14), bg="#701C1A", fg="white")
                 Empleados.pack(anchor="center", fill="both")
 
-                #Estilo tabla
-                style = ttk.Style()
-                style.configure("Treeview", background = "white", relief = "solid", rowheight = 25)
-                style.configure("Treeview.Heading", background = "#ffb48a", foreground = "black", font = ("Calibri", 14, "bold"))
+                #tabla
+                frame_tabla = tk.Frame(leftframeC)
+                frame_tabla.pack(expand=True, fill="both", padx=10, pady=1)
 
-                tablaE = ttk.Treeview(leftframe, columns=("Nombre", "IDs"), show="headings", style= "Treeview")
-                tablaE.heading("Nombre", text="Nombre")
-                tablaE.heading("IDs", text="IDs")
-                tablaE.column("Nombre", width=100, anchor="center")
-                tablaE.column("IDs", width=50, anchor="center")
+                #Encabezados
+                encabezados = ["Nombre", "IDs"]
+                for col, texto in enumerate(encabezados):
+                    encabezado = tk.Label(frame_tabla, text=texto, font=("Calibri", 12), bg="#d3d3d3", padx=10, pady=1)
+                    encabezado.grid(row=0, column=col, sticky="ew")
+                
+                #Fila de datos
+                for fila, emp in enumerate(Ranking, start=1):
+                    nombre = tk.Label(frame_tabla, text=emp.getNombre(), padx=10, pady=1 )
+                    nombre.grid(row=fila, column=0, sticky="ew")
 
-                for emp in Ranking:
-                    tablaE.insert("", "end", values=(emp.getNombre(), emp.getId()))
-                tablaE.pack(expand=True, fill="both", padx=15, pady=10)
-
+                    id = tk.Label(frame_tabla, text=emp.getId(), padx=10, pady=1)
+                    id.grid(row=fila, column=1, sticky="ew")
+                
+                #Ajustar columnas
+                for col in range(2):
+                    frame_tabla.grid_columnconfigure(col, weight=1)
+            
+                
                 #Frame derecho
-                question = tk.Frame(righframe, bg="#ffb48a")
+                question = tk.Frame(righframe, bg="#701C1A")
                 question.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-                ask = tk.Label(question, text="¿Deseas realizar los pagos?", font=("Calibri", 14), bg="#ffb48a")
+                ask = tk.Label(question, text="¿Deseas realizar los pagos?", font=("Calibri", 14), bg="#701C1A", fg="white")
                 ask.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
-                botones = tk.Frame(righframe, bg = "#ffb48a")
+                botones = tk.Frame(righframe, bg = "#701C1A")
                 botones.place(relx=0, rely=0.1, relwidth=1, relheight=0.1)
-                button_yes = tk.Button(botones, bg="#571F1C", text = "Si", fg="White", font=("Calibri", 12))
+                button_yes = tk.Button(botones, text = "Si", bg="#AE1918" ,fg="White", font=("Calibri", 12))
                 button_yes.pack(side="left", fill="both", padx=15, pady=5, anchor="center", expand=True)
-                button_no = tk.Button(botones, bg="#571F1C", text = "No", fg="White", font=("Calibri", 12))
+                button_no = tk.Button(botones, bg="#AE1918", text = "No", fg="White", font=("Calibri", 12))
                 button_no.pack(side="left", fill="both", padx=15, pady=5, anchor="center", expand=True)
 
                 def yes():
@@ -2185,8 +2191,8 @@ class Main:
                         Cuentas_Pagadas = []
                         cantPagada = 0.0
                         linea = 0.2
-                        tk.Label(righframe, text="Upps ... No se puede realizar los pagos adecuadamente", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=0, relwidth=1, relheight=0.1)
-                        tk.Label(righframe, text="Realizando pagos de manera equitativa", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=0.1, relwidth=1, relheight=0.1)
+                        tk.Label(righframe, text="Upps ... No se puede realizar los pagos adecuadamente", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=0, relwidth=1, relheight=0.1)
+                        tk.Label(righframe, text="Realizando pagos de manera equitativa", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=0.1, relwidth=1, relheight=0.1)
                         for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
                             transaccion = Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), (Persona.getDeuda() + Persona.calcularSueldo()) * 0.5)
                             if transaccion:
@@ -2194,15 +2200,15 @@ class Main:
                                 Persona.setDeuda((Persona.getDeuda() + (Persona.calcularSueldo() + Persona.getDeuda())* 0.5))
                                 Cuentas_Pagadas.append(Persona)
                             else:
-                                tk.Label(righframe, text="No se le puede pagar a: " + Persona.getNombre() + ", se le establecio una nueva deuda", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                tk.Label(righframe, text="No se le puede pagar a: " + Persona.getNombre() + ", se le establecio una nueva deuda", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                 Persona.setDeuda(Persona.getDeuda() + Persona.calcularSueldo())
                                 linea += 0.1
-                        tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                        tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                         linea += 0.1
                         msg = "Se pago un total de: " + str(cantPagada)
-                        tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                        tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                         linea += 0.1
-                        tk.Label(righframe, text="Se realizo el pago a " + str(len(Cuentas_Pagadas)), font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                        tk.Label(righframe, text="Se realizo el pago a " + str(len(Cuentas_Pagadas)), font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                         linea += 0.1
                         actualizarSaldo()
                         Cuentas_Pagadas = []
@@ -2222,27 +2228,27 @@ class Main:
                             #Realizacion Pagos
                             if totalSaldos > fondos:
                                 totalSaldos = 0
-                                tk.Label(righframe, text="Ups... No se pueden aplicar las bonificaciones personales", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                tk.Label(righframe, text="Ups... No se pueden aplicar las bonificaciones personales", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                 linea += 0.1
-                                tk.Label(righframe, text="Realizando Pagos", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                tk.Label(righframe, text="Realizando Pagos", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                 linea += 0.1
                                 for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
                                     cantPagada = cantPagada + (Persona.calcularSueldo() + Persona.getDeuda())
                                     totalSaldos = totalSaldos + Persona.calcularSueldo()
                                 #Pago solo sueldo Base
                                 if cantPagada > fondos:
-                                    tk.Label(righframe, text="No se pudo realizar los pagos junto a la deuda", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    tk.Label(righframe, text="No se pudo realizar los pagos junto a la deuda", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                     linea += 0.1
-                                    tk.Label(righframe, text="Realizando Pago del Sueldo Base", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    tk.Label(righframe, text="Realizando Pago del Sueldo Base", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                     linea += 0.1
                                     for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
                                         Teatro.getInstancia().getTesoreria().pagarSueldoBase(Persona.getCuenta(), Persona.calcularSueldo())
-                                    tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                     linea += 0.1
                                     msg = "Se pago un total de: " + str(totalSaldos)
-                                    tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                     linea += 0.1
-                                    tk.Label(righframe, text="Se realizo el pago a: " + len(Teatro.getInstancia().getEmpleadosPorRendimiento()) + " cuentas en total", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    tk.Label(righframe, text="Se realizo el pago a: " + len(Teatro.getInstancia().getEmpleadosPorRendimiento()) + " cuentas en total", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                     actualizarSaldo()
                                     for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
                                         if Persona.verificacionMeta:
@@ -2251,12 +2257,12 @@ class Main:
                                     #Pago sueldo + deuda
                                     for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
                                         Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), Persona.getDeuda() + Persona.calcularSueldo())
-                                    tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                     linea += 0.1
                                     msg = "Se pago un total de: " + str(cantPagada)
-                                    tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                     linea += 0.1
-                                    tk.Label(righframe, text="Se realizo el pago a: " + str(len(Teatro.getInstancia().getEmpleadosPorRendimiento())) + " cuentas en total", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    tk.Label(righframe, text="Se realizo el pago a: " + str(len(Teatro.getInstancia().getEmpleadosPorRendimiento())) + " cuentas en total", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                     actualizarSaldo()
                             else:
                                 #Pago boni + deuda
@@ -2265,12 +2271,12 @@ class Main:
                                         Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), (Persona.calcularSueldo()*1.15) + Persona.getDeuda())
                                     else:
                                         Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), Persona.calcularSueldo() + Persona.getDeuda())
-                                tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                 linea += 0.1
                                 msg = "Se pago un total de: " + str(totalSaldos)
-                                tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                tk.Label(righframe, text=msg, font=("Calibri", 12),bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                 linea += 0.1
-                                tk.Label(righframe, text="Se realizo el pago a: " + str(len(Teatro.getInstancia().getEmpleadosPorRendimiento())) + " cuentas en total", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                tk.Label(righframe, text="Se realizo el pago a: " + str(len(Teatro.getInstancia().getEmpleadosPorRendimiento())) + " cuentas en total", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                 actualizarSaldo()
                         else:
                             for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
@@ -2294,27 +2300,27 @@ class Main:
                                 if totalSaldos > fondos:
                                     #Verificacion
                                     totalSaldos = 0
-                                    tk.Label(righframe, text="Ups... No se pueden aplicar las bonificaciones personales", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    tk.Label(righframe, text="Ups... No se pueden aplicar las bonificaciones personales", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                     linea += 0.1
-                                    tk.Label(righframe, text="Realizando Pagos", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    tk.Label(righframe, text="Realizando Pagos", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                     linea += 0.1
                                     for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
                                         cantPagada = cantPagada + (Persona.calcularSueldo() + Persona.getDeuda())
                                         totalSaldos = totalSaldos + Persona.calcularSueldo()
                                     #Pago solo sueldo Base
                                     if cantPagada > fondos:
-                                        tk.Label(righframe, text="No se pudo realizar los pagos junto a la deuda", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                        tk.Label(righframe, text="No se pudo realizar los pagos junto a la deuda", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                         linea += 0.1
-                                        tk.Label(righframe, text="Realizando Pago del Sueldo Base", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                        tk.Label(righframe, text="Realizando Pago del Sueldo Base", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                         linea += 0.1
                                         for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
                                             Teatro.getInstancia().getTesoreria().pagarSueldoBase(Persona.getCuenta(), Persona.calcularSueldo())
-                                        tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                        tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                         linea += 0.1
                                         msg = "Se pago un total de: " + str(totalSaldos)
-                                        tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                        tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                         linea += 0.1
-                                        tk.Label(righframe, text="Se realizo el pago a: " + str(len(Teatro.getInstancia().getEmpleadosPorRendimiento())) + " cuentas en total", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                        tk.Label(righframe, text="Se realizo el pago a: " + str(len(Teatro.getInstancia().getEmpleadosPorRendimiento())) + " cuentas en total", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                         actualizarSaldo()
                                         for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
                                             if Persona.verificacionMeta:
@@ -2323,12 +2329,12 @@ class Main:
                                         #Pago sueldo + deuda
                                         for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
                                             Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), Persona.getDeuda() + Persona.calcularSueldo())
-                                        tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                        tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                         linea += 0.1
                                         msg = "Se pago un total de: " + str(cantPagada)
-                                        tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                        tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                         linea += 0.1
-                                        tk.Label(righframe, text="Se realizo el pago a: " + str(len(Teatro.getInstancia().getEmpleadosPorRendimiento())) + " cuentas en total", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                        tk.Label(righframe, text="Se realizo el pago a: " + str(len(Teatro.getInstancia().getEmpleadosPorRendimiento())) + " cuentas en total", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                         actualizarSaldo()
                                 else:
                                     #Pago boni + deuda
@@ -2337,12 +2343,12 @@ class Main:
                                             Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), (Persona.calcularSueldo()*1.15) + Persona.getDeuda())
                                         else:
                                             Teatro.getInstancia().getTesoreria().getCuenta().transferencia(Persona.getCuenta(), Persona.calcularSueldo() + Persona.getDeuda())
-                                    tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    tk.Label(righframe, text="Pago exitoso", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                     linea += 0.1
                                     msg = "Se pago un total de: " + str(totalSaldos)
-                                    tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    tk.Label(righframe, text=msg, font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                     linea += 0.1
-                                    tk.Label(righframe, text="Se realizo el pago a: " + str(len(Teatro.getInstancia().getEmpleadosPorRendimiento())) + " cuentas en total", font=("Calibri", 12), bg="#ffb48a").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
+                                    tk.Label(righframe, text="Se realizo el pago a: " + str(len(Teatro.getInstancia().getEmpleadosPorRendimiento())) + " cuentas en total", font=("Calibri", 12), bg="#701C1A", fg="white").place(relx=0, rely=linea, relwidth=1, relheight=0.1)
                                     actualizarSaldo()
                             else:
                                 for Persona in Teatro.getInstancia().getEmpleadosPorRendimiento():
@@ -2359,7 +2365,7 @@ class Main:
                         Persona.setTrabajoRealizado(0)
                         Persona.setPuntosPositivos(0)
 
-                    righframe.after(5000, lambda: Despidos())
+                    righframe.after(3000, lambda: Despidos())
 
 
                 def Despidos():
@@ -2387,9 +2393,9 @@ class Main:
                     Teatro.getInstancia().setEmpleadosPorRendimiento(NuevaLista)
 
                     if Despedidos:
-                        titulo = tk.Label(righframe, text="Personas despedidas:", bg="#ffb48a")
+                        titulo = tk.Label(righframe, text="Personas despedidas:", bg="#701C1A", fg="white")
                         titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-                        despedidos = tk.Label(righframe, text=msg, font=("Calibri", 14), bg="#ffb48a")
+                        despedidos = tk.Label(righframe, text=msg, font=("Calibri", 14), bg="#701C1A", fg="white")
                         despedidos.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
                     
                     button_salir = tk.Button(righframe, text="Salir", bg="#571F1C", fg="White", font=("Calibri", 12))
@@ -2401,33 +2407,64 @@ class Main:
 
             f1.after(1000, lambda: continuar())            
         # Encabezado
-        Titulo = tk.Frame(cls.content, bg="white")
+        Titulo = tk.Frame(cls.content, bg="#070709")
         Titulo.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-        TituloLabel = tk.Label(Titulo, text="Bienvenido a la gestion de empleados", font=("Calibri"))
+        TituloLabel = tk.Label(Titulo, text="Bienvenido a la gestion de empleados", font=("Calibri", 14), fg="#FCE6C9", bg="#070709")
         TituloLabel.pack(fill="both", expand=True)
         TituloLabel.bind("<Configure>", lambda e: cls.resize(Titulo, TituloLabel, 8, 50, False))
 
         # --- Partes del contenido --- #
         #f1 es el central
-        f1 = tk.Frame(cls.content, bg = "#ffb48a", highlightbackground="#5d2417", highlightthickness=10)
-        f1.place(relx=0.1, rely = 0, relwidth = 0.8, relheight= 0.9)
+        f1 = tk.Frame(cls.content, bg = "#4B2D2E")
+        f1.place(relx=0.1, rely = 0.1, relwidth = 0.8, relheight= 0.8)
         
         #frame izquierdo
         leftFrame = tk.Frame(cls.content, bg="#5d2417")
-        leftFrame.place(relx=0, rely=0, relwidth=0.1, relheight=1)
+        leftFrame.place(relx=0, rely=0.1, relwidth=0.1, relheight=0.9)
 
         #frame derecho
         rightFrame = tk.Frame(cls.content, bg="#5d2417")
-        rightFrame.place(relx=0.9, rely=0,relwidth=0.1, relheight=1)
+        rightFrame.place(relx=0.9, rely=0.1,relwidth=0.1, relheight=0.9)
         
         #frame inferior
-        bottomFrame = tk.Frame(cls.content, bg="#5d2417", padx=15, pady=20)
-        bottomFrame.place(relx=0.1, rely=0.9, relheight=0.2, relwidth=0.8)
+        bottomFrame = tk.Frame(cls.content, bg="#5d2417")
+        bottomFrame.place(relx=0, rely=0.9, relheight=0.1, relwidth=1)
         
+        '''IMAGEN BOTTOM (ASIENTOS)'''
+        # Cargar la imagen original (asegúrate de que el archivo se encuentre en el mismo directorio)
+        imagen_bottom = Image.open("src/media/theme/bottom.png")  
+        image = ImageTk.PhotoImage(imagen_bottom)
+
+        # Crear un Label que contendrá la imagen y que cubra todo el bottomFrame
+        bottom_label = tk.Label(bottomFrame, image=image)
+        bottom_label.place(relheight=1, relwidth=1)
+
+        # Vincular el evento <Configure> usando lambda para pasar la imagen y el label a la función
+        bottomFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_bottom, bottom_label))
+
+        '''IMAGEN RIGHT (CORTINA DER)'''
+        imagen_right = Image.open("src/media/theme/Courtain right.png")  
+        image_der = ImageTk.PhotoImage(imagen_right)
+
+        right_label = tk.Label(rightFrame, image=image_der, bg="black")
+        right_label.place(relheight=1, relwidth=1)
+
+        rightFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_right, right_label))
+
+        '''IMAGEN LEFT (CORTINA IZQ)'''
+
+        imagen_left = Image.open("src/media/theme/Courtain left.png")  
+        image_izq = ImageTk.PhotoImage(imagen_left)
+
+        left_label = tk.Label(leftFrame, image=image_izq, bg="black")
+        left_label.place(relheight=1, relwidth=1)
+
+        leftFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_left, left_label))
+
         #Accion principal
-        Anuncio = tk.Frame(f1, bg="#ffb48a")
-        Anuncio.place(relx = 0.5, rely=0.5, anchor="center", relwidth=0.9, relheight=0.5)
-        texto = tk.Label(Anuncio, text="Se estan pagando las deudas pendientes \nPorfavor espere...", font=("Calibri", 18), bg="#ffb48a", bd = 10, relief="raised")
+        Anuncio = tk.Frame(f1, bg="#701C1A")
+        Anuncio.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
+        texto = tk.Label(Anuncio, text="Se estan pagando las deudas pendientes \nPorfavor espere...", font=("Calibri", 18), bg="#701C1A", fg="white", bd = 10, relief="raised")
         texto.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.5, anchor="center")
 
         Teatro.getInstancia().getTesoreria().transferenciaFondos()
@@ -3062,6 +3099,9 @@ class Main:
         left_label.place(relheight=1, relwidth=1)
 
         leftFrame.bind("<Configure>", lambda event: Main.resize_image(event, imagen_left, left_label))
+
+        def toCop(value: float):
+            return "$" + "".join([val + "," if (i+1)%3 == 0 and (i+1) != len(str(value).split(".")[0]) else val for i, val in enumerate(str(value).split(".")[0][::-1])])[::-1] + "." + str(value).split(".")[1]
         
         #PREGUNTA NO. 1
         criteriosTipoEmpresa = ["Tipo de Empresa"]
@@ -3077,12 +3117,12 @@ class Main:
         
         CALIFICACION_ALTA = 4
 
-        def nullInEntries(fieldframe: FieldFrame) -> bool:
-            entries = [entry.get() for i, entry in enumerate(fieldframe.values) if i > 0]
-            for entry in entries:
-                if entry == "" or entry is None:
-                    return True
-            return False
+        #def nullInEntries(fieldframe: FieldFrame) -> bool:
+        #    entries = [entry.get() for i, entry in enumerate(fieldframe.values) if i > 0]
+        #    for entry in entries:
+        #        if entry == "" or entry is None:
+        #            return True
+        #F    return False
 
         def mostrarActores(fieldframe: FieldFrame, topFrame: Frame) -> None:
             """Se toma el presupuesto del fieldframe de entrada y muestra los actores que se pueden contratar.\n
@@ -3093,46 +3133,23 @@ class Main:
             global empresa
             global fechaInicio
             global fechaFin
-
-            fieldframe.gatherEntries()
-
-            if nullInEntries(fieldframe):
-                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
-                return
-
-            presupuesto = fieldframe.getValue("Presupuesto")
+            
             try:
-                presupuesto = float(presupuesto)
-            except Exception:
-                messagebox.showerror("Error", "La entrada debe ser numérica")
+                presupuesto = parseNumber(fieldframe, "Presupuesto", float)
+            except errorEntradaNoNumerica:
+                messagebox.showerror("Error", errorEntradaNoNumerica())
                 return
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
+                return
+
             
             actorsForRental = list(filter(lambda actor: actor.getPrecioContrato(duration) <= presupuesto, actorsForRental))
-
-            #actors = [(actor.getNombre(), actor.getId(), actor.getEdad(), actor.getCalificacion(), actor.getPrecioContrato(duration))
-            #            for actor in actorsForRental]
 
             if len(actorsForRental) == 0:
                 messagebox.showerror("Error", "No se hallaron actores para el presupuesto")
                 Main.contratarActores()
             else:
-
-                # columns = ("Nombre", "Id", "Edad", "Calificación", "Precio de contratación")
-                # widths = (60, 10, 10, 10, 60)
-                # tree = ttk.Treeview(topFrame,
-                #                     columns= columns,
-                #                     show= "headings")
-                # for col, width in zip(columns, widths):
-                #     tree.heading(col, text=col)
-                #     tree.column(column = col, width = width)
-                # scrollbar = ttk.Scrollbar(topFrame, orient=tk.VERTICAL, command=tree.yview)
-                # tree.configure(yscroll=scrollbar.set)
-
-                # for actor in actors:
-                #     tree.insert('', tk.END, values=actor)
-
-                # tree.place(relheight=1, relwidth= .98, relx= 0)
-                # scrollbar.place(relheight=1, relwidth=.02, relx= .98)
 
                 actores = FieldFrame(
                     centerFrame,
@@ -3151,11 +3168,11 @@ class Main:
                     if cls.filterDebug:
                         print(fechaInicio, fechaFin)
 
-                    if nullInEntries(fieldframe):
-                        messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+                    try:
+                        fieldframe.gatherEntries()
+                    except errorEntradaNula:
+                        messagebox.showerror("Error", errorEntradaNula())
                         return
-                    
-                    fieldframe.gatherEntries()
 
                     actorNames = [str(actor) for actor in actorsForRental]
                     actorEscogido: Actor = actorsForRental[actorNames.index(fieldframe.getValue("Actor"))]
@@ -3165,7 +3182,7 @@ class Main:
                     id = actorEscogido.getId()
 
                     contratar = messagebox.askyesno("Contratación de actores", 
-                                        f"Actor seleccionado:\n\nNombre: {actorEscogido}\nEdad: {edad}\nCalificación: {calificacion}\nPrecio de contratación: {precio}\n\n¿Desea contratarlo?")
+                                        f"Actor seleccionado:\n\nNombre: {actorEscogido}\nEdad: {edad}\nCalificación: {calificacion}\nPrecio de contratación: {toCop(precio)}\n\n¿Desea contratarlo?")
                     if contratar:
                         actor = Artista.buscarPorId(id)
                         empresa.pagarContratoActor(actor, float(precio))
@@ -3176,7 +3193,7 @@ class Main:
                         if cls.filterDebug:
                             print("horario nuevo", actor.getHorario())
 
-                        messagebox.showinfo("Success", f"¡Actor contratado!\n\nEl actor escogido fue {actorEscogido} por un precio de {precio}")
+                        messagebox.showinfo("Operación exitosa", f"¡Actor contratado!\n\nEl actor escogido fue {actorEscogido} por un precio de {toCop(precio)}")
                         Main.contratarActores()
                 
 
@@ -3189,7 +3206,7 @@ class Main:
             minActorPrecio = min(actorsForRental, key= lambda actor: actor.getPrecioContrato(duration)).getPrecioContrato(duration)
             maxActorPrecio = max(actorsForRental, key= lambda actor: actor.getPrecioContrato(duration)).getPrecioContrato(duration)
 
-            messagebox.showinfo("Información", "Antes de elegir el presupuesto de contratación, tenga en cuenta que el rango de los precios es de " + str(minActorPrecio) + " a " + str(maxActorPrecio))
+            messagebox.showinfo("Información", "Antes de elegir el presupuesto de contratación, tenga en cuenta que el rango de los precios es de " + toCop(minActorPrecio) + " a " + toCop(maxActorPrecio))
 
             presupuesto = FieldFrame(
                 topFrame,
@@ -3216,7 +3233,7 @@ class Main:
                 messagebox.showerror("Error", "No hay artistas disponibles con los requerimientos pedidos.")
             else:
                 if not avanzado:
-                    messagebox.showinfo("Success", str(len(actorsForRental)) + " actor/es encontrado/s durante la preselección")
+                    messagebox.showinfo("Operación exitosa", str(len(actorsForRental)) + " actor/es encontrado/s durante la preselección")
                 
                 actorsForRental.sort(key=lambda actor: actor not in historialEmpresa)
 
@@ -3231,10 +3248,10 @@ class Main:
 
             global actorsForRental
 
-            fieldframe.gatherEntries()
-
-            if nullInEntries(fieldframe):
-                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+            try:
+                fieldframe.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
                 return
 
             contadores = [[actor, 0] for actor in actorsForRental]
@@ -3272,7 +3289,7 @@ class Main:
                 messagebox.showerror("Error", "No se encontraron actores que se ajusten bien a las características")
                 return
             else:
-                messagebox.showinfo("Success", str(len(contadores)) + " actor/es se ajustaron a una o más características avanzadas.")
+                messagebox.showinfo("Operación exitosa", str(len(contadores)) + " actor/es se ajustaron a una o más características avanzadas.")
                 contadorActores = [tupla[0] for tupla in contadores]
 
                 if cls.filterDebug:
@@ -3302,7 +3319,7 @@ class Main:
             edad.place(relheight= 1, relwidth= 1)
 
         def setSchedule(fieldframe: FieldFrame, fecha: str, topFrame: str) -> None:
-            """Toma las entradas de un fieldframe que incluyan hora de inicio y fin de contratación, yr evisa si el horario cumple con los lineamientos."""
+            """Toma las entradas de un fieldframe que incluyan hora de inicio y fin de contratación, y revisa si el horario cumple con los lineamientos."""
 
             global actorsForRental
             global duration
@@ -3312,10 +3329,10 @@ class Main:
             if cls.filterDebug:
                 print("al entrar a setSchedule", [actor.getNombre() for actor in actorsForRental])
 
-            fieldframe.gatherEntries()
-
-            if nullInEntries(fieldframe):
-                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+            try:
+                fieldframe.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
                 return
             
             horaInicio = fieldframe.values[1].get()
@@ -3392,10 +3409,10 @@ class Main:
 
             global actorsForRental
 
-            fieldframe.gatherEntries()
-
-            if nullInEntries(fieldframe):
-                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+            try:
+                fieldframe.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
                 return
 
             responses = [entry.get() for i, entry in enumerate(fieldframe.values) if i > 0]
@@ -3458,23 +3475,22 @@ class Main:
 
             primeraRonda.place(relwidth= 1, relheight= 1)
 
-        def parseInt(fieldframe : FieldFrame, value: str) -> int | None:
+        def parseNumber(fieldframe : FieldFrame, value: str, cls = int) -> int | float:
             """Revisa si una entrada especfica de un fieldframe puede convertirse a entero"""
 
-            fieldframe.gatherEntries()
-
-            if nullInEntries(fieldframe):
-                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+            try:
+                fieldframe.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
                 return
 
             ans = fieldframe.getValue(value)
 
-            try:
-                ans = int(ans)
-                return ans
-            except Exception:
-                messagebox.showerror("Error", "La entrada no puede convertirse a entero")
-                return None
+            if not ans.isnumeric():
+                raise errorEntradaNoNumerica()
+
+            ans = cls(ans)
+            return ans
             
         def idExists(id: int) -> Cliente | bool:
             """Revisa si un número de identificación existe en la base de datos, y en caso de que exista, si es de tipo Empresa."""
@@ -3489,13 +3505,18 @@ class Main:
             global empresa
             global historialEmpresa
 
-            fieldframe.gatherEntries()
-
-            if nullInEntries(fieldframe):
-                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+            try:
+                fieldframe.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
                 return
 
-            id = parseInt(fieldframe, "Generar nuevo ID")
+            try:
+                id = parseNumber(fieldframe, "Generar nuevo ID", int)
+            except errorEntradaNoNumerica:
+                messagebox.showerror("Error", errorEntradaNoNumerica())
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
 
             if id is None: 
                 return
@@ -3505,7 +3526,7 @@ class Main:
             if not cliente:
                 empresa = Cliente(id= id, tipo = "Empresa")
                 historialEmpresa = empresa.getHistorial()
-                messagebox.showinfo("Success", "Cliente nuevo agregado a la base de datos")
+                messagebox.showinfo("Operación exitosa", "Cliente nuevo agregado a la base de datos")
                 initPrimeraRonda(centerFrame)
 
             else:
@@ -3516,14 +3537,20 @@ class Main:
 
             global empresa
             global historialEmpresa
+            id = None
 
-            fieldframe.gatherEntries()
-
-            if nullInEntries(fieldframe):
-                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+            try:
+                fieldframe.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
                 return
 
-            id = parseInt(fieldframe, "Inserte ID existente")
+            try:
+                id = parseNumber(fieldframe, "Inserte ID existente", int)
+            except errorEntradaNoNumerica:
+                messagebox.showerror("Error", errorEntradaNoNumerica())
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
 
             if id is None:
                 return
@@ -3531,7 +3558,7 @@ class Main:
             cliente = idExists(id)
             
             if cliente:
-                messagebox.showinfo("Success", "Cliente confirmado en base de datos")
+                messagebox.showinfo("Operación exitosa", "Cliente confirmado en base de datos")
                 historialEmpresa = cliente.getHistorial()
                 empresa = cliente
                 initPrimeraRonda(centerFrame)
@@ -3541,10 +3568,10 @@ class Main:
         def definirTipoEmpresa(fieldframe: FieldFrame, topFrame: Frame) -> None:
             """Antes de empezar con el filtrado, se elige si el cliente que va a llevar a cabo la contratación existe en la base de datos o es nuevo."""
 
-            fieldframe.gatherEntries()
-            
-            if nullInEntries(fieldframe):
-                messagebox.showerror("Error", "Existen opciones vacías, debe rellenar todos los valores.")
+            try:
+                fieldframe.gatherEntries()
+            except errorEntradaNula:
+                messagebox.showerror("Error", errorEntradaNula())
                 return
 
             choice = fieldframe.getValue("Tipo de Empresa")
@@ -3570,10 +3597,6 @@ class Main:
                                     command= lambda: createId(idFrame),
                                     tituloGuardar= "Crear cuenta")
                     idFrame.place(relwidth= 1, relheight= 1)
-
-            else:
-                ##MANEJO DE EXCEPCION
-                messagebox.showerror("Error", "Opción Inválida")
 
         pregunta1 = FieldFrame(root = centerFrame, 
                                 criterios = criteriosTipoEmpresa,
@@ -3677,13 +3700,17 @@ class Main:
 
             artistas = Teatro.getInstancia().getArtistas()
             if artistas:
-                lbl_artistas = tk.Label(process_frame, text="Artistas existentes en la base de datos:",
-                                        font=("Calibri", 14), bg="white")
-                lbl_artistas.pack(pady=10)
-                txt_artistas = tk.Text(process_frame, height=10, width=80, font=("Calibri", 12))
-                txt_artistas.pack(pady=10)
+                lbl_artistas = tk.Label(process_frame,
+                                    text="Artistas existentes en la base de datos:",
+                                    font=("Calibri", 14),
+                                    bg="#701C1A", fg="#FCE6C9")
+                lbl_artistas.pack(pady=10, fill="x")
+                txt_artistas = tk.Text(process_frame,
+                               height=6, width=80,
+                               font=("Calibri", 12),
+                               bg="#701C1A", fg="#FCE6C9")
+                txt_artistas.pack(pady=10, fill="both", expand=True)
                 for artista in artistas:
-                    # Diferenciamos actores y directores: suponemos que si el artista tiene atributo "edad" es Actor.
                     if isinstance(artista, Actor):
                         linea = f"- Actor {artista.getNombre()} con ID {artista.getId()}\n"
                     else:
@@ -3691,17 +3718,27 @@ class Main:
                     txt_artistas.insert("end", linea)
                 txt_artistas.config(state="disabled")
             else:
-                tk.Label(process_frame, text="No hay artistas en la base de datos.",
-                        font=("Calibri", 14), bg="white").pack(pady=10)
+                tk.Label(process_frame,
+                        text="No hay artistas en la base de datos.",
+                        font=("Calibri", 14),
+                        bg="#701C1A", fg="#FCE6C9").pack(pady=10, fill="x")
 
-            lbl_id = tk.Label(process_frame, text="Ingrese el ID del artista para gestionar clases:",
-                                font=("Calibri", 14), bg="white")
-            lbl_id.pack(pady=10)
+            lbl_id = tk.Label(process_frame,
+                      text="Ingrese el ID del artista para gestionar clases:",
+                      font=("Calibri", 14),
+                      bg="#701C1A", fg="#FCE6C9")
+            lbl_id.pack(pady=10, fill="x")
             entry_id = tk.Entry(process_frame, font=("Calibri", 14))
             entry_id.pack(pady=5)
-            btn_buscar = tk.Button(process_frame, text="Buscar", font=("Calibri", 14),
-                                    command=lambda: process_artist(entry_id.get()))
+            btn_buscar = tk.Button(process_frame,
+                                text="Buscar",
+                                font=("Calibri", 14),
+                                bg="#701C1A", fg="#FCE6C9",
+                                command=lambda: process_artist(entry_id.get()))
             btn_buscar.pack(pady=10)
+
+            # Se asocia el evento de resize al label (puedes hacerlo a otros widgets según convenga)
+            Main.resize(process_frame, lbl_artistas, 14, 60, True)
 
         # -------------------- PASO 2: Procesar el ID ingresado --------------------
         '''AVALADA'''
@@ -3722,14 +3759,26 @@ class Main:
         def step_artist_not_found(id_num):
             for widget in process_frame.winfo_children():
                 widget.destroy()
-            tk.Label(process_frame, text=f"Artista con ID {id_num} no encontrado.",
-                        font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
-            tk.Label(process_frame, text="¿Desea crear un nuevo Artista con este ID?",
-                        font=("Calibri", 14), bg="white").pack(pady=10)
-            tk.Button(process_frame, text="Sí", font=("Calibri", 14),
-                        command=lambda: step_create_artist(id_num)).pack(pady=5)
-            tk.Button(process_frame, text="No", font=("Calibri", 14),
-                        command=lambda: step_show_obras_criticas_and_fin()).pack(pady=5)
+            tk.Label(process_frame,
+             text=f"Artista con ID {id_num} no encontrado.",
+             font=("Calibri", 14),
+             bg="#701C1A", fg="#FCE6C1").pack(pady=10, fill="x")
+            tk.Label(process_frame,
+                    text="¿Desea crear un nuevo Artista con este ID?",
+                    font=("Calibri", 14),
+                    bg="#701C1A", fg="#FCE6C1").pack(pady=10, fill="x")
+            tk.Button(process_frame,
+                    text="Sí",
+                    font=("Calibri", 14),
+                    bg="#701C1A", fg="#FCE6C1",
+                    width=10,
+                    command=lambda: step_create_artist(id_num)).pack(pady=5)
+            tk.Button(process_frame,
+                    text="No",
+                    font=("Calibri", 14),
+                    bg="#701C1A", fg="#FCE6C1",
+                    width=10,
+                    command=lambda: step_show_obras_criticas_and_fin()).pack(pady=5)
 
         # -------------------- MÉTODO REQUERIDO: Obras críticas y terminar -------------------- 
         '''AVALADA'''
@@ -3743,20 +3792,24 @@ class Main:
             obras_criticas = Obra.mostrarObrasCriticas()  
             if not obras_criticas:
                 tk.Label(process_frame, text="No hay obras en estado crítico en el teatro.",
-                        font=("Calibri", 20), bg="white", fg="yellow").pack(pady=10)
+                        font=("Calibri", 20), bg="#701C1A", fg="#FCE6C1").pack(pady=10)
             else:
-                tk.Label(process_frame, text="Obras en estado crítico del teatro:",
-                        font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
-                txt_obras = tk.Text(process_frame, height=10, width=80, font=("Calibri", 12))
-                txt_obras.pack(pady=10)
-                # Itera sobre la lista de obras y agrega una línea para cada obra
+                tk.Label(process_frame,
+                        text="Obras en estado crítico del teatro:",
+                        font=("Calibri", 14),
+                        bg="#701C1A", fg="#FCE6C1").pack(pady=10, fill="x")
+                txt_obras = tk.Text(process_frame,
+                                    height=8, width=80,
+                                    font=("Calibri", 12),
+                                    bg="#701C1A", fg="#FCE6C1")
+                txt_obras.pack(pady=10, fill="both", expand=True)
                 for obra in obras_criticas:
-                    # Se asume que cada obra tiene métodos getNombre() y promedioCalificacion()
                     linea = f"- '{obra.getNombre()}' (Promedio: {obra.promedioCalificacion()})\n"
                     txt_obras.insert("end", linea)
                 txt_obras.config(state="disabled")
             
-            Main.gestionClases()
+            tk.Button(process_frame, text="Volver al inicio", font=("Calibri", 16), bg="#701C1A", fg="#FCE6C1",
+                command=Main.gestionClases).pack(pady=10)
 
         # -------------------- PASO 4: Crear nuevo artista --------------------
         '''AVALADA'''
@@ -3764,8 +3817,8 @@ class Main:
             for widget in process_frame.winfo_children():
                 widget.destroy()
             # Configuramos los criterios y valores iniciales para ingresar el nombre y el tipo de artista
-            criterios = ["Nombre", "Tipo de artista"]
-            valores = ["", ""]  # valores vacíos inicialmente
+            criterios = ["ID", "Nombre", "Tipo de artista"]
+            valores = [f"{id_num}", "", ""]  # valores vacíos inicialmente
             # Se crea el FieldFrame; al presionar "Guardar" se llamará a la función lambda
             # que invoca process_new_artist con los datos ingresados.
             ff = FieldFrame(process_frame,
@@ -3773,11 +3826,14 @@ class Main:
                             criterios=criterios,
                             tituloValores="Ingrese valor",
                             valores=valores,
+                            habilitado= ["Nombre", "Tipo de artista"],
                             combobox=False,
-                            command=lambda: (ff.gatherEntries(), process_new_artist(id_num, ff.valores[0], ff.valores[1])))
+                            command=lambda: (ff.gatherEntries(), process_new_artist(id_num, ff.valores[1], ff.valores[2])))
             ff.pack(pady=10, fill="both", expand=True)
-            tk.Label(process_frame, text="(Si se ingresa 'actor' se pedirá la edad posteriormente)",
-                    font=("Calibri", 12), bg="white").pack(pady=5)
+            tk.Label(process_frame,
+                    text="(Si se ingresa 'actor' se pedirá la edad posteriormente)",
+                    font=("Calibri", 12),
+                    bg="#701C1A", fg="#FCE6C1").pack(pady=5, fill="x")
 
         def process_new_artist(id_num, nombre, tipo):
             tipo = tipo.lower().strip()
@@ -3796,12 +3852,17 @@ class Main:
             else:
                 for widget in process_frame.winfo_children():
                     widget.destroy()
-                tk.Label(process_frame, text="Ingrese la edad del nuevo actor (entre 4 y 80):",
-                        font=("Calibri", 14), bg="white").pack(pady=10)
+                tk.Label(process_frame,
+                    text="Ingrese la edad del nuevo actor (entre 4 y 80):",
+                    font=("Calibri", 14),
+                    bg="#701C1A", fg="#FCE6C1").pack(pady=30, fill="x")
                 entry_age = tk.Entry(process_frame, font=("Calibri", 14))
                 entry_age.pack(pady=5)
-                tk.Button(process_frame, text="Guardar", font=("Calibri", 14),
-                            command=lambda: process_new_actor(id_num, nombre, entry_age.get())).pack(pady=10)
+                tk.Button(process_frame,
+                        text="Guardar",
+                        font=("Calibri", 14),
+                        bg="#701C1A", fg="#FCE6C1",
+                        command=lambda: process_new_actor(id_num, nombre, entry_age.get())).pack(pady=10)
 
         def process_new_actor(id_num, nombre, age_str):
             try:
@@ -3835,31 +3896,37 @@ class Main:
                 if len(artista.getCalificacionesPublico()) == 0:
                     Artista.inicializarCalificacionesPublico(artista)
                 # Mostrar información de calificaciones
-                txt_info = tk.Text(process_frame, height=8, width=80, font=("Calibri", 12))
-                txt_info.pack(pady=10)
-                info_text = f"Calificaciones de calificadores: {artista.getCalificacionesAptitudes()}\n"
+                info_text = f"Calificaciones de profesores: {artista.getCalificacionesAptitudes()}\n"
                 info_text += f"Calificaciones del público: {artista.getCalificacionesPublico()}\n"
-                txt_info.insert("end", info_text)
-                txt_info.config(state="disabled")
+                lbl_info = tk.Label(process_frame, text=info_text, font=("Calibri", 18), bg="#701C1A", fg="#FCE6C1")
+                lbl_info.pack(pady=5)
                 # Mostrar obras críticas
                 tk.Label(process_frame, text="Obras en estado crítico del teatro:",
-                        font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
+                        font=("Calibri", 14), bg="#701C1A", fg="#FCE6C1").pack(pady=10)
                 obras = Obra.mostrarObrasCriticas()  # Se asume que este método existe
                 if not obras:
                     tk.Label(process_frame, text="No hay obras en estado crítico.",
-                            font=("Calibri", 14), bg="white", fg="yellow").pack(pady=5)
+                            font=("Calibri", 14), bg="#701C1A", fg="#FCE6C1").pack(pady=5)
                 else:
-                    txt_obras = tk.Text(process_frame, height=6, width=80, font=("Calibri", 12))
-                    txt_obras.pack(pady=5)
+                    txt_obras = tk.Text(process_frame, height=6, width=80, font=("Calibri", 12),
+                                bg="#701C1A", fg="#FCE6C1")
+                    txt_obras.pack(pady=5, fill="both", expand=True)
                     for obra in obras:
                         linea = f"- '{obra.nombre}' (Promedio: {obra.promedioCalificacion()})\n"
                         txt_obras.insert("end", linea)
                     txt_obras.config(state="disabled")
-                tk.Button(process_frame, text="Programar clase", font=("Calibri", 14),
-                            command=lambda: step_select_area(artista)).pack(pady=10)
-                
-                tk.Button(process_frame, text="Volver al inicio", font=("Calibri", 14),
-                command=Main.gestionClases).pack(pady=10)
+                tk.Button(process_frame,
+                        text="Programar clase",
+                        font=("Calibri", 14),
+                        bg="#701C1A", fg="#FCE6C1",
+                        width=13,
+                        command=lambda: step_select_area(artista)).pack(pady=10)
+                tk.Button(process_frame,
+                        text="Volver al inicio",
+                        font=("Calibri", 14),
+                        bg="#701C1A", fg="#FCE6C1",
+                        width=13,
+                        command=Main.gestionClases).pack(pady=10)
 
         # -------------------- PASO 6: Seleccionar área de mejora --------------------
         '''AVALADA'''
@@ -3867,22 +3934,33 @@ class Main:
             for widget in process_frame.winfo_children():
                 widget.destroy()
             areas_recomendadas = actor.obtenerAreasDeMejora()
-            txt_areas = tk.Text(process_frame, height=6, width=80, font=("Calibri", 12))
-            txt_areas.pack(pady=10)
             if not areas_recomendadas:
                 step_select_custom_area(actor)
             else:
+                txt_areas = tk.Text(process_frame, height=6, width=80, font=("Calibri", 12),
+                                bg="#701C1A", fg="#FCE6C1")
+                txt_areas.pack(pady=10, fill="both", expand=True)
                 txt_areas.insert("end", "Áreas recomendadas para mejorar del actor " + actor.getNombre() + ":\n")
                 for i, area in enumerate(areas_recomendadas[:3]):
                     cal = actor.getCalificacionPorAptitud(area)
                     txt_areas.insert("end", f"{i+1}. {area.name.capitalize()} (Calificación: {cal})\n")
                 txt_areas.config(state="disabled")
-                tk.Label(process_frame, text="¿Desea programar una clase basada en las áreas recomendadas?",
-                    font=("Calibri", 14), bg="white").pack(pady=10)
-                tk.Button(process_frame, text="Sí", font=("Calibri", 14),
-                    command=lambda: step_schedule_class(actor, areas_recomendadas[0])).pack(pady=5)
-                tk.Button(process_frame, text="No", font=("Calibri", 14),
-                    command=lambda: step_select_custom_area(actor)).pack(pady=5)
+                tk.Label(process_frame,
+                        text="¿Desea programar una clase basada en las áreas recomendadas?",
+                        font=("Calibri", 14),
+                        bg="#701C1A", fg="#FCE6C1").pack(pady=10, fill="x")
+                tk.Button(process_frame,
+                        text="Sí",
+                        font=("Calibri", 14),
+                        bg="#701C1A", fg="#FCE6C1",
+                        width=10,
+                        command=lambda: step_schedule_class(actor, areas_recomendadas[0])).pack(pady=5)
+                tk.Button(process_frame,
+                        text="No",
+                        font=("Calibri", 14),
+                        bg="#701C1A", fg="#FCE6C1",
+                        width=10,
+                        command=lambda: step_select_custom_area(actor)).pack(pady=5)
 
         # -------------------- PASO 7: Selección personalizada de área --------------------
         '''AVALADA'''
@@ -3895,8 +3973,8 @@ class Main:
             var_index = tk.IntVar(value=0)
             # Crear radiobuttons usando el índice
             for i, area in enumerate(areas):
-                tk.Radiobutton(process_frame, text=str(area), variable=var_index,
-                            value=i, font=("Calibri", 12), bg="white").pack(anchor="w", padx=20)
+                tk.Radiobutton(process_frame, text=area.name.capitalize(), variable=var_index,
+                            value=i, font=("Calibri", 12), bg="#701C1A", fg='#FCE6C9', selectcolor="#4B2D2E").pack(anchor="w", padx=20)
             tk.Button(process_frame, text="Siguiente", font=("Calibri", 14),
                     command=lambda: step_schedule_class(actor, areas[var_index.get()])).pack(pady=10)
 
@@ -3921,9 +3999,9 @@ class Main:
             
             tk.Label(process_frame,
                     text=f"Área seleccionada: {area_display}\nNivel de clase: {nivelClase}",
-                    font=("Calibri", 14), bg="white").pack(pady=10)
+                    font=("Calibri", 14), bg="#701C1A", fg="#FCE6C1").pack(pady=10)
             
-            tk.Label(process_frame, text="Programe la clase:", font=("Calibri", 14), bg="white").pack(pady=5)
+            tk.Label(process_frame, text="Programe la clase:", font=("Calibri", 14), bg="#701C1A", fg="#FCE6C1").pack(pady=5)
             
             # Obtener la lista de días de la semana con getWeek()
             week_days = Main.getWeek()  # Retorna una lista de objetos date
@@ -4026,8 +4104,9 @@ class Main:
             else:
                 costoClase = 90000
             tk.Label(process_frame, text=f"El costo de la clase es: ${costoClase}",
-                    font=("Calibri", 14), bg="white").pack(pady=10)
+                    font=("Calibri", 14), bg="#701C1A", fg="#FCE6C1").pack(pady=10)
             tk.Button(process_frame, text="Procesar Pago", font=("Calibri", 14),
+                    bg="#701C1A", fg="#FCE6C1",
                     command=lambda: process_payment(actor, costoClase, areaSeleccionada,
                                                     profesorAsignado, nivelClase, fin)).pack(pady=10)
 
@@ -4088,7 +4167,7 @@ class Main:
             for widget in process_frame.winfo_children():
                 widget.destroy()
             tk.Label(process_frame, text="Reprogramar clase por falta de mejora",
-                    font=("Calibri", 14), bg="white", fg="red").pack(pady=10)
+                    font=("Calibri", 14), bg="#701C1A", fg="#FCE6C1").pack(pady=10)
             
             # Obtener la lista de días de la semana con getWeek()
             week_days = Main.getWeek()  # Retorna una lista de objetos date

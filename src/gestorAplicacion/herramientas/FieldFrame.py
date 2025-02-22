@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import Frame, Tk, ttk
+from excepciones.errorEntradaNula import errorEntradaNula
 
 class FieldFrame(Frame):
 
@@ -79,7 +80,11 @@ class FieldFrame(Frame):
         return None
     
     def gatherEntries(self) -> None:
-        self.valores = [entry.get() for i, entry in enumerate(self.values) if i > 0]    
+        self.valores = [entry.get() for i, entry in enumerate(self.values) if i > 0]   
+
+        for entry in self.valores:
+                if entry == "" or entry is None:
+                    raise errorEntradaNula
         
         if FieldFrame.fieldTest:
             print(self.valores)    
