@@ -1175,7 +1175,7 @@ class Main:
                 botonContinuar.pack(fill="both", padx=10, pady=5)
                 botonContinuar.config(command=lambda: continuar2())
 
-                #Organizar tabla de empleados
+                #Organizar las tablas de los empleados
                 #Estilo tablas
                 #Seguridad
                 seguridad = tk.Label(p1, text="Seguridad", font=("Calibri", 18), bg="#701C1A", fg="white")
