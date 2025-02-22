@@ -13,6 +13,8 @@ import random
 
 
 
+
+
 #AGREGAR SRC AL PATH
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -39,6 +41,7 @@ from gestorAplicacion.herramientas.FieldFrame import FieldFrame
 
 from excepciones.errorEntradaNula import errorEntradaNula
 from excepciones.errorEntradaNoNumerica import errorEntradaNoNumerica
+from excepciones.errorSuscripcion import errorSuscripcion
 
 
 class Main:
@@ -108,7 +111,7 @@ class Main:
             ["src/media/Programadores/Danna1 (9).png", "src/media/Programadores/Danna1 (5).png", "src/media/Programadores/Dannaa.png", "src/media/Programadores/Danna1 (10).png"]),
         ("Programador 3:\nNombre: Oscar David Arango Garcia\n Edad: 17 \nID: 1011591946",
             ["src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png", "src/media/Programadores/Perro3.png"]),
-        ("Programador 4:\nNombre: Juan Pablo Miras Cañas\n Edad: 18 \nID: 4",
+        ("Programador 4:\nNombre: Juan Pablo Miras Cañas\n Edad: 19 \nID: 4",
             ["src/media/Programadores/pablo1.png", "src/media/Programadores/pablo2.png", "src/media/Programadores/pablo5.png", "src/media/Programadores/pablo4.png"]),
         ("Programador 5:\nNombre: Miguel Velez Bernal\n Edad: 18 \nID: 1023524572",
             ["src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png", "src/media/Programadores/Velez.png"])
@@ -118,7 +121,7 @@ class Main:
         "src/media/foto1.jpg",
         "src/media/foto2.jpg",
         "src/media/foto3.png",
-        "src/media/foto4.jpg",
+        "src/media/foto6.jpeg",
         "src/media/foto5.jpg"        
     ]
 
@@ -601,6 +604,8 @@ class Main:
 
             
         def Inicio_preguntas():
+            global descuento
+            descuento = 0
             for widget in cls.content.winfo_children():
                 widget.destroy()
             global frame_central
@@ -676,6 +681,8 @@ class Main:
             Main.wait()
         
         def adquirir_suscripcion():
+            global descuento
+            descuento = 0
             
             global frame_central
             
@@ -704,7 +711,8 @@ class Main:
             
         def asignar_suscripcion(fieldframe: FieldFrame):
             global cliente
-            
+            global descuento
+            descuento = 0
             
             try:
                 fieldframe.gatherEntries()
@@ -715,17 +723,23 @@ class Main:
             if suscripcion == "BASICA":
                 cliente.set_suscripcion(Suscripcion.BASICA)
                 precio_sus=0
+                descuento = 0
             elif suscripcion == "VIP":
                 cliente.set_suscripcion(Suscripcion.VIP)
                 precio_sus=18900
+                descuento = 0.25
             elif suscripcion == "PREMIUM":
                 cliente.set_suscripcion(Suscripcion.PREMIUM)
                 precio_sus=11900
+                descuento = 0
+                descuento = 0.10
             elif suscripcion == "ELITE":
                 cliente.set_suscripcion(Suscripcion.ELITE)
                 precio_sus=39900
+                descuento = 1
             else:
                 raise ValueError("Suscripción no válida")
+            descuento = 1-descuento
             
             print(cliente.get_suscripcion())
             continuar()
@@ -935,24 +949,30 @@ class Main:
                     global funcion_elegida
                     funcion_elegida = funcion
                     sillas = funcion.getSillas()
+            
 
 
             def boton_presionado(numero,l):
                 pregun = messagebox.askyesno("Eleccion",f"seleccionaste las silla  {numero}")
                 if pregun :
                     indi = 0
-                    if cliente.verificarSuscripcion(l[0]):
-                        messagebox.showerror("Error", f"Tu suscripcion no te permite comprar sillas tipo {l}")
-                    else:
-
+                    try :
+                        print(cliente.verificarSuscripcion(l[0]))
+                        cliente.verificarSuscripcion(l[0])
                         for i in funcion_elegida.getSillas():
                         
                             if i.getCodigo()==numero:
                                 funcion_elegida.getSillas()[indi].setCodigo("ocupado")
 
-                            
+                                
                             indi += 1
                         imprimir_factura(numero)
+                        
+                        
+                    except errorSuscripcion:
+                        messagebox.showerror("Error", errorSuscripcion(l))
+
+                    
                             
                     
 
@@ -975,6 +995,8 @@ class Main:
                     btn.grid(row=fila, column=columna, padx=5, pady=5, sticky="nsew", ipady=2)  # Agregar `sticky="nsew"`
 
             def imprimir_factura(numero):
+                global descuento
+
                 
                 global frame_central
 
@@ -985,7 +1007,7 @@ class Main:
                 frame_central.place(relx = 0.5, rely=0.5,anchor="center", relwidth=0.9, relheight=0.8)
 
                 global precio_sus
-                texto=Tiquete.imprimirFactura(cliente,su=precio_sus,p=precio_fun)
+                texto=Tiquete.imprimirFactura(cliente,su=precio_sus*descuento,p=precio_fun)
                 texto = tk.Label(frame_central,text=texto)
                 texto.place(relx=0.3,rely=0.2)
 
