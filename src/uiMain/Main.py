@@ -110,9 +110,10 @@ class Main:
 
     # --- NUEVAS VARIABLES PARA PROGRAMADORES ---
     current_programador_index = -1
+
     programadores = [
         ("Programador 1:\nNombre: Francisco Jose Ceren Porto\n Edad: 17 \nID: 1023631713",
-            ["src/media/Programadores/perro.png", "src/media/Programadores/perro.png", "src/media/Programadores/perro.png", "src/media/Programadores/perro.png"]),
+            ["src/media/Programadores/fran1.png", "src/media/Programadores/fran2.png", "src/media/Programadores/fran3.png", "src/media/Programadores/fran4.png"]),
         ("Programador 2:\nNombre: Danna Valeria Perez Niño\n Edad: 17 \nID: 1052839541",
             ["src/media/Programadores/Danna1 (9).png", "src/media/Programadores/Danna1 (5).png", "src/media/Programadores/Dannaa.png", "src/media/Programadores/Danna1 (10).png"]),
         ("Programador 3:\nNombre: Oscar David Arango Garcia\n Edad: 17 \nID: 1011591946",
