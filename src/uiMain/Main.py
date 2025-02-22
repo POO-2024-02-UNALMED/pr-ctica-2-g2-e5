@@ -1054,7 +1054,7 @@ class Main:
             frame_botones.place(relx=0.1, rely=0.1, relwidth=0.80, relheight=0.60)
 
             escenario = tk.Label(frame_botones, bg="slategray",text="ESCENARIO")
-            escenario.place(relx=0.35, rely=0.8, relwidth=0.30, relheight=0.20)
+            escenario.place(relx=0.35, rely=0.9, relwidth=0.30, relheight=0.20)
 
             for funcion in Teatro.getInstancia().getFuncionesCreadas():
                 
@@ -1118,7 +1118,6 @@ class Main:
                 global descuento
 
                 
-
                 
                 global frame_central
 
@@ -1136,6 +1135,10 @@ class Main:
 
                 fin = tk.Button(frame_central,text="Volver al menu",command=cls.gestionVentas)
                 fin.place(relx=0.42,rely=0.9)
+                
+                Teatro.getInstancia().getTesoreria().setDineroEnCaja(Teatro.getInstancia().getTesoreria().getDineroEnCaja()+precio_fun+precio_sus)
+                Teatro.getInstancia().getTesoreria().setTotal(Teatro.getInstancia().getTesoreria().getTotal()+precio_fun+precio_sus)
+                
 
 
             
