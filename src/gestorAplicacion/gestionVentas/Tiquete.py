@@ -2,6 +2,7 @@
 from datetime import datetime
 import random
 
+from baseDatos.Teatro import Teatro
 from gestorAplicacion.gestionVentas.Cliente import Cliente
 
 class Tiquete:
@@ -15,7 +16,8 @@ class Tiquete:
         self.personaje = personaje
         self.obra = obra
         self.silla = silla
-        Tiquete.tiquetes.append(self)  # Agregar instancia a la lista de tiquetes
+        Teatro.getInstancia().getTiquetes().append(self)
+        
 
     def setId(self,id):
         self.__id=id
