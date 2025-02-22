@@ -44,6 +44,8 @@ from excepciones.errorEntradaNula import errorEntradaNula
 from excepciones.errorEntradaNoNumerica import errorEntradaNoNumerica
 from excepciones.errorSuscripcion import errorSuscripcion
 from excepciones.errorFormatoHorario import errorFormatoHorario
+from excepciones.errorIdExiste import errorIdExiste
+from excepciones.errorIdNoExiste import errorIdNoExiste
 
 
 class Main:
@@ -3623,7 +3625,7 @@ class Main:
                 initPrimeraRonda(centerFrame)
 
             else:
-                messagebox.showerror("Error", "La identificación ya existe, intente con un número diferente")
+                raise errorIdExiste
 
         def locateId(fieldframe: FieldFrame) -> None:
             """Busca si un determinado número de identificaición existe"""
@@ -3656,7 +3658,19 @@ class Main:
                 empresa = cliente
                 initPrimeraRonda(centerFrame)
             else:
-                messagebox.showerror("Error", "El número de identificación no existe en la base de datos de empresa.\nRevise si el cliente es de tipo Empresa o si se digitó correctamente.")
+                raise errorIdNoExiste
+            
+        def auth(fieldframe: FieldFrame, clientExists: bool) -> None:
+            if clientExists:
+                try:
+                    locateId(fieldframe)
+                except errorIdNoExiste:
+                    messagebox.showerror("Error", errorIdNoExiste())
+            else:
+                try:
+                    createId(fieldframe)
+                except errorIdExiste:
+                    messagebox.showerror("Error", errorIdExiste())
 
         def definirTipoEmpresa(fieldframe: FieldFrame, topFrame: Frame) -> None:
             """Antes de empezar con el filtrado, se elige si el cliente que va a llevar a cabo la contratación existe en la base de datos o es nuevo."""
@@ -3677,7 +3691,7 @@ class Main:
                                     tituloCriterios= "", 
                                     tituloValores= "", 
                                     valores = [""],
-                                    command= lambda: locateId(idFrame),
+                                    command= lambda: auth(idFrame, clientExists= True),
                                     tituloGuardar= "Iniciar Sesión")
                     idFrame.place(relwidth= 1, relheight= 1)
                     
@@ -3687,7 +3701,7 @@ class Main:
                                     tituloCriterios= "", 
                                     tituloValores= "", 
                                     valores = [""],
-                                    command= lambda: createId(idFrame),
+                                    command= lambda: auth(idFrame, clientExists= False),
                                     tituloGuardar= "Crear cuenta")
                     idFrame.place(relwidth= 1, relheight= 1)
 
