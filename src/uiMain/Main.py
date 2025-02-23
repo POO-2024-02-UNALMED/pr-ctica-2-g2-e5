@@ -969,7 +969,7 @@ class Main:
 
                 lista=[]
                 for funcion in Teatro.getInstancia().getFuncionesCreadas():
-                     
+                    
                     if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getObra().getNombre() == suscripcion:
                         print(lista)
 
@@ -1000,7 +1000,7 @@ class Main:
 
                 tree = ttk.Treeview(frame_central, columns=("Fecha", "Horario"), show="headings",height=5)
 
-                 
+                
                 tree.heading("Fecha", text="Fecha")
                 tree.heading("Horario", text="Horario")
 
@@ -3073,7 +3073,7 @@ class Main:
                 continuar = True
                 drut = rut  # Acepta si la cantidad es adecuada
             cantFunciones = 0
-            for numeroFunciones in range(drut):
+            for numeroFunciones in range(0, drut, 1):
                 weekn = getWeek()
                 funcion = Funcion(obra = obra, week = weekn)
                 obra.addFuncion(funcion)
@@ -3126,8 +3126,7 @@ class Main:
 
                         if inicioDia < funcion.getHorario()[0] and funcion.getHorario()[0]<finDia:
                             columnasDias[pou].append(
-                                f"{funcion.getObra().getNombre()} ({funcion.getHorario()[0].strftime(formatoHora)} - " +
-                                f"{funcion.getHorario()[1].strftime(formatoHora)})"
+                                f"{funcion.getObra().getNombre()} ({funcion.getHorario()[0].strftime(formatoHora)} - {funcion.getHorario()[1].strftime(formatoHora)})"
                             )
                             break
 

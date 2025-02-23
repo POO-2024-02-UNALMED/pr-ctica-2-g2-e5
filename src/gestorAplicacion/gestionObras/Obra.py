@@ -205,10 +205,8 @@ class Obra:
         # Revisa las funciones estelares de las obras filtradas
         for obra in obrasGenero:
             funcion_estelar = obra.getFuncionEstelar()
-            print(obra.getNombre())
             if funcion_estelar is not None:
                 fstar = funcion_estelar.extraerHora()  # Asegúrate de que esto devuelva una lista de datetime
-                print(fstar)
                 if len(fstar) >= 2:
                     # Extrae las horas de inicio y fin
                     hora_inicio = fstar[0]  # Asegúrate de que esto sea un objeto datetime

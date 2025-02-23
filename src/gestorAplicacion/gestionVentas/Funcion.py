@@ -23,7 +23,6 @@ class Funcion:
             self.__sillas  = sala.get_sillas()
         else:
             self.__sillas = []
-        Teatro.getInstancia().getFuncionesCreadas().append(self)
         
         if len(week)>0:
             self.__horario = self.createHorario(week)
@@ -140,7 +139,6 @@ class Funcion:
         inicioFranja = datetime.datetime.combine(datetime.date.today(), inicioFranja)  # Combina con la fecha actual
 
         for sala in Teatro.Teatro.getInstancia().getSalas():
-            print(Teatro.Teatro.getInstancia().getSalas())
             if sala.get_capacidad() > self.getObra().getAudienciaEsperada():
                 for day in week:
                     inicioFranjaITE = inicioFranja
@@ -153,8 +151,8 @@ class Funcion:
                         v = i + self.getObra().getDuracionFormatoS()  # Asegúrate de que getDuracionFormatoS devuelva un timedelta
 
                         if self.getObra().isRepartoDisponible(i, v) and sala.is_disponible(i, v):
-                            horario.extend((i, v))
-                            print(sala)
+                            horario.append(i)
+                            horario.append(v)
                             self.setSala(sala) 
                             self.getSala().anadir_horario(horario)
                             return horario
