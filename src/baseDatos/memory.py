@@ -14,7 +14,7 @@ from gestorAplicacion.herramientas.Aptitud import Aptitud
 def resetMemory():
     Teatro.setInstancia( Teatro() )
 
-    Cliente(id = 426, tipo= "Empresa")
+    
 
     sala1 = Sala(numero_sala=1,metros_cuadrados= 100,capacidad= 24)
     sala2 = Sala(numero_sala=2,metros_cuadrados= 200,capacidad= 32)

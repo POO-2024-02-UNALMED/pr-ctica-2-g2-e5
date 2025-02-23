@@ -54,8 +54,8 @@ class Main:
     debug = True
     root = None
     fieldTest = False
-    reset = False
-    filterDebug = True
+    reset = True
+    filterDebug = False
     bg = "#701C1A"
 
     @classmethod
@@ -969,11 +969,16 @@ class Main:
 
                 lista=[]
                 for funcion in Teatro.getInstancia().getFuncionesCreadas():
-                    
+                     
                     if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getObra().getNombre() == suscripcion:
+                        print(lista)
 
-                        
-                        lista.append(funcion.getHorario()[0].time())
+                        try:
+                            lista.append(funcion.getHorario()[0].time())
+                        except IndexError:
+                            None
+
+                
                 if lista ==[]:
                     messagebox.showerror("Error", "No hay funciones Disponibles")
                     continuar()
@@ -1015,6 +1020,7 @@ class Main:
                     if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getObra().getNombre() == suscripcion:
                         fecha = str(funcion.getHorario()[0].date())
                         hora = funcion.getHorario()[0].time().strftime("%H:%M:%S")
+                        print(funcion.getHorario()[0])
                         
                         
                         fila = f"{fecha:<25}{hora:<10}\n"
@@ -3298,6 +3304,7 @@ class Main:
 
                     contratar = messagebox.askyesno("Contratación de actores", 
                                         f"Actor seleccionado:\n\nNombre: {actorEscogido}\nEdad: {edad}\nCalificación: {calificacion}\nPrecio de contratación: {Main.toCop(precio)}\n\n¿Desea contratarlo?")
+                    print(contratar)
                     if contratar:
                         actor = Artista.buscarPorId(id)
                         empresa.getCuentaBancaria().ingresar(float(precio))
