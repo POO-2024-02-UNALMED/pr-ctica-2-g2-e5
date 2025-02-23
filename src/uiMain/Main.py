@@ -2914,6 +2914,7 @@ class Main:
                         font=("Calibri", 14), 
                         bg="#701C1A", fg="#FCE6C9").pack(pady=10, 
                                                         fill = "x")
+                return
 
             lbl_name = tk.Label(process_frameO, 
                                 text="Ingrese el nombre de la obra que desea gestionar:",
@@ -3843,6 +3844,7 @@ class Main:
                         text="No hay artistas en la base de datos.",
                         font=("Calibri", 14),
                         bg="#701C1A", fg="#FCE6C9").pack(pady=10, fill="x")
+                return
 
             lbl_id = tk.Label(process_frame,
                     text="Ingrese el ID del artista para gestionar clases:",

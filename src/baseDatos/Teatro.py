@@ -144,9 +144,12 @@ class Teatro:
 
     @classmethod
     def serializar(cls):
-        picklefile = open(cls.DATADIR, "wb")
-        dump(cls.__instancia, picklefile)
-        picklefile.close
+        try:
+            picklefile = open(cls.DATADIR, "wb")
+            dump(cls.__instancia, picklefile)
+            picklefile.close()
+        except Exception as e:
+            print("No se pudo serializar", e)
 
     @classmethod
     def deserializar(cls):
@@ -155,5 +158,6 @@ class Teatro:
             teatro = load(picklefile)
             picklefile.close()
             cls.__instancia = teatro
-        except Exception:
+        except Exception as e:
+            print("No se pudo deserializar", e)
             cls.createInstancia()
