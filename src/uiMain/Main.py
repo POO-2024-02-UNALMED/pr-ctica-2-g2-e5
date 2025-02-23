@@ -24,6 +24,7 @@ from baseDatos.memory import resetMemory
 
 from gestorAplicacion.gestionVentas.Cliente import Cliente
 from gestorAplicacion.gestionFinanciera.Empleado import Empleado
+from gestorAplicacion.gestionFinanciera.CuentaBancaria import CuentaBancaria
 from gestorAplicacion.gestionClases.Profesor import Profesor
 
 from gestorAplicacion.gestionObras.Artista import Artista
@@ -3298,8 +3299,8 @@ class Main:
                                         f"Actor seleccionado:\n\nNombre: {actorEscogido}\nEdad: {edad}\nCalificación: {calificacion}\nPrecio de contratación: {Main.toCop(precio)}\n\n¿Desea contratarlo?")
                     if contratar:
                         actor = Artista.buscarPorId(id)
+                        empresa.getCuentaBancaria().ingresar(float(precio))
                         empresa.pagarContratoActor(actor, float(precio))
-
                         actor.getHorario().append((fechaInicio, fechaFin))
 
 
@@ -3635,7 +3636,7 @@ class Main:
             cliente = idExists(id)
 
             if not cliente:
-                empresa = Cliente(id= id, tipo = "Empresa")
+                empresa = Cliente(id= id, tipo = "Empresa", cuenta_bancaria= CuentaBancaria(id, 0))
                 historialEmpresa = empresa.getHistorial()
                 messagebox.showinfo("Operación exitosa", "Cliente nuevo agregado a la base de datos")
                 initPrimeraRonda(centerFrame)
