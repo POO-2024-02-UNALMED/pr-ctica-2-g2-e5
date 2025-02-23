@@ -115,13 +115,6 @@ def resetMemory():
     warner.getHistorial().append(actor3)
     warner.getCuentaBancaria().ingresar(3_700_000)
 
-    obra1 = Obra(nombre="El Gran Show", genero=Genero.CIRCO, duracion=timedelta(hours=2, minutes=30, seconds=15))
-    obra2 = Obra(nombre="Romeo y Julieta", genero=Genero.DRAMA, duracion=timedelta(hours=3, minutes=0, seconds=0))
-    obra3 = Obra(nombre="El Mago de os", genero=Genero.MUSICAL, duracion=timedelta(hours=1, minutes=45, seconds=30))
-    obra4 = Obra(nombre="Cars 4", genero=Genero.COMEDIA, duracion=timedelta(hours=2, minutes=20, seconds=10))
-    obra5 = Obra(nombre="Pepe el grilo", genero=Genero.DRAMA, duracion=timedelta(hours=2, minutes=50, seconds=5))
-
-    
 
     Profesor1 = Profesor("Oscar Arango", 1)
     Teatro.getInstancia().getEmpleadosPorRendimiento().append(Profesor1)
@@ -151,30 +144,5 @@ def resetMemory():
     ActorPrueba.setCalificacionPorAptitud(Aptitud.DISCURSO, 5.0)
     #funcion3 = Funcion(obra=obra1,horario=(datetime(2025, 2, 19, 14, 30),datetime(2025, 3, 19, 14, 30)),sillas=sala.create_sillas(16), sala = Sala(3))
 
-    funcion1 = Funcion(
-    obra=obra1, 
-    horario=(datetime(2025, 2, 17, 14, 28), datetime(2025, 2, 17, 16, 58)), 
-    sala=sala1
-    )
-
-    funcion2 = Funcion(
-        obra=obra2, 
-        horario=(datetime(2025, 2, 18, 19, 00), datetime(2025, 2, 18, 22, 00)), 
-        sala=sala2
-    )
-
-    funcion3 = Funcion(
-        obra=obra3, 
-        horario=(datetime(2025, 2, 19, 16, 30), datetime(2025, 2, 19, 18, 15)), 
-        
-        sala=sala3
-    )
-
-    funcion4 = Funcion(
-        obra=obra4, 
-        horario=(datetime(2025, 2, 20, 20, 00), datetime(2025, 2, 20, 22, 20)), 
-        
-        sala=sala4
-    )
 
     print("Base de datos reinicializada")
