@@ -3344,6 +3344,7 @@ class Main:
             
             if len(actorsForRental) == 0:
                 messagebox.showerror("Error", "No hay artistas disponibles con los requerimientos pedidos.")
+                Main.contratarActores()
             else:
                 if not avanzado:
                     messagebox.showinfo("Operación exitosa", str(len(actorsForRental)) + " actor/es encontrado/s durante la preselección")
@@ -3400,7 +3401,7 @@ class Main:
 
             if len(contadores) == 0:
                 messagebox.showerror("Error", "No se encontraron actores que se ajusten bien a las características")
-                return
+                Main.contratarActores()
             else:
                 messagebox.showinfo("Operación exitosa", str(len(contadores)) + " actor/es se ajustaron a una o más características avanzadas.")
                 contadorActores = [tupla[0] for tupla in contadores]
