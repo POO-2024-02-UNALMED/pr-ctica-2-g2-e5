@@ -8,7 +8,6 @@ from baseDatos.Teatro import Teatro
 
 
 class Sala:
-    salas = []  # Lista estática de salas
 
     def __init__(self, numero_sala: int, metros_cuadrados: float = 50.0, aseado: bool = True,
             ocupado: bool = False, capacidad: int = 100):
