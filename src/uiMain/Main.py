@@ -54,7 +54,7 @@ class Main:
     debug = True
     root = None
     fieldTest = False
-    reset = True
+    reset = True 
     filterDebug = False
     bg = "#701C1A"
 
@@ -927,14 +927,15 @@ class Main:
 
             # Agregar datos al Treeview
             for obra in Teatro.getInstancia().getObras():
-                obra.setPrecio(obra.precioFuncion())
-                fila = f"{obra.getNombre():<20}{obra.getGenero().value:<15}{formatear_duracion(obra.getDuracion()):<10}{f'${obra.getPrecio():,.2f}':>10}\n"
-                text_widget.insert(tk.END, fila)
+                if not obra.getNombre() =="NOTFORITE":
+                    obra.setPrecio(obra.precioFuncion())
+                    fila = f"{obra.getNombre():<20}{obra.getGenero().value:<15}{formatear_duracion(obra.getDuracion()):<10}{f'${obra.getPrecio():,.2f}':>10}\n"
+                    text_widget.insert(tk.END, fila)
+                    
+                    
+                    
+                    tree.insert("", "end", values=(obra.getNombre(),obra.getGenero().value,obra.getDuracion(), f"${obra.getPrecio():,.2f}"))
                 
-                
-                
-                tree.insert("", "end", values=(obra.getNombre(),obra.getGenero().value,obra.getDuracion(), f"${obra.getPrecio():,.2f}"))
-            
 
 
 
@@ -969,6 +970,7 @@ class Main:
 
                 lista=[]
                 for funcion in Teatro.getInstancia().getFuncionesCreadas():
+                    print(funcion.getObra().getNombre())
                     
                     if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getObra().getNombre() == suscripcion:
                         print(lista)
@@ -4049,7 +4051,7 @@ class Main:
                                 bg="#701C1A", fg="#FCE6C1")
                     txt_obras.pack(pady=5, fill="both", expand=True)
                     for obra in obras:
-                        linea = f"- '{obra.nombre}' (Promedio: {obra.promedioCalificacion()})\n"
+                        linea = f"- '{obra.getNombre()}' (Promedio: {obra.promedioCalificacion()})\n"
                         txt_obras.insert("end", linea)
                     txt_obras.config(state="disabled")
                 tk.Button(process_frame,
