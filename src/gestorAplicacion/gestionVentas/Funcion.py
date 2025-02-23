@@ -17,6 +17,8 @@ class Funcion:
         self.__trabajador = trabajador
         self.__asistentes = asistentes
         self.__precio = precio
+        if obra != None:
+            self.__obra.franjaHoraria(self.getObra().getGenero())
         if sala is not None:
             self.__sillas  = sala.get_sillas()
         else:
@@ -163,13 +165,14 @@ class Funcion:
         return horario
 
     def extraerHora(self):
+        listHora = []
         horario = self.getHorario()
         for tiempo in horario:
-            hora = tiempo.total_hours()
-            minutos = tiempo.total_minutes()
-            segundos = tiempo.total_seconds()
-        return [datetime.datetime(hora, minutos, segundos)]
-    
+            hora = tiempo.hour
+            minutos = tiempo.minute
+            segundos = tiempo.second
+            listHora.append(datetime.time(hour = hora, minute = minutos, second = segundos))
+        return listHora
     def doWeNeedACalificador(self):
         a = False
         for actor in self.getObra().getReparto():

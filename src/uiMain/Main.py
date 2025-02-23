@@ -2912,8 +2912,9 @@ class Main:
                                     fg = "#FCE6C9")
                 txt_obras.pack(pady=10, fill="both", expand=True)
                 for obra in obras:
-                    linea = f"- Obra {obra.getNombre()}\n"
-                    txt_obras.insert("end", linea)
+                    if obra.getNombre() != "NOTFORITE":
+                        linea = f"- Obra {obra.getNombre()}\n"
+                        txt_obras.insert("end", linea)
                 txt_obras.config(state="disabled")
             else:
                 tk.Label(process_frameO, 

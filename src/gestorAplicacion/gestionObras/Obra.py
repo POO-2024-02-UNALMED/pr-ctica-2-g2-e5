@@ -34,10 +34,7 @@ class Obra:
         self.calcularCalificacion(self.getCalificaciones())
         self.calcAudienciaEsperada(self.getCalificacion())
         self.checkEstadoCritico()
-        
-        if self.__nombre != "NOTFORITE":
-            self.franjaHoraria(genero)
-            Teatro.getInstancia().getObras().append(self)
+        Teatro.getInstancia().getObras().append(self)
         Obra.obras.append(self)
         
     def getAudienciaEsperada(self):
@@ -128,7 +125,7 @@ class Obra:
         return self.__funcionEstelar
     
     def setFuncionEstelar(self, value):
-        self.funcionEstelar = value
+        self.__funcionEstelar = value
         
     def getFunciones(self):
         return self.__funciones
@@ -192,22 +189,36 @@ class Obra:
     def franjaHoraria(self, genero):
         from gestorAplicacion.gestionVentas import Funcion
         from baseDatos import Teatro
-        a = Funcion.Funcion(obra = Obra(nombre="NOTFORITE"),horario = [datetime.datetime(year=2024,month=1,day=2,hour=0,minute=0), datetime.datetime(year=2024,month=1,day=2,hour=0,minute=0)])
-        franja = [datetime.time(hour=00,minute=00),datetime.time(hour=23,minute=59)]
+        import datetime
+
+        # Inicializa la franja horaria con valores extremos
+        franja = [datetime.time(hour=0, minute=0), datetime.time(hour=23, minute=59)]
         obrasGenero = []
+
+        # Filtra las obras por género
         for obra in Teatro.Teatro.getInstancia().getObras():
-            u = obra.getGenero()
-            if u == genero:
+            if obra.getGenero() == genero:
                 obrasGenero.append(obra)
+
+        # Revisa las funciones estelares de las obras filtradas
         for obra in obrasGenero:
-            a = obra.getFuncionEstelar()
-            if a != None:
-                fstar = a.extraerHora(a.horario)
+            funcion_estelar = obra.getFuncionEstelar()
+            print(obra.getNombre())
+            if funcion_estelar is not None:
+                fstar = funcion_estelar.extraerHora()  # Asegúrate de que esto devuelva una lista de datetime
+                print(fstar)
                 if len(fstar) >= 2:
-                    if fstar[0] > franja[0]:
-                        franja[0] = fstar[0]
-                    if fstar[1] < franja[1]:
-                        franja[1] = fstar[1]
+                    # Extrae las horas de inicio y fin
+                    hora_inicio = fstar[0]  # Asegúrate de que esto sea un objeto datetime
+                    hora_fin = fstar[1]    # Asegúrate de que esto sea un objeto datetime
+
+                    # Actualiza la franja horaria
+                    if hora_inicio > franja[0]:
+                        franja[0] = hora_inicio
+                    if hora_fin < franja[1]:
+                        franja[1] = hora_fin
+
+        # Establece la franja horaria
         self.setFranjaHoraria(franja)
 
     def  calcFuncionEstelar(self,funciones):
