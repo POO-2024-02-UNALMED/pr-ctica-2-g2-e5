@@ -34,9 +34,10 @@ class Obra:
         self.calcularCalificacion(self.getCalificaciones())
         self.calcAudienciaEsperada(self.getCalificacion())
         self.checkEstadoCritico()
-        
-        if self.__nombre != "NOTFORITE":
+        if self.__nombre !="NOTFORITEA":
             self.franjaHoraria(genero)
+        if self.__nombre != "NOTFORITE" and self.__nombre !="NOTFORITEA":
+            
             Teatro.getInstancia().getObras().append(self)
         Obra.obras.append(self)
         
@@ -192,7 +193,7 @@ class Obra:
     def franjaHoraria(self, genero):
         from gestorAplicacion.gestionVentas import Funcion
         from baseDatos import Teatro
-        a = Funcion.Funcion(obra = Obra(nombre="NOTFORITE"),horario = [datetime.datetime(year=2024,month=1,day=2,hour=0,minute=0), datetime.datetime(year=2024,month=1,day=2,hour=0,minute=0)])
+        a = Funcion.Funcion(obra = Obra(nombre="NOTFORITEA"),horario = [datetime.datetime(year=2024,month=1,day=2,hour=0,minute=0), datetime.datetime(year=2024,month=1,day=2,hour=0,minute=0)])
         franja = [datetime.time(hour=00,minute=00),datetime.time(hour=23,minute=59)]
         obrasGenero = []
         for obra in Teatro.Teatro.getInstancia().getObras():
