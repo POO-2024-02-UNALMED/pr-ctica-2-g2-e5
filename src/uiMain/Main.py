@@ -3000,8 +3000,8 @@ class Main:
         def process_new_obra(name_str, actor, aptitud, genero, director, costo, duracion):
             name_str = str(name_str)
             actor = Artista.buscarPorNombre(actor)
-            aptitud = Aptitud[aptitud.upper()]
-            genero = Genero[genero.upper()]
+            aptitud = Aptitud[aptitud.upper().trim()]
+            genero = Genero[genero.upper().trim()]
             director = Artista.buscarPorNombre(director)
             costo = float(costo)
             duracion = float(duracion)
