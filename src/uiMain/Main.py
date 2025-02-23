@@ -3016,7 +3016,7 @@ class Main:
                 name_str = ""
                 step_create_obra(name_str)
             else:
-                obra = Obra(nombre = name_str, reparto = actor, papeles = aptitud, genero  = genero, director = director,
+                obra = Obra(nombre = name_str, reparto = [actor], papeles = [aptitud], genero  = genero, director = director,
                         costoProducción= costo, duracion = duracion)
                 messagebox.showinfo("Completado", "La obra ha sido creada, para añadir funciones corra de nuevo la funcionalidad y selecciónela")
                 name_str = ""
