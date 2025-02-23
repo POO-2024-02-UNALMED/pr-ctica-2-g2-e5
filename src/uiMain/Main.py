@@ -1054,10 +1054,19 @@ class Main:
                 buscar_sillas(fecha)
             except errorEntradaNula:
                 messagebox.showerror("Error", errorEntradaNula())
+                return         
+        def buscar_sillas (fecha):
+
+
             
-            
-            f1 = tk.Frame(cls.content, bg = "#4B2D2E")                          
+            global frame_central
+
+            f1 = tk.Frame(cls.content, bg = "#4B2D2E")
+            f1.place(relx=0.175, rely=0.1, relwidth=0.65, relheight=0.8)                          
             frame_central = tk.Frame(f1, bg="#701C1A",name="central")
+            frame_central.place(relx=0.032, rely=0.05, relwidth=0.937, relheight=0.87)
+
+
             frame_botones = tk.Frame((frame_central), bg="#701C1A")
             frame_botones.place(relx=0.1, rely=0.1, relwidth=0.80, relheight=0.60)
 
@@ -1136,7 +1145,7 @@ class Main:
                 frame_central.place(relx=0.032, rely=0.05, relwidth=0.937, relheight=0.87)
 
                 global precio_sus
-               
+
                 texto=Tiquete.imprimirFactura(cliente,su=precio_sus,p=precio_fun,d=descuento)
                 texto = tk.Label(cls.content,text=texto,bg="#FCE6C9")
                 texto.place(relx=0.3,rely=0.2,relheight=0.4,relwidth=0.4)
@@ -1217,8 +1226,7 @@ class Main:
         bottomFrame.place(relx=0, rely=0.9, relheight=0.2, relwidth=1)
         global precio_sus
         precio_sus=0
-        
-       
+
         
         
         '''IMAGEN BOTTOM (ASIENTOS)'''
