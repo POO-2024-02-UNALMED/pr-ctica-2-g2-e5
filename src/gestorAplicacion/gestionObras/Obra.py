@@ -193,6 +193,8 @@ class Obra:
 
         # Inicializa la franja horaria con valores extremos
         franja = [datetime.time(hour=0, minute=0), datetime.time(hour=23, minute=59)]
+        a = Funcion.Funcion(horario = [datetime.datetime(year=2024,month=1,day=2,hour=0,minute=0), datetime.datetime(year=2024,month=1,day=2,hour=0,minute=0)])
+        franja = [datetime.time(hour=00,minute=00),datetime.time(hour=23,minute=59)]
         obrasGenero = []
 
         # Filtra las obras por género

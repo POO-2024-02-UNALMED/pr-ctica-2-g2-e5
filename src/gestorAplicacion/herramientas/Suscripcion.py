@@ -7,4 +7,3 @@ class Suscripcion(Enum):
     ELITE = "Elite"
     VIP = "Vip"
 
-
