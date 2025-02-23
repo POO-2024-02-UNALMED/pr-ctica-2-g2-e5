@@ -1054,21 +1054,10 @@ class Main:
                 buscar_sillas(fecha)
             except errorEntradaNula:
                 messagebox.showerror("Error", errorEntradaNula())
-                return         
-        def buscar_sillas (fecha):
-           
             
             
-            
-            global frame_central
-
-            f1 = tk.Frame(cls.content, bg = "#4B2D2E")
-            f1.place(relx=0.175, rely=0.1, relwidth=0.65, relheight=0.8)
-  
-            
+            f1 = tk.Frame(cls.content, bg = "#4B2D2E")                          
             frame_central = tk.Frame(f1, bg="#701C1A",name="central")
-            frame_central.place(relx=0.032, rely=0.05, relwidth=0.937, relheight=0.87)
-
             frame_botones = tk.Frame((frame_central), bg="#701C1A")
             frame_botones.place(relx=0.1, rely=0.1, relwidth=0.80, relheight=0.60)
 

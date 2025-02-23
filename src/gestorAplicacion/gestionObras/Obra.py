@@ -393,7 +393,16 @@ class Obra:
         return str.format("%d:%02d", horas, minutos)
     
     def getDuracionFormatoS(self):
-        return datetime.timedelta(seconds= (self.getDuracion().total_seconds()))
-    
+        if not isinstance(self.getDuracion(), float):
+            return datetime.timedelta(seconds= (self.getDuracion().total_seconds()))
+        else:
+            return datetime.timedelta(seconds=self.traducirDuracion())
     def addFuncion(self, funcion):
         self.getFuncionesSemana().append(funcion)
+    
+    def traducirDuracion(self):
+        duracion = self.getDuracion()
+        horas = duracion // 10000
+        minutos = (duracion % 10000) // 100
+        segundos = duracion % 100
+        return horas * 3600 + minutos * 60 + segundos
