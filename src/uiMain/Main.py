@@ -3050,6 +3050,7 @@ class Main:
                 dias = []
                 for pio in range(1, 8):
                     dias.append(hoy + timedelta(days = pio))
+                return dias
 
             if a + 2 < rut:
                 messagebox.showwarning("ALERTA", "SON DEMASIADAS FUNCIONES SEGUN LA CALIFICACION DE LA OBRA")
@@ -3067,7 +3068,7 @@ class Main:
             cantFunciones = 0
             for numeroFunciones in range(drut):
                 weekn = getWeek()
-                funcion = Funcion(obra, weekn)
+                funcion = Funcion(obra = obra, week = weekn)
                 obra.addFuncion(funcion)
                 if funcion.getSala() is not None:
                     for widget in process_frameO.winfo_children():

@@ -3,6 +3,7 @@ import random
 import time
 
 from baseDatos.Teatro import Teatro
+from gestorAplicacion.herramientas import Genero
 
 class Obra:
     estadoCriticoS = []
@@ -33,11 +34,12 @@ class Obra:
         self.calcularCalificacion(self.getCalificaciones())
         self.calcAudienciaEsperada(self.getCalificacion())
         self.checkEstadoCritico()
+        self.franjaHoraria(genero)
         if self.__nombre != "NOTFORITE":
             Teatro.getInstancia().getObras().append(self)
         Obra.obras.append(self)
         
-    def getAudenciaEsperada(self):
+    def getAudienciaEsperada(self):
         return self.__audienciaEsperada
     
     def setAudienciaEsperada(self, value):
@@ -113,7 +115,7 @@ class Obra:
         return self.__franjaHoraria
     
     def setFranjaHoraria(self, value):
-        self.franjaHoraria = value
+        self.__franjaHoraria = value
         
     def getDuracion(self):
         return self.__duracion
@@ -187,12 +189,12 @@ class Obra:
         self.setCalificacion(v)
 
     def franjaHoraria(self, genero):
-        from gestionVentas import Funcion
+        from gestorAplicacion.gestionVentas import Funcion
         from baseDatos import Teatro
-        a = Funcion(datetime(2024,1,2,00,00))
-        franja = [time(00,00),time(23,59)]
+        a = Funcion.Funcion(horario = [datetime.datetime(year=2024,month=1,day=2,hour=0,minute=0), datetime.datetime(year=2024,month=1,day=2,hour=0,minute=0)])
+        franja = [datetime.time(hour=00,minute=00),datetime.time(hour=23,minute=59)]
         obrasGenero = []
-        for obra in Teatro.getInstancia().getObras():
+        for obra in Teatro.Teatro.getInstancia().getObras():
             u = obra.getGenero()
             if u == genero:
                 obrasGenero.append(obra)
@@ -200,7 +202,7 @@ class Obra:
             a = obra.getFuncionEstelar()
             if a != None:
                 fstar = a.extraerHora(a.horario)
-                if fstar.size() >= 2:
+                if len(fstar) >= 2:
                     if fstar[0] > franja[0]:
                         franja[0] = fstar[0]
                     if fstar[1] < franja[1]:
@@ -333,11 +335,11 @@ class Obra:
     
     def isRepartoDisponible(self, inicio, fin):
         genteDisponibleFR = []
-        for actor in self.reparto:
+        for actor in self.getReparto():
             if actor.isDisponible(inicio, fin):
                 genteDisponibleFR.add(actor)
 
-        if len(genteDisponibleFR) == len(self.reparto):
+        if len(genteDisponibleFR) == len(self.getReparto()):
             self.reparto = True
             return True
         else:
@@ -379,6 +381,7 @@ class Obra:
         return str.format("%d:%02d", horas, minutos)
     
     def getDuracionFormatoS(self):
-        return self.getDuracion.total_seconds()
+        return datetime.timedelta(seconds= (self.getDuracion().total_seconds()))
+    
     def addFuncion(self, funcion):
         self.getFuncionesSemana().append(funcion)

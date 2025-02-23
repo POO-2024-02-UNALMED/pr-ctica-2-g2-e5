@@ -28,7 +28,9 @@ class Funcion:
             self.__sala = self.getSala()
             self.__audienciaEsperada = obra.getAudienciaEsperada()
             if self.__sala != None:
-                self.__sillas = self.__sala.getSillas()        
+                self.__sillas = self.__sala.get_sillas()
+            Teatro.getInstancia().getFuncionesCreadas().append(self)
+        
     def getObra(self):
         return self.__obra
     
@@ -130,21 +132,34 @@ class Funcion:
     def createHorario(self, week):
         from baseDatos import Teatro
         import datetime
+
         horario = []
-        inicioFranja = self.getObra().getFranjaHoraria()[0]
-        for sala in Teatro.getInstancia().getSalas():
-            if sala.getCapacidad() > self.getObra().getAudienciaEsperada():
+        inicioFranja = self.getObra().getFranjaHoraria()[0]  # Esto debe ser un objeto datetime.time
+        inicioFranja = datetime.datetime.combine(datetime.date.today(), inicioFranja)  # Combina con la fecha actual
+
+        for sala in Teatro.Teatro.getInstancia().getSalas():
+            print(Teatro.Teatro.getInstancia().getSalas())
+            if sala.get_capacidad() > self.getObra().getAudienciaEsperada():
                 for day in week:
                     inicioFranjaITE = inicioFranja
-                    while inicioFranjaITE < self.getObra().getFranjaHoraria()[1] and inicioFranjaITE + self.getObra().getDuracionFormatoS()<(datetime.datetime(22,00)):
-                        i = datetime.datetime(day, inicioFranjaITE)
-                        v = i + self.getObra().getDuracionFormatoS()
-                        if self.getObra().isRepartoDisponible(i, v) and sala.isDisponible(i,v):
+                    while inicioFranjaITE.time() < self.getObra().getFranjaHoraria()[1] and \
+                        (inicioFranjaITE - datetime.datetime.combine(datetime.date.today(), datetime.time(0, 0))).total_seconds() + self.getObra().getDuracionFormatoS().total_seconds() < \
+                        (datetime.datetime.combine(datetime.date.today(), datetime.time(hour=22, minute=0)) - datetime.datetime.combine(datetime.date.today(), datetime.time(0, 0))).total_seconds():
+                        
+                        # Crear un objeto datetime para el día actual
+                        i = inicioFranjaITE.replace(year=day.year, month=day.month, day=day.day)
+                        v = i + self.getObra().getDuracionFormatoS()  # Asegúrate de que getDuracionFormatoS devuelva un timedelta
+
+                        if self.getObra().isRepartoDisponible(i, v) and sala.is_disponible(i, v):
                             horario.extend((i, v))
+                            print(sala)
                             self.setSala(sala) 
-                            self.getSala().anadirHorario(horario)
+                            self.getSala().anadir_horario(horario)
                             return horario
-                        inicioFranjaITE = inicioFranjaITE.total_minutes() + 30
+                        
+                        # Incrementar inicioFranjaITE en 30 minutos
+                        inicioFranjaITE += datetime.timedelta(minutes=30)
+
         return horario
 
     def extraerHora(self):
