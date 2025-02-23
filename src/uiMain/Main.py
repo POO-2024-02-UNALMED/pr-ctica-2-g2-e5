@@ -4051,7 +4051,7 @@ class Main:
                                 bg="#701C1A", fg="#FCE6C1")
                     txt_obras.pack(pady=5, fill="both", expand=True)
                     for obra in obras:
-                        linea = f"- '{obra.nombre}' (Promedio: {obra.promedioCalificacion()})\n"
+                        linea = f"- '{obra.getNombre()}' (Promedio: {obra.promedioCalificacion()})\n"
                         txt_obras.insert("end", linea)
                     txt_obras.config(state="disabled")
                 tk.Button(process_frame,
