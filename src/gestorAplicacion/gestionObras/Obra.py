@@ -349,7 +349,7 @@ class Obra:
         genteDisponibleFR = []
         for actor in self.getReparto():
             if actor.isDisponible(inicio, fin):
-                genteDisponibleFR.add(actor)
+                genteDisponibleFR.append(actor)
 
         if len(genteDisponibleFR) == len(self.getReparto()):
             self.reparto = True
