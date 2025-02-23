@@ -17,7 +17,10 @@ class Funcion:
         self.__trabajador = trabajador
         self.__asistentes = asistentes
         self.__precio = precio
-        self.__sillas  = sala.get_sillas()
+        if sala is not None:
+            self.__sillas  = sala.get_sillas()
+        else:
+            self.__sillas = []
         Teatro.getInstancia().getFuncionesCreadas().append(self)
         
         if len(week)>0:
