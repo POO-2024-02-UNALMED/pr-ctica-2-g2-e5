@@ -330,7 +330,7 @@ class Obra:
         obrasCriticas.extend(
             obra
             for obra in Teatro.getInstancia().getObras()
-            if obra.promedioCalificacion() <= 2.0 and obra.getNombre() == "NOTFORITE"
+            if obra.promedioCalificacion() <= 2.0 and obra.getNombre() != "NOTFORITE"
         )
         return obrasCriticas
 
