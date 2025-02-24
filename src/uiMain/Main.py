@@ -63,7 +63,7 @@ class Main:
         return f"${value:,.2f}"
 
     @classmethod
-    def wait(cls) -> None:
+    def wait(cls) -> None: 
         """Genera un periodo de espera de 2 segundos si Main.debug es False"""
         if cls.debug:
             return 
