@@ -135,21 +135,19 @@ class Funcion:
         import datetime
 
         horario = []
-        inicioFranja = self.getObra().getFranjaHoraria()[0]  # Esto debe ser un objeto datetime.time
-        inicioFranja = datetime.datetime.combine(datetime.date.today(), inicioFranja)  # Combina con la fecha actual
+        inicioFranja = self.getObra().getFranjaHoraria()[0] 
+        hoy = datetime.date.today() # Esto debe ser un objeto datetime.time
+        inicioFranja = datetime.datetime(year = hoy.year, month = hoy.month, day = hoy.day, hour = inicioFranja.hour, minute= inicioFranja.minute)  # Combina con la fecha actual
 
         for sala in Teatro.Teatro.getInstancia().getSalas():
             if sala.get_capacidad() > self.getObra().getAudienciaEsperada():
                 for day in week:
                     inicioFranjaITE = inicioFranja
-                    while inicioFranjaITE.time() < self.getObra().getFranjaHoraria()[1] and \
-                        (inicioFranjaITE - datetime.datetime.combine(datetime.date.today(), datetime.time(0, 0))).total_seconds() + self.getObra().getDuracionFormatoS().total_seconds() < \
-                        (datetime.datetime.combine(datetime.date.today(), datetime.time(hour=22, minute=0)) - datetime.datetime.combine(datetime.date.today(), datetime.time(0, 0))).total_seconds():
+                    while inicioFranjaITE.time() < self.getObra().getFranjaHoraria()[1]:
                         
                         # Crear un objeto datetime para el día actual
                         i = inicioFranjaITE.replace(year=day.year, month=day.month, day=day.day)
                         v = i + self.getObra().getDuracionFormatoS()  # Asegúrate de que getDuracionFormatoS devuelva un timedelta
-
                         if self.getObra().isRepartoDisponible(i, v) and sala.is_disponible(i, v):
                             horario.append(i)
                             horario.append(v)

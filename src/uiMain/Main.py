@@ -2932,11 +2932,16 @@ class Main:
             entry_name = tk.Entry(process_frameO, 
                                 font=("Calibri", 14))
             entry_name.pack(pady=5)
+            def getEntry():
+                try:
+                    return entry_name.get()
+                except errorEntradaNula:
+                    messagebox.showerror("Error", "No se ingreso un nombre")
             btn_buscarN = tk.Button(process_frameO,
                                     text="Buscar", 
                                     font=("Calibri", 14),
                                     bg = "#701C1A", fg = "#FCE6C9",
-                                    command=lambda: process_obra(entry_name.get()))
+                                    command=lambda: process_obra(getEntry()))
             btn_buscarN.pack(pady=10)
             
             Main.resize(process_frameO, lbl_obras, 14, 60, True)
@@ -2984,22 +2989,25 @@ class Main:
                 widget.destroy()
             criteriosObra = ["Nombre", "Actor", "Aptitud", "Genero", "Director","Costo de producción", "Duración de la obra (HHMMSS)"]
             valoresObra = ["", "", "", "", "", "", ""]
-            ff = FieldFrame(process_frameO,
-                            tituloCriterios="Datos de la nueva obra",
-                            criterios=criteriosObra,
-                            tituloValores="Ingrese su respuesta <3",
-                            valores=valoresObra,
-                            combobox=False,
-                            command=lambda: (ff.gatherEntries(), 
-                                            process_new_obra(name_str, 
-                                                            ff.valores[1], 
-                                                            ff.valores[2],
-                                                            ff.valores[3], 
-                                                            ff.valores[4],
-                                                            ff.valores[5],
-                                                            ff.valores[6])))
-            ff.pack(pady=10, fill="both", expand=True)
-
+            try:
+                ff = FieldFrame(process_frameO,
+                                tituloCriterios="Datos de la nueva obra",
+                                criterios=criteriosObra,
+                                tituloValores="Ingrese su respuesta <3",
+                                valores=valoresObra,
+                                combobox=False,
+                                command=lambda: (ff.gatherEntries(), 
+                                                process_new_obra(name_str, 
+                                                                ff.valores[1], 
+                                                                ff.valores[2],
+                                                                ff.valores[3], 
+                                                                ff.valores[4],
+                                                                ff.valores[5],
+                                                                ff.valores[6])))
+                ff.pack(pady=10, fill="both", expand=True)
+            except errorEntradaNula:
+                messagebox.showerror("Error", "No se ingresaron todos los datos")
+                step_create_obra(name_str)
         def process_new_obra(name_str, actor, aptitud, genero, director, costo, duracion):
             name_str = str(name_str)
             actor = Artista.buscarPorNombre(actor)
@@ -3013,14 +3021,18 @@ class Main:
                     widget.destroy()
                 criteriosDir = ["Nombre", "ID", "Genero"]
                 valoresDir = ["", 0, genero]
-                fieldframedir = FieldFrame(process_frameO, 
-                                        tituloCriterios = "Datos del nuevo director", 
-                                        criterios= criteriosDir,
-                                        tituloValores = "Ingrese su respuesta <3",  
-                                        valores = valoresDir,
-                                        combobox=False,
-                                        command = lambda: (fieldframedir.gatherEntries(), process_director_nuevo(fieldframedir.valores[0], fieldframedir.valores[1], fieldframedir.valores[2])))
-                fieldframedir.pack(pady=10, fill="both", expand=True)
+                try:
+                    fieldframedir = FieldFrame(process_frameO, 
+                                            tituloCriterios = "Datos del nuevo director", 
+                                            criterios= criteriosDir,
+                                            tituloValores = "Ingrese su respuesta <3",  
+                                            valores = valoresDir,
+                                            combobox=False,
+                                            command = lambda: (fieldframedir.gatherEntries(), process_director_nuevo(fieldframedir.valores[0], fieldframedir.valores[1], fieldframedir.valores[2])))
+                    fieldframedir.pack(pady=10, fill="both", expand=True)
+                except errorEntradaNula:
+                    messagebox.showerror("Error", "No se ingresaron todos los datos")
+                    step_create_obra(name_str)
                 name_str = ""
             elif actor == None:
                 messagebox.showerror("Error", "El actor que ingresaste no existe en nuestra base de datos :(")

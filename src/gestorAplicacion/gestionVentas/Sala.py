@@ -68,7 +68,7 @@ class Sala:
 
     def is_disponible(self, inicio, fin) -> bool:
         for evento in self.get_horario():
-            if inicio <= evento[1] or fin >= evento[0]:  
+            if inicio <= evento[1] and fin >= evento[0]:  
                 return False  # Horario ocupado
         return True
     
