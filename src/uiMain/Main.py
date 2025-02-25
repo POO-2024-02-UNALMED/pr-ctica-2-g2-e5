@@ -1761,14 +1761,14 @@ class Main:
 
                             if funcionesSinHorario == 1:
                                 horarios = tk.Frame(infoSeguridad, bg="red")
-                                horarios.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-                                horarioLabel = tk.Label(horarios, text="Hay una funcion sin horarios", font=("Calibri", 12), bg="red", fg="white")
-                                horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
+                                horarios.place(relx=0, rely=0.15, relwidth=1, relheight=0.1)
+                                horarioLabel = tk.Label(horarios, text="Hay una funcion sin horarios", font=("Calibri", 10), bg="red", fg="white")
+                                horarioLabel.place(relx=0, rely=0.15, relwidth=1, relheight=0.8)
                             elif funcionesSinHorario > 1:
                                 horarios = tk.Frame(infoSeguridad, bg="red")
-                                horarios.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-                                horarioLabel = tk.Label(horarios, text="Hay " + str(funcionesSinHorario) + " Funciones sin horarios", font=("Calibri", 12), bg="red", fg="white")
-                                horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
+                                horarios.place(relx=0, rely=0.15, relwidth=1, relheight=0.1)
+                                horarioLabel = tk.Label(horarios, text="Hay " + str(funcionesSinHorario) + " Funciones sin horarios", font=("Calibri", 10), bg="red", fg="white")
+                                horarioLabel.place(relx=0, rely=0, relwidth=1, relheight=0.8)
 
                             #Evaluacion de Salas sin trabajador
                             if funcionesDisponibles != 0:
@@ -1829,7 +1829,7 @@ class Main:
                                 elif len(Persona.getHorario()) > 1 or len(Persona.getHorario()) == 0:
                                     msg = msg + Persona.getNombre() + " Cuidará: " + str(len(Persona.getHorario())) + " Funciones\n"
                             mensaje = tk.Label(infoSeguridad, text=msg, font=("Calibri", 12), bg="#701C1A", fg="white")
-                            mensaje.place(relx = 0.5, rely=0.5, relwidth= 0.8,relheight=0.7, anchor="center")
+                            mensaje.place(relx = 0.5, rely=0.5, relwidth= 0.8,relheight=0.5, anchor="center")
                         #No todos son principiantes
                         else:
                             try:
@@ -1897,14 +1897,14 @@ class Main:
 
                             if funcionesSinHorario == 1:
                                 horarios = tk.Frame(infoSeguridad, bg="red")
-                                horarios.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-                                horarioLabel = tk.Label(horarios, text="Hay una funcion sin horarios", font=("Calibri", 12), bg="red", fg="white")
-                                horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
+                                horarios.place(relx=0, rely=0.15, relwidth=1, relheight=0.1)
+                                horarioLabel = tk.Label(horarios, text="Hay una funcion sin horarios", font=("Calibri", 10), bg="red", fg="white")
+                                horarioLabel.place(relx=0, rely=0.15, relwidth=1, relheight=0.8)
                             elif funcionesSinHorario > 1:
                                 horarios = tk.Frame(infoSeguridad, bg="red")
-                                horarios.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-                                horarioLabel = tk.Label(horarios, text="Hay " + str(funcionesSinHorario) + " Funciones sin horarios", font=("Calibri", 12), bg="red", fg="white")
-                                horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
+                                horarios.place(relx=0, rely=0.15, relwidth=1, relheight=0.1)
+                                horarioLabel = tk.Label(horarios, text="Hay " + str(funcionesSinHorario) + " Funciones sin horarios", font=("Calibri", 10), bg="red", fg="white")
+                                horarioLabel.place(relx=0, rely=0, relwidth=1, relheight=0.8)
                         
                             #Evaluacion de salas sin trabajador
                             if funcionesDisponibles != 0:
@@ -1966,7 +1966,7 @@ class Main:
                                 elif len(Persona.getHorario()) > 1 or len(Persona.getHorario()) == 0:
                                     msg = msg + Persona.getNombre() + " Cuidará: " + str(len(Persona.getHorario())) + " Funciones\n"
                             mensaje = tk.Label(infoSeguridad, text=msg, font=("Calibri", 12), bg="#701C1A", fg="white")
-                            mensaje.place(relx = 0.5, rely=0.5, relwidth= 0.8,relheight=0.7, anchor="center")
+                            mensaje.place(relx = 0.5, rely=0.5, relwidth= 0.8,relheight=0.5, anchor="center")
                     else:
                         if totalFunciones == 0:
                             alerta = tk.Frame(infoSeguridad, bg="#701C1A", bd=2, relief="groove")
@@ -2090,14 +2090,14 @@ class Main:
 
                             if funcionesSinHorario == 1:
                                 horarios = tk.Frame(infoAseador, bg="red")
-                                horarios.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-                                horarioLabel = tk.Label(horarios, text="Hay una funcion sin horarios", font=("Calibri", 12), bg="red", fg="white")
-                                horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
+                                horarios.place(relx=0, rely=0.15, relwidth=1, relheight=0.1)
+                                horarioLabel = tk.Label(horarios, text="Hay una funcion sin horarios", font=("Calibri", 10), bg="red", fg="white")
+                                horarioLabel.place(relx=0, rely=0.15, relwidth=1, relheight=0.8)
                             elif funcionesSinHorario > 1:
                                 horarios = tk.Frame(infoAseador, bg="red")
-                                horarios.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-                                horarioLabel = tk.Label(horarios, text="Hay " + str(funcionesSinHorario) + " Funciones sin horarios", font=("Calibri", 12), bg="red", fg="white")
-                                horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
+                                horarios.place(relx=0, rely=0.15, relwidth=1, relheight=0.1)
+                                horarioLabel = tk.Label(horarios, text="Hay " + str(funcionesSinHorario) + " Funciones sin horarios", font=("Calibri", 10), bg="red", fg="white")
+                                horarioLabel.place(relx=0, rely=0, relwidth=1, relheight=0.8)
 
                             if len(funcionesLimpiadas) != 0:
                                 for Persona in Teatro.getInstancia().getTipoAseador():
@@ -2154,7 +2154,7 @@ class Main:
                                 else:
                                     msg = msg + Persona.getNombre() + " Limpiará: " + str(len(Persona.getHorario())) + " veces\n"
                             mensaje = tk.Label(infoAseador, text=msg, font=("Calibri", 12), bg="#701C1A", fg="white")
-                            mensaje.place(relx = 0.5, rely=0.5, relwidth= 0.8,relheight=0.7, anchor="center")
+                            mensaje.place(relx = 0.5, rely=0.5, relwidth= 0.8,relheight=0.5, anchor="center")
                         else:
                             funcionesPorMetros = list(Teatro.getInstancia().getFuncionesCreadas())
                             funcionesPorMetros.sort(
@@ -2239,14 +2239,14 @@ class Main:
 
                             if funcionesSinHorario == 1:
                                 horarios = tk.Frame(infoAseador, bg="red")
-                                horarios.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-                                horarioLabel = tk.Label(horarios, text="Hay una funcion sin horarios", font=("Calibri", 12), bg="red", fg="white")
-                                horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
+                                horarios.place(relx=0, rely=0.15, relwidth=1, relheight=0.1)
+                                horarioLabel = tk.Label(horarios, text="Hay una funcion sin horarios", font=("Calibri", 10), bg="red", fg="white")
+                                horarioLabel.place(relx=0, rely=0.15, relwidth=1, relheight=0.8)
                             elif funcionesSinHorario > 1:
                                 horarios = tk.Frame(infoAseador, bg="red")
-                                horarios.place(relx=0, rely=0, relwidth=1, relheight=0.1)
-                                horarioLabel = tk.Label(horarios, text="Hay " + str(funcionesSinHorario) + " Funciones sin horarios", font=("Calibri", 12), bg="red", fg="white")
-                                horarioLabel.place(relx=0.5, rely=0.5, relwidth=0.8, relheight=0.8, anchor="center")
+                                horarios.place(relx=0, rely=0.15, relwidth=1, relheight=0.1)
+                                horarioLabel = tk.Label(horarios, text="Hay " + str(funcionesSinHorario) + " Funciones sin horarios", font=("Calibri", 10), bg="red", fg="white")
+                                horarioLabel.place(relx=0, rely=0, relwidth=1, relheight=0.8)
                             
                             if len(funcionesLimpiadas) != 0:
                                 for Persona in Teatro.getInstancia().getTipoAseador():
@@ -2302,7 +2302,7 @@ class Main:
                                 else:
                                     msg = msg + Persona.getNombre() + " Limpiará: " + str(len(Persona.getHorario())) + " veces\n"
                             mensaje = tk.Label(infoAseador, text=msg, font=("Calibri", 12), bg="#701C1A", fg="white")
-                            mensaje.place(relx = 0.5, rely=0.5, relwidth= 0.8,relheight=0.7, anchor="center")
+                            mensaje.place(relx = 0.5, rely=0.5, relwidth= 0.8,relheight=0.5, anchor="center")
                     else:
                         if totalFunciones == 0:
                             alerta = tk.Frame(infoAseador, bg="#701C1A", bd=2, relief="groove")
