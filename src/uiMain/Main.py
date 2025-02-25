@@ -54,11 +54,7 @@ class Main:
     debug = True
     root = None
     fieldTest = False
-<<<<<<< Updated upstream
     reset = False 
-=======
-    reset = True 
->>>>>>> Stashed changes
     filterDebug = False
     bg = "#701C1A"
 
