@@ -970,10 +970,10 @@ class Main:
 
                 lista=[]
                 for funcion in Teatro.getInstancia().getFuncionesCreadas():
-                    print(funcion.getObra().getNombre())
+                    
                     
                     if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getObra().getNombre() == suscripcion:
-                        print(lista)
+                        
 
                         try:
                             lista.append(funcion.getHorario()[0].time())
@@ -1022,7 +1022,7 @@ class Main:
                     if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getObra().getNombre() == suscripcion and len(funcion.getHorario())!=0:
                         fecha = str(funcion.getHorario()[0].date())
                         hora = funcion.getHorario()[0].time().strftime("%H:%M:%S")
-                        print(funcion.getHorario()[0])
+                        
                         
                         
                         fila = f"{fecha:<25}{hora:<10}\n"
