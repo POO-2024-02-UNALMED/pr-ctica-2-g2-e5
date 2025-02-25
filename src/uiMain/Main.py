@@ -971,7 +971,10 @@ class Main:
                 lista=[]
                 for funcion in Teatro.getInstancia().getFuncionesCreadas():
                     print(funcion.getObra().getNombre())
+<<<<<<< Updated upstream
                     
+=======
+>>>>>>> Stashed changes
                     
                     if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getObra().getNombre() == suscripcion:
                         
