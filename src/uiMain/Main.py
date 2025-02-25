@@ -3052,12 +3052,12 @@ class Main:
             continuar = False
             drut = 0
             rut = int(numero)
-            #def getWeek():
-            #    hoy = datetime.now()
-            #    dias = []
-            #    for pio in range(1, 8):
-            #        dias.append(hoy + timedelta(days = pio))
-            #    return dias
+            def getWeek():
+                hoy = datetime.now()
+                dias = []
+                for pio in range(1, 8):
+                    dias.append(hoy + timedelta(days = pio))
+                return dias
 
             if a + 2 < rut:
                 messagebox.showwarning("ALERTA", "SON DEMASIADAS FUNCIONES SEGUN LA CALIFICACION DE LA OBRA")
@@ -3074,7 +3074,7 @@ class Main:
                 drut = rut  # Acepta si la cantidad es adecuada
             cantFunciones = 0
             for numeroFunciones in range(0, drut, 1):
-                weekn = Main.getWeek()
+                weekn = getWeek()
                 funcion = Funcion(obra = obra, week = weekn)
                 obra.addFuncion(funcion)
                 if funcion.getSala() is not None:
