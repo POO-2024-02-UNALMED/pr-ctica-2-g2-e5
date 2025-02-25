@@ -1,8 +1,8 @@
 from gestorAplicacion.herramientas.Persona import Persona
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 from datetime import datetime
 
-class PersonaConHorario(Persona):
+class conHorario(ABC):
 
     horario: list
     nombre: str
