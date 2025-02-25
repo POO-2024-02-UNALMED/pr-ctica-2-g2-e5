@@ -970,6 +970,7 @@ class Main:
 
                 lista=[]
                 for funcion in Teatro.getInstancia().getFuncionesCreadas():
+                    print(funcion.getObra().getNombre())
                     
                     
                     if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getObra().getNombre() == suscripcion:
