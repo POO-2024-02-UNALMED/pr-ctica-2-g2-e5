@@ -54,7 +54,7 @@ class Main:
     debug = True
     root = None
     fieldTest = False
-    reset = True 
+    reset = False 
     filterDebug = False
     bg = "#701C1A"
 
@@ -1019,7 +1019,7 @@ class Main:
                 
                 for funcion in Teatro.getInstancia().getFuncionesCreadas():
                     
-                    if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getObra().getNombre() == suscripcion:
+                    if not funcion.getObra().getNombre() =="NOTFORITE" and funcion.getObra().getNombre() == suscripcion and len(funcion.getHorario())!=0:
                         fecha = str(funcion.getHorario()[0].date())
                         hora = funcion.getHorario()[0].time().strftime("%H:%M:%S")
                         print(funcion.getHorario()[0])
@@ -1076,16 +1076,16 @@ class Main:
             escenario.place(relx=0.35, rely=0.8, relwidth=0.30, relheight=0.15)
 
             for funcion in Teatro.getInstancia().getFuncionesCreadas():
-                
-                if not funcion.getObra().getNombre() =="NOTFORITE" and str(funcion.getHorario()[0].time()) == fecha:
-                    
-                    precio_fun=funcion.getObra().getPrecio()
-                    
-                    
-                    global sillas
-                    global funcion_elegida
-                    funcion_elegida = funcion
-                    sillas = funcion.getSillas()
+                if len(funcion.getHorario())!=0:
+                    if not funcion.getObra().getNombre() =="NOTFORITE" and str(funcion.getHorario()[0].time()) == fecha:
+                        
+                        precio_fun=funcion.getObra().getPrecio()
+                        
+                        
+                        global sillas
+                        global funcion_elegida
+                        funcion_elegida = funcion
+                        sillas = funcion.getSillas()
                     
             
 
